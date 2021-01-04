@@ -27,7 +27,7 @@ const LoginWrapper: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <div style={{ width: "100%" }}>
+    <div className={classes.root}>
       <div className={classes.wrapper}>
         <Avatar
           src={IG_MONOCHROME_LOGO1_URL}
@@ -133,7 +133,7 @@ const LoginWrapper: React.FC<Props> = ({
         <Typography className={classes.linkWrapper}>
           Don't Have an account?{" "}
           <Link to={TO_SIGNUP_PAGE} className={classes.link}>
-            Signup
+            Sign up
           </Link>
         </Typography>
       </div>

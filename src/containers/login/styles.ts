@@ -7,6 +7,9 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("xs")]: {
+      background: theme.palette.background.paper,
+    },
   },
   linkWrapper: {
     textAlign: "right",

@@ -3,10 +3,11 @@ import { makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    width: "100%",
+    [theme.breakpoints.down("xs")]: {
+      background: theme.palette.background.paper,
+      paddingBottom: "3rem",
+    },
   },
   brandLogo: {
     width: "170px",
@@ -50,7 +51,7 @@ export const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: theme.palette.primary.main,
-    fontWeight: 600,
+    fontWeight: 500,
   },
   darkLink: {
     textDecoration: "none",
@@ -69,7 +70,6 @@ export const useStyles = makeStyles((theme) => ({
     // display: "block",
     background: theme.palette.background.paper,
     [theme.breakpoints.down("xs")]: {
-      background: theme.palette.background.default,
       padding: "2.5rem 2.5rem 1.2rem 2.5rem",
       width: "95%",
       margin: "auto",

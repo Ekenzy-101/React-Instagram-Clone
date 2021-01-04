@@ -6,7 +6,7 @@ import {
   validateFunction,
   formState,
 } from "../../utils/types/form";
-import Loading from "../loading";
+import LoadingSpinner from "../loading/spinner";
 
 const useForm = (initialValues: initialValues) => {
   const [formData, setFormData] = useState(initialValues);
@@ -71,7 +71,7 @@ const useForm = (initialValues: initialValues) => {
         className="submit-button"
         style={{ textTransform: "none" }}
       >
-        {formState === "submitted" ? <Loading /> : label}
+        {formState === "submitted" ? <LoadingSpinner /> : label}
       </Button>
     );
   };
