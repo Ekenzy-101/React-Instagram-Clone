@@ -6,11 +6,13 @@ import {
   validateFunction,
   formState,
 } from "../../utils/types/form";
+import Loading from "../loading";
 
 const useForm = (initialValues: initialValues) => {
   const [formData, setFormData] = useState(initialValues);
   const [formErrors, setFormErrors] = useState(initialValues);
   const [formState, setFormState] = useState<formState>("initial");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (Object.keys(formErrors).length) {
@@ -65,9 +67,11 @@ const useForm = (initialValues: initialValues) => {
         type="submit"
         disableElevation
         fullWidth
+        disabled={isDisabled()}
+        className="submit-button"
         style={{ textTransform: "none" }}
       >
-        {formState === "submitted" ? "loading.." : label}
+        {formState === "submitted" ? <Loading /> : label}
       </Button>
     );
   };
@@ -77,7 +81,8 @@ const useForm = (initialValues: initialValues) => {
     name: inputName,
     validate?: validateFunction,
     placeholder?: string,
-    type?: string
+    type?: string,
+    error?: boolean
   ) => {
     return (
       <div className="form-group">
@@ -88,13 +93,27 @@ const useForm = (initialValues: initialValues) => {
           placeholder={placeholder}
           onChange={(e) => handleChange(e, validate)}
         />
-        <label>{label}</label>
-        {formErrors[name] && <small>{formErrors[name]}</small>}
+        <label className={formData[name] ? "form-group-label" : ""}>
+          {label}
+        </label>
+        {formErrors[name] && error ? (
+          <small className="form-group-error">{formErrors[name]}</small>
+        ) : null}
       </div>
     );
   };
 
-  return { renderButton, renderInput, setFormState };
+  const renderErrorMessage = () =>
+    errorMessage && <small className="form-error">{errorMessage}</small>;
+
+  return {
+    renderButton,
+    renderInput,
+    renderErrorMessage,
+    setErrorMessage,
+    setFormState,
+    formData,
+  };
 };
 
 export default useForm;

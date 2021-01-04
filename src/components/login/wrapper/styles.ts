@@ -30,12 +30,11 @@ export const useStyles = makeStyles((theme) => ({
     marginRight: "0.5rem",
   },
   facebookLoginBtn: {
-    marginBottom: "1.2rem",
+    marginBottom: "0.5rem",
     textTransform: "none",
     color: theme.palette.primary.dark,
     [theme.breakpoints.only("xs")]: {
       color: theme.palette.common.white,
-      marginBottom: "0.3rem",
     },
   },
   linkWrapper: {

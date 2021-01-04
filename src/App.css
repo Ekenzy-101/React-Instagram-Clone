@@ -10,7 +10,7 @@
 .form-group > input {
   letter-spacing: 1px;
   width: 100%;
-  padding: 1rem 0.7rem 0.3rem 0.7rem;
+  padding: 1.2rem 0.7rem 0.25rem 0.7rem;
   border-radius: 3px;
   border: 1px solid rgba(var(--b6a, 219, 219, 219), 1);
   outline: none;
@@ -30,26 +30,39 @@
 }
 
 .form-group input:focus ~ label {
-  top: -8px;
+  top: -4px;
   left: 0;
   font-size: 0.8rem;
   margin-bottom: 1px;
+  padding-top: 5px;
+}
+
+.form-group-label {
+  top: -4px !important;
+  left: 0 !important;
+  font-size: 0.8rem !important;
+  margin-bottom: 1px !important;
+  padding-top: 5px !important;
 }
 
 .form-group input:focus {
   border-color: rgba(168, 168, 168, 1);
 }
 
-/* button[type="submit"] {
-    background: transparent;
-    text-transform: uppercase;
-    border: none;
-    outline: none;
-    color: #fff;
-    padding: 0.7rem 1.1rem;
-    background: #03a9f4;
-    cursor: pointer;
-    border-radius: 0.2rem;
-    display: block;
-    margin: auto;
-} */
+.form-group-error {
+  color: rgb(218, 23, 23);
+}
+
+.form-error {
+  color: rgb(218, 23, 23);
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  background: #0095f6 !important;
+  color: #fff !important;
+}

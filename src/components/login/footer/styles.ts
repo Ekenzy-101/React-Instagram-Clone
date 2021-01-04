@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
-    height: "56px",
+    height: "52px",
     width: "100%",
     borderTop: "0.5px solid rgba(var(--b6a,219,219,219),1)",
     position: "fixed",

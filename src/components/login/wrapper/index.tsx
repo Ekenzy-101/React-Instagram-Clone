@@ -1,8 +1,6 @@
 import { Avatar, Typography, Button, Hidden } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
-import ReactFacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-
 import { useStyles } from "./styles";
 import { Link } from "react-router-dom";
 import {
@@ -11,14 +9,21 @@ import {
 } from "../../../utils/constants/routes";
 import {
   IG_MONOCHROME_LOGO1_URL,
-  FACEBOOK_LOGO_URL,
+  FACEBOOK_LITE_LOGO_URL,
+  FACEBOOK_DARK_LOGO_URL,
 } from "../../../utils/constants/url";
+import FacebookButton from "../../../common/facebook/button";
 
 interface Props {
   onFacebookResponse: (response: any) => void;
+  renderErrorMessage: () => "" | JSX.Element;
 }
 
-const LoginWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
+const LoginWrapper: React.FC<Props> = ({
+  onFacebookResponse,
+  renderErrorMessage,
+  children,
+}) => {
   const classes = useStyles();
 
   return (
@@ -31,11 +36,8 @@ const LoginWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
         />
 
         <Hidden smUp>
-          <ReactFacebookLogin
-            appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-            autoLoad={false}
-            fields="name,email,picture"
-            callback={onFacebookResponse}
+          <FacebookButton
+            onFacebookResponse={onFacebookResponse}
             render={(renderProps: {
               onClick:
                 | ((
@@ -52,7 +54,7 @@ const LoginWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
                 onClick={renderProps.onClick}
               >
                 <Avatar
-                  src={FACEBOOK_LOGO_URL}
+                  src={FACEBOOK_LITE_LOGO_URL}
                   variant="square"
                   className={classes.facebookLogo}
                 />
@@ -76,6 +78,10 @@ const LoginWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
 
         {children}
 
+        <Hidden smUp>
+          <br />
+          {renderErrorMessage()}
+        </Hidden>
         <Hidden xsDown>
           <div className={classes.dividerGroup}>
             <div className={classes.divider}></div>
@@ -88,20 +94,33 @@ const LoginWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
             </Typography>
             <div className={classes.divider}></div>
           </div>
-          <Button
-            variant="text"
-            color="primary"
-            className={classes.facebookLoginBtn}
-            disableElevation
-            fullWidth
-          >
-            <Avatar
-              src={FACEBOOK_LOGO_URL}
-              variant="square"
-              className={classes.facebookLogo}
-            />
-            Log in with Facebook
-          </Button>
+          <FacebookButton
+            onFacebookResponse={onFacebookResponse}
+            render={(renderProps: {
+              onClick:
+                | ((
+                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => void)
+                | undefined;
+            }) => (
+              <Button
+                variant="text"
+                color="primary"
+                className={classes.facebookLoginBtn}
+                disableElevation
+                fullWidth
+                onClick={renderProps.onClick}
+              >
+                <Avatar
+                  src={FACEBOOK_DARK_LOGO_URL}
+                  variant="square"
+                  className={classes.facebookLogo}
+                />
+                Log in with Facebook
+              </Button>
+            )}
+          />
+          {renderErrorMessage()}
           <Typography className={classes.linkWrapper}>
             <Link to={TO_PASSWORDRESET_PAGE} className={classes.darkLink}>
               Forgot Password?

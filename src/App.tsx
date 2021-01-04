@@ -3,6 +3,7 @@ import React from "react";
 import "./App.css";
 
 import Routes from "./routes";
+import { UserProvider } from "./utils/context/user";
 
 const theme = createMuiTheme({
   palette: {
@@ -14,9 +15,11 @@ const theme = createMuiTheme({
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <Routes />
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
+    </UserProvider>
   );
 };
 
