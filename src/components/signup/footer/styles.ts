@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.paper,
-    height: "56px",
+    height: "50px",
     width: "100%",
     borderTop: "0.5px solid rgba(var(--b6a,219,219,219),1)",
     position: "fixed",
@@ -18,7 +18,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   facebookLoginBtn: {
     textTransform: "none",
-    padding: 0,
+    height: "100%",
+    borderRadius: 0,
   },
   toolbar: {
     padding: 0,

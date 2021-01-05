@@ -1,15 +1,15 @@
 import { Avatar, Typography, Button, Hidden } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
-import ReactFacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import { Link } from "react-router-dom";
 
 import { useStyles } from "./styles";
-import { Link } from "react-router-dom";
 import { TO_LOGIN_PAGE } from "../../../utils/constants/routes";
 import {
   IG_MONOCHROME_LOGO1_URL,
-  FACEBOOK_LOGO_URL,
+  FACEBOOK_LITE_LOGO_URL,
 } from "../../../utils/constants/url";
+import FacebookButton from "../../../common/facebook/button";
 
 interface Props {
   onFacebookResponse: (response: any) => void;
@@ -32,11 +32,8 @@ const SignupWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
           Sign up to see photos and videos from your friends.
         </Typography>
         <Hidden xsDown>
-          <ReactFacebookLogin
-            appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-            autoLoad={false}
-            fields="name,email,picture"
-            callback={onFacebookResponse}
+          <FacebookButton
+            onFacebookResponse={onFacebookResponse}
             render={(renderProps: {
               onClick:
                 | ((
@@ -53,7 +50,7 @@ const SignupWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
                 onClick={renderProps.onClick}
               >
                 <Avatar
-                  src={FACEBOOK_LOGO_URL}
+                  src={FACEBOOK_LITE_LOGO_URL}
                   variant="square"
                   className={classes.facebookLogo}
                 />

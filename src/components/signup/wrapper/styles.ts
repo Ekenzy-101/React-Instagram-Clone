@@ -7,6 +7,9 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.only("sm")]: {
+      background: theme.palette.background.paper,
+    },
   },
   brandLogo: {
     width: "170px",
@@ -52,10 +55,9 @@ export const useStyles = makeStyles((theme) => ({
   wrapper: {
     margin: "auto auto 10px auto",
     padding: "2.5rem",
-    // display: "block",
     background: theme.palette.background.paper,
     [theme.breakpoints.down("xs")]: {
-      background: theme.palette.background.default,
+      paddingBottom: "0.5rem",
       width: "95%",
       margin: "auto",
     },
