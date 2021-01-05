@@ -1,7 +1,9 @@
 import { useMutation } from "@apollo/client";
 import { Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useHistory, useLocation } from "react-router-dom";
+
 import useForm from "../../common/hooks/useForm";
 import usePageTitle from "../../common/hooks/usePageTitle";
 import VerifyEmailHeader from "../../components/verify-email/header";
@@ -14,7 +16,6 @@ import { verifyEmail } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
 import { User } from "../../utils/types/user";
 import { useStyles } from "./styles";
-import toast from "react-hot-toast";
 
 const VerifyEmailPage: React.FC = () => {
   // Global State Hooks
@@ -30,6 +31,7 @@ const VerifyEmailPage: React.FC = () => {
     renderButton,
     renderErrorMessage,
     setFormState,
+    setErrorMessage,
     formData,
   } = useForm({ code: "" });
 
@@ -47,8 +49,6 @@ const VerifyEmailPage: React.FC = () => {
     event.preventDefault();
     setFormState("submitted");
 
-    // const email = state as string;
-
     try {
       const { data } = await verifyEmail({
         code: parseInt(formData.code as string),
@@ -63,9 +63,9 @@ const VerifyEmailPage: React.FC = () => {
 
       setFormState("initial");
       if (error?.response?.status >= 400 && error?.response?.status < 500) {
-        toast(error?.response?.data);
+        setErrorMessage(error?.response?.data);
       } else {
-        toast("An unexpected error occured. Please try again");
+        setErrorMessage("An unexpected error occured. Please try again");
       }
     }
   };
