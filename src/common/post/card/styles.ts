@@ -94,6 +94,10 @@ export const useStyles = makeStyles((theme) => ({
     height: "1.2rem",
     marginRight: "5px",
   },
+  link: {
+    color: "#000",
+    textDecoration: "none",
+  },
   media: {
     height: "30rem",
   },
