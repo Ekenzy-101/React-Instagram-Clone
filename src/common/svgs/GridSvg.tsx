@@ -1,6 +1,7 @@
 import React from "react";
 
 interface Props {
+  fill?: string;
   active?: boolean;
   width?: number;
   height?: number;
@@ -9,12 +10,12 @@ interface Props {
     | undefined;
 }
 
-const GridSvg: React.FC<Props> = ({ active, width, height, onClick }) => {
+const GridSvg: React.FC<Props> = ({ fill, width, height, onClick }) => {
   return (
     <svg
       aria-label="Posts"
       className="_8-yf5 "
-      fill={active ? "#0095f6" : "#8e8e8e"}
+      fill={fill}
       height={height}
       viewBox="0 0 48 48"
       width={width}
@@ -30,7 +31,7 @@ const GridSvg: React.FC<Props> = ({ active, width, height, onClick }) => {
 };
 
 GridSvg.defaultProps = {
-  active: false,
+  fill: "#262626",
   height: 24,
   width: 24,
 };

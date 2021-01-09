@@ -1,7 +1,7 @@
 import React from "react";
 
 interface Props {
-  active?: boolean;
+  fill?: string;
   width?: number;
   height?: number;
   onClick?:
@@ -9,12 +9,12 @@ interface Props {
     | undefined;
 }
 
-const TaggedSvg: React.FC<Props> = ({ active, height, width, onClick }) => {
+const TaggedSvg: React.FC<Props> = ({ height, width, onClick, fill }) => {
   return (
     <svg
       aria-label="Tagged"
       className="_8-yf5 "
-      fill={active ? "#0095f6" : "#8e8e8e"}
+      fill={fill}
       height={height}
       viewBox="0 0 48 48"
       width={width}
@@ -26,9 +26,9 @@ const TaggedSvg: React.FC<Props> = ({ active, height, width, onClick }) => {
 };
 
 TaggedSvg.defaultProps = {
-  active: false,
   height: 24,
   width: 24,
+  fill: "#262626",
 };
 
 export default TaggedSvg;

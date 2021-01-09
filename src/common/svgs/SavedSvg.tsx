@@ -3,14 +3,15 @@ import React from "react";
 interface Props {
   width?: number;
   height?: number;
+  fill?: string;
 }
 
-const SavedSvg: React.FC<Props> = ({ width, height }) => {
+const SavedSvg: React.FC<Props> = ({ width, height, fill }) => {
   return (
     <svg
       aria-label="Save"
       className="_8-yf5 "
-      fill="#262626"
+      fill={fill}
       height={height}
       viewBox="0 0 48 48"
       width={width}
@@ -23,6 +24,7 @@ const SavedSvg: React.FC<Props> = ({ width, height }) => {
 SavedSvg.defaultProps = {
   width: 24,
   height: 24,
+  fill: "#262626",
 };
 
 export default SavedSvg;
