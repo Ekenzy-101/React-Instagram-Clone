@@ -1,3 +1,16 @@
+#file-input {
+  opacity: 0;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+}
+
+.file-input-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+
 .form-group {
   position: relative !important;
   margin-bottom: 10px;

@@ -1,6 +1,6 @@
 import { Hidden, Avatar, Grid } from "@material-ui/core";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import {
   IG_MONOCHROME_LOGO_URL,
@@ -12,7 +12,11 @@ import DirectSvg from "../svgs/DirectSvg";
 import ExploreSvg from "../svgs/ExploreSvg";
 import HomeSvg from "../svgs/HomeSvg";
 import LoveSvg from "../svgs/LoveSvg";
-import { TO_EXPLORE_PAGE, TO_HOME_PAGE } from "../../utils/constants/routes";
+import {
+  TO_ACTIVITY_PAGE,
+  TO_EXPLORE_PAGE,
+  TO_HOME_PAGE,
+} from "../../utils/constants/routes";
 import HeaderMenu from "./menu";
 
 const DesktopViewHeader = () => {
@@ -21,6 +25,7 @@ const DesktopViewHeader = () => {
 
   // Other Hooks
   const classes = useStyles();
+  const { pathname } = useLocation();
 
   // Event Handlers
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -55,8 +60,8 @@ const DesktopViewHeader = () => {
           </Link>
         </Grid>
         <Grid item>
-          <Link to={"/activity"} className={classes.navLink}>
-            <LoveSvg />
+          <Link to={TO_ACTIVITY_PAGE} className={classes.navLink}>
+            <LoveSvg active={pathname === TO_ACTIVITY_PAGE} />
           </Link>
         </Grid>
         <Grid item>

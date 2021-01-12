@@ -10,6 +10,8 @@ import React from "react";
 import "./App.css";
 
 import Routes from "./routes";
+import { InputImagesProvider } from "./utils/context/inputImages";
+
 import { UserProvider } from "./utils/context/user";
 
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
@@ -30,26 +32,28 @@ const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <UserProvider>
-        <ThemeProvider theme={theme}>
-          <Toaster
-            position="bottom-center"
-            toastOptions={{
-              style: {
-                margin: "0",
-                maxWidth: "100vw",
-                width: "100vw",
-                borderRadius: 0,
-                background: "#333",
-                textAlign: "left",
-                color: "#fff",
-                zIndex: 9999,
-              },
-              duration: 5000,
-            }}
-            reverseOrder={false}
-          />
-          <Routes />
-        </ThemeProvider>
+        <InputImagesProvider>
+          <ThemeProvider theme={theme}>
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                style: {
+                  margin: "0",
+                  maxWidth: "100vw",
+                  width: "100vw",
+                  borderRadius: 0,
+                  background: "#333",
+                  textAlign: "left",
+                  color: "#fff",
+                  zIndex: 9999,
+                },
+                duration: 5000,
+              }}
+              reverseOrder={false}
+            />
+            <Routes />
+          </ThemeProvider>
+        </InputImagesProvider>
       </UserProvider>
     </ApolloProvider>
   );

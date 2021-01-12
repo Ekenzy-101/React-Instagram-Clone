@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useUserContext } from "../../utils/context/user";
 
 import ProfileSvg from "../svgs/ProfileSvg";
 import SavedSvg from "../svgs/SavedSvg";
@@ -20,6 +21,7 @@ interface Props {
 const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
   // Other Hooks
   const history = useHistory();
+  const { user } = useUserContext()!;
 
   // Event Handler
   const handleClick = (path: string) => {
@@ -45,7 +47,7 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
       open={Boolean(anchorElement)}
       onClose={() => setAnchorElement(null)}
     >
-      <MenuItem onClick={() => handleClick("/kenzy_d_coder")}>
+      <MenuItem onClick={() => handleClick(`/${user?.username}/`)}>
         <ListItemIcon>
           <ProfileSvg width={16} height={16} />
         </ListItemIcon>
