@@ -1,24 +1,51 @@
 import { AppBar, Toolbar, Hidden, Typography } from "@material-ui/core";
 import React from "react";
-import { useStyles } from "./styles";
-import { PersonAddOutlined, PhotoCameraOutlined } from "@material-ui/icons";
-import DesktopViewHeader from "../../../common/header";
+import { ArrowBackIos, PersonAddOutlined } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
-const ProfileHeader = () => {
+import { useStyles } from "./styles";
+import DesktopViewHeader from "../../../common/header";
+import { UserProfile } from "../../../utils/types/user";
+import { useUserContext } from "../../../utils/context/user";
+import SettingsSvg from "../../../common/svgs/SettingsSvg";
+interface Props {
+  user: UserProfile;
+}
+
+const ProfileHeader: React.FC<Props> = ({ user }) => {
+  // Global Hooks
+  const { user: authUser } = useUserContext()!;
+
   // Other Hooks
   const classes = useStyles();
+  const history = useHistory();
+
+  const isAuthUserPage = authUser?.username === user.username;
 
   // JSX
   return (
     <AppBar position="sticky" className={classes.root}>
       <Toolbar className={classes.toolbar}>
-        <Hidden smUp>
-          <PhotoCameraOutlined className={classes.icon} />
-          <Typography color="textPrimary" variant="h6">
-            kenzy_d_coder
-          </Typography>
-          <PersonAddOutlined className={classes.icon} />
-        </Hidden>
+        {isAuthUserPage ? (
+          <Hidden smUp>
+            <SettingsSvg />
+            <Typography color="textPrimary" variant="h6">
+              {user.username}
+            </Typography>
+            <PersonAddOutlined className={classes.icon} />
+          </Hidden>
+        ) : (
+          <Hidden smUp>
+            <ArrowBackIos
+              className={classes.icon}
+              onClick={() => history.goBack()}
+            />
+            <Typography color="textPrimary" variant="h6">
+              {user.username}
+            </Typography>
+            <Typography></Typography>
+          </Hidden>
+        )}
 
         <DesktopViewHeader />
       </Toolbar>

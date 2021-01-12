@@ -13,14 +13,32 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
+    margin: "auto",
     [theme.breakpoints.only("xs")]: {
-      width: "60px",
-      height: "60px",
+      width: "75px",
+      height: "75px",
     },
     [theme.breakpoints.up("sm")]: {
-      width: "120px",
-      height: "120px",
-      margin: "auto",
+      width: "150px",
+      height: "150px",
+    },
+  },
+  editBtn: {
+    textTransform: "none",
+    textDecoration: "none",
+    textAlign: "center",
+    fontWeight: 600,
+    display: "block",
+    padding: "0.4rem 1rem",
+    borderRadius: "5px",
+    color: "#000",
+    border: "1px solid rgba(var(--b6a,219,219,219),1)",
+    background: "#fff !important",
+    [theme.breakpoints.only("xs")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.up("sm")]: {
+      marginRight: "1rem",
     },
   },
   feedIcon: {
@@ -42,5 +60,8 @@ export const useStyles = makeStyles((theme) => ({
   username: {
     marginBottom: "0.4rem",
     marginRight: "1.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyItems: "space-between",
   },
 }));

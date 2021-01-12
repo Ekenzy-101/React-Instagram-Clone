@@ -2,9 +2,23 @@ import React from "react";
 import { Avatar, Button, Grid, Typography } from "@material-ui/core";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { useStyles } from "./styles";
+import { UserProfile } from "../../../utils/types/user";
+import { useUserContext } from "../../../utils/context/user";
+import SettingsSvg from "../../../common/svgs/SettingsSvg";
+import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
+import { Link } from "react-router-dom";
+interface Props {
+  user: UserProfile;
+}
 
-const ProfileTitleDesktopView = () => {
+const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
+  // Global State Hooks
+  const { user: authUser } = useUserContext()!;
+
+  // Other Hooks
   const classes = useStyles();
+
+  // JSX
   return (
     <>
       <Grid
@@ -25,19 +39,28 @@ const ProfileTitleDesktopView = () => {
           <Grid container>
             <Grid item>
               <Typography className={classes.username} variant="h5">
-                kenzy_d_coder
+                {user.username}
               </Typography>
             </Grid>
 
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.followBtn}
-                disableElevation
-              >
-                Follow Back
-              </Button>
+            <Grid style={{ display: "flex", alignItems: "center" }} item>
+              {user.username === authUser?.username ? (
+                <>
+                  <Link to={TO_EDITPROFILE_PAGE} className={classes.editBtn}>
+                    Edit Profile
+                  </Link>
+                  <SettingsSvg width={24} height={24} />
+                </>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.followBtn}
+                  disableElevation
+                >
+                  Follow Back
+                </Button>
+              )}
             </Grid>
           </Grid>
 
@@ -50,26 +73,29 @@ const ProfileTitleDesktopView = () => {
           >
             <Grid item>
               <Typography>
-                <strong>0</strong> posts
+                <strong>{user.posts?.length}</strong> posts
               </Typography>
             </Grid>
             <Grid item>
               <Typography>
-                <strong>275</strong> followers
+                <strong>{user.followersCount}</strong> followers
               </Typography>
             </Grid>
             <Grid item>
               <Typography>
-                <strong>699</strong> following
+                <strong>{user.followingCount}</strong> following
               </Typography>
             </Grid>
           </Grid>
 
           <Grid xs={12} item>
             <Typography variant="body1">
-              <strong>Ayobowale Adeyanju</strong>
+              <strong>{user.name}</strong>
             </Typography>
-            <Typography variant="body1">KCOB</Typography>
+            <Typography variant="body1">{user.bio}</Typography>
+            <Typography component="a" variant="body1">
+              {user.website}
+            </Typography>
           </Grid>
           <br />
           <Grid xs={12} item>
