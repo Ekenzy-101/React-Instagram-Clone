@@ -4,6 +4,7 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.paper,
     boxShadow: "none",
+    height: "3.4rem",
     borderBottom: "1px solid rgba(var(--b6a,219,219,219),1)",
   },
   icon: {
@@ -25,5 +26,7 @@ export const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
+    minHeight: 0,
+    height: "100%",
   },
 }));

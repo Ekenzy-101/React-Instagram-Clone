@@ -7,11 +7,29 @@ export const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   gridIconContainer: {
-    width: "fit-content",
+    width: "auto",
+  },
+  gridItem: {
+    paddingLeft: "3px !important",
+    paddingRight: "3px !important",
   },
   navLink: {
     cursor: "pointer",
     textDecoration: "none",
+  },
+  loginBtn: {
+    background: theme.palette.primary.main,
+    color: "#fff",
+    borderRadius: "4px",
+    padding: "5px 9px",
+    fontWeight: 600,
+  },
+  signUpBtn: {
+    color: theme.palette.primary.main,
+    background: "#fff",
+    borderRadius: "4px",
+    padding: "5px 9px",
+    fontWeight: 600,
   },
   profilePic: {
     width: "25px",

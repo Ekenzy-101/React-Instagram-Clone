@@ -26,7 +26,7 @@ import { useStyles } from "./styles";
 import { Post } from "../../../utils/types/post";
 import PostModal from "../modal";
 import { useUserContext } from "../../../utils/context/user";
-import PostNotSupportedModal from "../modal/not-supported";
+import NotSupportedModal from "../../not-supported-modal";
 interface Props {
   post: Post;
   onToggleLike: () => void;
@@ -83,7 +83,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
   return (
     <>
       <PostModal open={open} onClose={handleClose} post={post} />
-      <PostNotSupportedModal open={open1} onClose={() => setOpen1(false)} />
+      <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
       <Card variant="outlined" className={classes.root}>
         <Grid container>
           <Grid item xs={7} style={{ position: "relative" }}>

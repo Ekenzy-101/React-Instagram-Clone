@@ -18,6 +18,11 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    minHeight: 0,
+    height: "100%",
+    maxWidth: "975px",
+    width: "100%",
+    margin: "auto",
   },
   username: {
     fontWeight: "bold",

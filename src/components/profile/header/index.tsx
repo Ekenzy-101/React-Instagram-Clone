@@ -8,6 +8,7 @@ import DesktopViewHeader from "../../../common/header";
 import { UserProfile } from "../../../utils/types/user";
 import { useUserContext } from "../../../utils/context/user";
 import SettingsSvg from "../../../common/svgs/SettingsSvg";
+import MobileViewHeader from "../../../common/header/mobile-view";
 interface Props {
   user: UserProfile;
 }
@@ -34,7 +35,7 @@ const ProfileHeader: React.FC<Props> = ({ user }) => {
             </Typography>
             <PersonAddOutlined className={classes.icon} />
           </Hidden>
-        ) : (
+        ) : authUser ? (
           <Hidden smUp>
             <ArrowBackIos
               className={classes.icon}
@@ -45,6 +46,8 @@ const ProfileHeader: React.FC<Props> = ({ user }) => {
             </Typography>
             <Typography></Typography>
           </Hidden>
+        ) : (
+          <MobileViewHeader />
         )}
 
         <DesktopViewHeader />

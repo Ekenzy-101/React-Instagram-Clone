@@ -16,12 +16,16 @@ export const useStyles = makeStyles((theme) => ({
   cameraIcon: {
     width: "30px",
     height: "30px",
-    color: "#494949",
     cursor: "pointer",
   },
   toolbar: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    minHeight: 0,
+    height: "100%",
+    maxWidth: "975px",
+    width: "100%",
+    margin: "auto",
   },
 }));
