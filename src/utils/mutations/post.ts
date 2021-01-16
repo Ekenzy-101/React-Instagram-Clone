@@ -5,3 +5,9 @@ export const CREATE_POST = gql`
     createPost(count: $count, caption: $caption, location: $location)
   }
 `;
+
+export const TOGGLE_LIKE = gql`
+  mutation toggleLike($id: String!) {
+    toggleLike(id: $id)
+  }
+`;

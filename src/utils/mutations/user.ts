@@ -5,3 +5,9 @@ export const RESEND_VERIFICATION_CODE = gql`
     resendCode(email: $email)
   }
 `;
+
+export const TOGGLE_FOLLOW = gql`
+  mutation toggleFollow($id: String!) {
+    toggleFollow(id: $id)
+  }
+`;
