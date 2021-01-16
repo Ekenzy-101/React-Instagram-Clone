@@ -37,7 +37,15 @@ const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
           Unfollow
         </DialogContent>
       ) : null}
-      {params.id ? (
+      {user?.username === post.user.username ? (
+        <DialogContent
+          className={clsx(classes.dialogBtn, classes.dangerBtn)}
+          dividers
+        >
+          Delete
+        </DialogContent>
+      ) : null}
+      {!params.id ? (
         <DialogContent
           onClick={() => history.push(`/p/${post.id}/`)}
           className={classes.dialogBtn}

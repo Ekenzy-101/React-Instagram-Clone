@@ -1,79 +1,88 @@
 import {
   Avatar,
-  Button,
   Card,
   CardActions,
   CardContent,
-  CardHeader,
-  CardMedia,
   Divider,
   Grid,
-  IconButton,
   Typography,
-  useTheme,
 } from "@material-ui/core";
-import { ArrowBackIos, ArrowForwardIos, MoreHoriz } from "@material-ui/icons";
-import SwipeableViews from "react-swipeable-views";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLongPress } from "react-use";
+import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
 
-import { PROFILE_PIC_URL, POST_PIC_URL } from "../../../utils/constants/url";
+import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import SavedSvg from "../../svgs/SavedSvg";
 import CommentSvg from "../../svgs/CommentSvg";
 import DirectSvg from "../../svgs/DirectSvg";
 import LoveSvg from "../../svgs/LoveSvg";
 import { useStyles } from "./styles";
-import { Post } from "../../../utils/types/post";
+import { Post, PostComment } from "../../../utils/types/post";
+import { DELETE_COMMENT } from "../../../utils/mutations/comment";
 import PostModal from "../modal";
+import PostCardCommonStepper from "./common/stepper";
+import PostCardCommonHeader from "./common/header";
 import { useUserContext } from "../../../utils/context/user";
 import NotSupportedModal from "../../not-supported-modal";
+import PostCommentModal from "../modal/comment";
+import PostCardCommonForm from "./common/form";
+import {
+  deletePostComment,
+  parseCommentDate,
+} from "../../../utils/helpers/comment";
+import { debug } from "../../../utils/services/debugService";
 interface Props {
   post: Post;
   onToggleLike: () => void;
 }
 
 const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
-  const {
-    user,
-    image_urls,
-    created_at,
-    comments,
-    caption,
-    location,
-    likes,
-  } = post;
+  const { user, image_urls, created_at, comments, caption, likes } = post;
 
   // Global Hooks
   const { user: authUser } = useUserContext()!;
 
   // State Hooks
-  const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [activeComment, setActiveComment] = useState<undefined | PostComment>(
+    undefined
+  );
 
   // Other Hooks
   const classes = useStyles();
-  const theme = useTheme();
+  const [deleteComment] = useMutation(DELETE_COMMENT);
+  const longPressEvent = useLongPress(
+    (e) => {
+      const target = e.target as EventTarget & { id: string };
+      const comment = comments.find((c) => c.id === target.id);
+      setActiveComment(comment);
+      setOpen2(true);
+    },
+    {
+      isPreventDefault: true,
+      delay: 2000,
+    }
+  );
 
   // Event Handlers
-  const handleStepChange = (step: number) => {
-    setActiveStep(step);
-  };
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
+  const handleDelete = async () => {
+    try {
+      await deleteComment({
+        variables: { id: activeComment?.id },
+        update(cache) {
+          deletePostComment(cache, post, activeComment!);
+        },
+      });
+      setOpen2(false);
+    } catch (error) {
+      debug.error(error);
+      setOpen2(false);
+      toast(error?.message);
+    }
   };
 
   // Other Logic
@@ -82,82 +91,22 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
   // JSX
   return (
     <>
-      <PostModal open={open} onClose={handleClose} post={post} />
+      <PostModal open={open} onClose={() => setOpen(false)} post={post} />
+      <PostCommentModal
+        open={open2}
+        onClose={() => setOpen2(false)}
+        comment={activeComment}
+        onDelete={handleDelete}
+      />
       <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
       <Card variant="outlined" className={classes.root}>
         <Grid container>
           <Grid item xs={7} style={{ position: "relative" }}>
-            <SwipeableViews
-              axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-              index={activeStep}
-              onChangeIndex={handleStepChange}
-              enableMouseEvents
-            >
-              {image_urls.map((img, index) => (
-                <CardMedia
-                  className={classes.media}
-                  key={index}
-                  image={POST_PIC_URL}
-                />
-              ))}
-            </SwipeableViews>
-
-            <div className={classes.stepper}>
-              {activeStep !== 0 ? (
-                <IconButton
-                  className={classes.stepperButton}
-                  onClick={handleBack}
-                >
-                  <ArrowBackIos
-                    fontSize="inherit"
-                    className={classes.stepperButtonIcon}
-                  />
-                </IconButton>
-              ) : (
-                <p></p>
-              )}
-              {activeStep !== image_urls.length - 1 ? (
-                <IconButton
-                  className={classes.stepperButton}
-                  onClick={handleNext}
-                >
-                  <ArrowForwardIos
-                    fontSize="inherit"
-                    className={classes.stepperButtonIcon}
-                  />
-                </IconButton>
-              ) : (
-                <p></p>
-              )}
-            </div>
+            <PostCardCommonStepper image_urls={image_urls} />
           </Grid>
 
           <Grid item xs={5}>
-            <CardHeader
-              avatar={
-                <Grid item className={classes.gridItem}>
-                  <div className={classes.avatarWrapper}>
-                    <Avatar
-                      src={user.image_url ? user.image_url : PROFILE_PIC_URL}
-                      className={classes.avatar}
-                    />
-                  </div>
-                </Grid>
-              }
-              action={
-                <IconButton onClick={handleOpen}>
-                  <MoreHoriz />
-                </IconButton>
-              }
-              title={
-                <Link className={classes.link} to={`/${user.username}/`}>
-                  {user.username}
-                </Link>
-              }
-              subheader={location}
-              className={classes.header}
-            />
-
+            <PostCardCommonHeader onClick={() => setOpen(true)} post={post} />
             <Divider />
 
             <CardContent className={classes.commentContent}>
@@ -166,7 +115,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
                   src={user.image_url ? user.image_url : PROFILE_PIC_URL}
                   className={classes.commentByAvatar}
                 />
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                <div className={classes.commentByBody}>
                   <Typography
                     style={{ marginBottom: "0.5rem" }}
                     variant="caption"
@@ -179,43 +128,63 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
                     {caption}
                   </Typography>
                   <Typography variant="caption" color="textSecondary">
-                    12 hrs
+                    {parseCommentDate(created_at)}
                   </Typography>
                 </div>
               </div>
               {comments.map((comment, index) => (
-                <div className={classes.commentByGroup} key={index}>
-                  <Avatar
-                    src={
-                      comment.user.image_url
-                        ? comment.user.image_url
-                        : PROFILE_PIC_URL
-                    }
-                    className={classes.commentByAvatar}
-                  />
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <Typography
-                      style={{ marginBottom: "0.5rem" }}
-                      variant="caption"
+                <div key={index} onClick={() => console.log("Clicked")}>
+                  <div className={classes.commentByGroup}>
+                    <Avatar
+                      src={
+                        comment.user.image_url
+                          ? comment.user.image_url
+                          : PROFILE_PIC_URL
+                      }
+                      className={classes.commentByAvatar}
+                    />
+                    <div
+                      {...longPressEvent}
+                      id={comment.id}
+                      className={classes.commentByBody}
                     >
-                      <strong style={{ marginRight: "0.5rem" }}>
-                        <Link
-                          className={classes.link}
-                          to={`/${comment.user.username}/`}
+                      <Typography
+                        style={{ marginBottom: "0.5rem" }}
+                        variant="caption"
+                        id={comment.id}
+                      >
+                        <strong
+                          id={comment.id}
+                          style={{ marginRight: "0.5rem" }}
                         >
-                          {comment.user.username}
-                        </Link>
-                      </strong>
-                      {comment.content}
-                    </Typography>
-                    <Typography variant="caption" color="textSecondary">
-                      12 hrs <strong>Reply</strong>
-                    </Typography>
+                          <Link
+                            className={classes.link}
+                            to={`/${comment.user.username}/`}
+                          >
+                            {comment.user.username}
+                          </Link>
+                        </strong>
+                        {comment.content}
+                      </Typography>
+                      <Typography
+                        id={comment.id}
+                        variant="caption"
+                        color="textSecondary"
+                      >
+                        {parseCommentDate(comment.created_at)}{" "}
+                        <strong>Reply</strong>
+                      </Typography>
+                    </div>
+                    <div>
+                      <LoveSvg width={12} height={12} />
+                    </div>
                   </div>
                 </div>
               ))}
             </CardContent>
+
             <Divider />
+
             <CardActions className={classes.cardActions}>
               <div className={classes.groupIcons}>
                 <LoveSvg
@@ -255,23 +224,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
                 {created_at}
               </Typography>
             </CardContent>
-            <form style={{ width: "100%" }}>
-              <CardContent className={classes.commentContainer}>
-                <textarea
-                  className={classes.commentArea}
-                  placeholder="Add a comment ..."
-                  autoComplete="off"
-                  autoCorrect="off"
-                ></textarea>
-                <Button
-                  variant="text"
-                  color="primary"
-                  style={{ textTransform: "capitalize" }}
-                >
-                  Post
-                </Button>
-              </CardContent>
-            </form>
+            <PostCardCommonForm post={post} />
           </Grid>
         </Grid>
       </Card>

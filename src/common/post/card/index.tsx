@@ -5,27 +5,39 @@ import { Post } from "../../../utils/types/post";
 import { useMutation } from "@apollo/client";
 import { TOGGLE_LIKE } from "../../../utils/mutations/post";
 import { debug } from "../../../utils/services/debugService";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { TO_LOGIN_PAGE } from "../../../utils/constants/routes";
+import { useUserContext } from "../../../utils/context/user";
+import { updatePostLikes, updatePostsLikes } from "../../../utils/helpers/like";
 
 interface Props {
   tabView?: boolean;
   post: Post;
-  refetch?: any;
 }
 
-const PostCard: React.FC<Props> = ({ tabView, post, refetch }) => {
+const PostCard: React.FC<Props> = ({ tabView, post }) => {
+  // Global Hook
+  const { user } = useUserContext()!;
+
   // Other Hooks
   const [toggleLike] = useMutation(TOGGLE_LIKE, { variables: { id: post.id } });
   const history = useHistory();
   const { pathname } = useLocation();
+  const params = useParams() as { id: string };
 
   // Event Handler
   const handleToggleLike = async () => {
     try {
       debug.log("Svg clicked");
-      await toggleLike();
-      refetch();
+      await toggleLike({
+        update(cache) {
+          if (params.id) {
+            updatePostLikes(cache, user!, post.id);
+          } else {
+            updatePostsLikes(cache, user!, post);
+          }
+        },
+      });
     } catch (error) {
       debug.error(error.message);
 

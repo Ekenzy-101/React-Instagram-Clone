@@ -42,13 +42,17 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexGrow: 1,
     resize: "none",
-    // height: "18px",
     fontFamily: "inherit",
   },
   commentByAvatar: {
     width: "30px",
     height: "30px",
-    marginRight: "23px",
+  },
+  commentByBody: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+    margin: "auto 20px",
   },
   commentByGroup: {
     display: "flex",
@@ -99,17 +103,17 @@ export const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   media: {
-    height: "30rem",
+    paddingBottom: "125%",
   },
   stepper: {
     display: "flex",
     width: "100%",
     margin: "auto",
     position: "absolute",
-    top: "35%",
+    top: "40%",
     justifyContent: "space-between",
     alignItems: "center",
-    zIndex: 2,
+    zIndex: 10,
   },
   stepperButton: {
     width: "1.5rem",

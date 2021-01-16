@@ -15,10 +15,10 @@ export const useStyles = makeStyles((theme) => ({
   },
   dangerBtn: {
     color: red[600],
-    fontWeight: 600,
+    fontWeight: 700,
   },
   primaryBtn: {
     color: theme.palette.primary.main,
-    fontWeight: 600,
+    fontWeight: 700,
   },
 }));
