@@ -20,3 +20,9 @@ export const DELETE_COMMENT = gql`
     deleteComment(id: $id)
   }
 `;
+
+export const TOGGLE_COMMENT_LIKE = gql`
+  mutation toggleCommentLike($id: String!) {
+    toggleCommentLike(id: $id)
+  }
+`;

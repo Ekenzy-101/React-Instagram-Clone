@@ -7,7 +7,7 @@ import CommentSvg from "../../svgs/CommentSvg";
 import DirectSvg from "../../svgs/DirectSvg";
 import LoveSvg from "../../svgs/LoveSvg";
 import { useStyles } from "./styles";
-import { Post } from "../../../utils/types/post";
+import { Post, PostComment } from "../../../utils/types/post";
 import PostModal from "../modal";
 import NotSupportedModal from "../../not-supported-modal";
 import { useUserContext } from "../../../utils/context/user";
@@ -17,9 +17,14 @@ import PostCardCommonForm from "./common/form";
 interface Props {
   post: Post;
   onToggleLike: () => void;
+  onToggleCommentLike: (id: string) => void;
 }
 
-const PostCardTabView: React.FC<Props> = ({ post, onToggleLike }) => {
+const PostCardTabView: React.FC<Props> = ({
+  post,
+  onToggleLike,
+  onToggleCommentLike,
+}) => {
   const { user, image_urls, comments, created_at, caption, likes } = post;
   // Global Hooks
   const { user: authUser } = useUserContext()!;
@@ -32,7 +37,11 @@ const PostCardTabView: React.FC<Props> = ({ post, onToggleLike }) => {
   const classes = useStyles();
 
   // Other Logic
-  const isLikedByUser = likes.some((like) => like.id === authUser?.id);
+  const isPostLikedByUser = likes.some((like) => like.id === authUser?.id);
+
+  const isCommentLikedByUser = (comment: PostComment) => {
+    return comment.likes.some((like) => like.id === authUser?.id);
+  };
 
   // JSX
   return (
@@ -47,8 +56,8 @@ const PostCardTabView: React.FC<Props> = ({ post, onToggleLike }) => {
           <div className={classes.groupIcons}>
             <LoveSvg
               onClick={onToggleLike}
-              active={isLikedByUser}
-              fill={isLikedByUser ? "#ed4956" : undefined}
+              active={isPostLikedByUser}
+              fill={isPostLikedByUser ? "#ed4956" : undefined}
             />
             <CommentSvg />
             <DirectSvg onClick={() => setOpen1(true)} />
@@ -74,22 +83,26 @@ const PostCardTabView: React.FC<Props> = ({ post, onToggleLike }) => {
               </strong>
             </Typography>
           ) : null}
-          <Typography variant="body1">
-            <strong style={{ marginRight: "0.5rem" }}>
+
+          <div className={classes.commentByGroup}>
+            <strong className={classes.username}>
               <Link className={classes.link} to={`/${user.username}/`}>
                 {user.username}
               </Link>
             </strong>
-            {caption}
-          </Typography>
+            <Typography className={classes.commentByBody} variant="body1">
+              {caption}
+            </Typography>
+            <div></div>
+          </div>
           {comments.length > 1 ? (
-            <Typography color="textSecondary">
-              View all {comments.length} comments
+            <Typography style={{ fontSize: "0.9rem" }} color="textSecondary">
+              View all {post.commentsCount} comments
             </Typography>
           ) : null}
           {comments.map((comment, index) => (
-            <Typography variant="body1" key={index}>
-              <strong style={{ marginRight: "0.5rem" }}>
+            <div className={classes.commentByGroup} key={index}>
+              <strong className={classes.username}>
                 <Link
                   className={classes.link}
                   to={`/${comment.user.username}/`}
@@ -97,8 +110,19 @@ const PostCardTabView: React.FC<Props> = ({ post, onToggleLike }) => {
                   {comment.user.username}
                 </Link>
               </strong>
-              {comment.content}
-            </Typography>
+              <Typography className={classes.commentByBody} variant="body1">
+                {comment.content}
+              </Typography>
+              <div>
+                <LoveSvg
+                  active={isCommentLikedByUser(comment)}
+                  fill={isCommentLikedByUser(comment) ? "#ed4956" : undefined}
+                  width={12}
+                  height={12}
+                  onClick={() => onToggleCommentLike(comment.id)}
+                />
+              </div>
+            </div>
           ))}
           <Typography
             color="textSecondary"

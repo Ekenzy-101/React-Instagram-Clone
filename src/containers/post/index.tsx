@@ -16,7 +16,7 @@ import { useStyles } from "./styles";
 const PostPage: React.FC = () => {
   // Other Hooks
   const { id } = useParams() as { id: string };
-  const { data, loading, refetch } = useQuery(GET_POST, { variables: { id } });
+  const { data, loading } = useQuery(GET_POST, { variables: { id } });
   const classes = useStyles();
   const tabView = useMediaQuery(`(max-width: 735px)`);
 
@@ -34,7 +34,7 @@ const PostPage: React.FC = () => {
     <Paper variant="outlined" square className={classes.root}>
       <PostHeader />
       <div className={classes.wrapper}>
-        <PostCard tabView={tabView} post={post} refetch={refetch} />
+        <PostCard tabView={tabView} post={post} />
         <PostBody post={post} />
       </div>
       <Footer />

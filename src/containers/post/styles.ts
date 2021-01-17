@@ -9,14 +9,17 @@ export const useStyles = makeStyles((theme) => ({
   },
   wrapper: {
     margin: "auto",
-    width: "90%",
+    width: "816px",
     display: "block",
     [theme.breakpoints.down("xs")]: {
       width: "100%",
-      marginBottom: "70px",
+      marginBottom: "49px",
+    },
+    [theme.breakpoints.between(601, 735)]: {
+      width: "600px",
     },
     [theme.breakpoints.up("sm")]: {
-      marginTop: "70px",
+      marginTop: "4vh",
     },
   },
 }));

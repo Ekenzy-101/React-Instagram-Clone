@@ -52,11 +52,15 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    margin: "auto 20px",
+    margin: "auto 15px",
+    [theme.breakpoints.down("xs")]: {
+      margin: "auto 9px",
+      fontSize: "0.9rem",
+    },
   },
   commentByGroup: {
     display: "flex",
-    marginBottom: "0.5rem",
+    marginBottom: "0.3rem",
   },
   commentContainer: {
     display: "flex",
@@ -104,6 +108,9 @@ export const useStyles = makeStyles((theme) => ({
   },
   media: {
     paddingBottom: "125%",
+    [theme.breakpoints.down("xs")]: {
+      paddingBottom: "105%",
+    },
   },
   stepper: {
     display: "flex",
@@ -126,5 +133,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   stepperButtonIcon: {
     fontSize: "15px !important",
+  },
+  username: {
+    fontSize: "1rem",
+    marginBottom: "2px",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem",
+    },
   },
 }));

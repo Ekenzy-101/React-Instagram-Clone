@@ -36,9 +36,14 @@ import { debug } from "../../../utils/services/debugService";
 interface Props {
   post: Post;
   onToggleLike: () => void;
+  onToggleCommentLike: (id: string) => void;
 }
 
-const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
+const PostCardDesktopView: React.FC<Props> = ({
+  post,
+  onToggleLike,
+  onToggleCommentLike,
+}) => {
   const { user, image_urls, created_at, comments, caption, likes } = post;
 
   // Global Hooks
@@ -88,6 +93,10 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
   // Other Logic
   const isLikedByUser = likes.some((like) => like.id === authUser?.id);
 
+  const isCommentLikedByUser = (comment: PostComment) => {
+    return comment.likes.some((like) => like.id === authUser?.id);
+  };
+
   // JSX
   return (
     <>
@@ -133,7 +142,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
                 </div>
               </div>
               {comments.map((comment, index) => (
-                <div key={index} onClick={() => console.log("Clicked")}>
+                <div key={index}>
                   <div className={classes.commentByGroup}>
                     <Avatar
                       src={
@@ -176,7 +185,15 @@ const PostCardDesktopView: React.FC<Props> = ({ post, onToggleLike }) => {
                       </Typography>
                     </div>
                     <div>
-                      <LoveSvg width={12} height={12} />
+                      <LoveSvg
+                        active={isCommentLikedByUser(comment)}
+                        fill={
+                          isCommentLikedByUser(comment) ? "#ed4956" : undefined
+                        }
+                        width={12}
+                        height={12}
+                        onClick={() => onToggleCommentLike(comment.id)}
+                      />
                     </div>
                   </div>
                 </div>
