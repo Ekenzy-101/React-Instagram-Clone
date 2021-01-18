@@ -1,5 +1,6 @@
 import { Post } from "./post";
 export interface User {
+  __typename: "User";
   id?: string;
   username?: string;
 }
@@ -11,5 +12,7 @@ export type UserProfile = User & {
   bio?: string;
   followersCount?: number;
   followingCount?: number;
+  followers?: UserProfile[];
+  following?: UserProfile[];
   posts?: Post[];
 };

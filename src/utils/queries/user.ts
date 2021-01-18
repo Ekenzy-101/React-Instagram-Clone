@@ -13,12 +13,16 @@ export const GET_USER = gql`
         likes {
           id
         }
-        comments {
-          id
-        }
+        commentsCount
       }
       website
       image_url
+      followers {
+        id
+      }
+      following {
+        id
+      }
       followersCount
       followingCount
     }
@@ -30,6 +34,20 @@ export const GET_AUTH_USER = gql`
     profile {
       id
       username
+    }
+  }
+`;
+
+export const GET_RELATED_USERS = gql`
+  query {
+    profile {
+      id
+      followers {
+        id
+      }
+      following {
+        id
+      }
     }
   }
 `;

@@ -1,11 +1,25 @@
 import { gql } from "@apollo/client";
+import { POST_FRAGMENT } from "../fragments/post";
+import { COMMENT_FRAGMENT } from "../fragments/comment";
+// import { USER_FRAGMENT } from "../fragments/user";
 
 export const GET_POST = gql`
   query getPost($id: String!) {
     post(id: $id) {
+      ...PostFragment
+      comments(count: null) {
+        ...CommentFragment
+      }
+    }
+  }
+  ${COMMENT_FRAGMENT}
+  ${POST_FRAGMENT}
+`;
+
+export const GET_POST_COMMENTS = gql`
+  query getPostComments($id: String!) {
+    post(id: $id) {
       id
-      image_urls
-      location
       caption
       created_at
       user {
@@ -13,18 +27,23 @@ export const GET_POST = gql`
         username
         image_url
       }
+      comments(count: null) {
+        ...CommentFragment
+      }
+    }
+  }
+  ${COMMENT_FRAGMENT}
+`;
+
+export const GET_POST_LIKES = gql`
+  query getPostLikes($id: String!) {
+    post(id: $id) {
+      id
       likes {
         id
-      }
-      comments {
-        id
-        content
-        created_at
-        user {
-          id
-          username
-          image_url
-        }
+        name
+        username
+        image_url
       }
     }
   }
@@ -33,29 +52,12 @@ export const GET_POST = gql`
 export const GET_POSTS = gql`
   query {
     posts {
-      id
-      image_urls
-      location
-      caption
-      created_at
-      user {
-        id
-        username
-        image_url
-      }
-      likes {
-        id
-      }
-      comments {
-        id
-        content
-        created_at
-        user {
-          id
-          username
-          image_url
-        }
+      ...PostFragment
+      comments(count: 2) {
+        ...CommentFragment
       }
     }
   }
+  ${COMMENT_FRAGMENT}
+  ${POST_FRAGMENT}
 `;
