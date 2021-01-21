@@ -12,6 +12,20 @@ export const TOGGLE_FOLLOW = gql`
   }
 `;
 
+export const UPDATE_PASSWORD = gql`
+  mutation updatePassword(
+    $password: String
+    $new_password: String
+    $new_password_confirmation: String
+  ) {
+    updatePassword(
+      password: $password
+      new_password: $new_password
+      new_password_confirmation: $new_password_confirmation
+    )
+  }
+`;
+
 export const UPDATE_PROFILE_INFO = gql`
   mutation updateProfile(
     $website: String
