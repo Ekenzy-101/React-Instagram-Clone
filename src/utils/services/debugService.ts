@@ -11,4 +11,19 @@ export const debug = {
       console.error(message, ...rest);
     }
   },
+  table: (tabularData: any, properties?: readonly string[] | undefined) => {
+    if (!inProduction) {
+      console.table(tabularData, properties);
+    }
+  },
+  group: (...label: any[]) => {
+    if (!inProduction) {
+      console.group(...label);
+    }
+  },
+  groupEnd: () => {
+    if (!inProduction) {
+      console.groupEnd();
+    }
+  },
 };

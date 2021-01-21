@@ -51,3 +51,19 @@ export const GET_RELATED_USERS = gql`
     }
   }
 `;
+
+export const GET_AUTH_USER_INFO = gql`
+  query {
+    profile {
+      id
+      username
+      name
+      bio
+      phone_no
+      website
+      image_url
+      gender
+      email
+    }
+  }
+`;
