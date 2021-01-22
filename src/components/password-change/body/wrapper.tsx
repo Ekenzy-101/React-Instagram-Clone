@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, useMediaQuery } from "@material-ui/core";
 
 interface Props {
   leftComponent?: JSX.Element;
@@ -7,12 +7,10 @@ interface Props {
   centerComponent?: JSX.Element;
 }
 
-const PasswordChangeBodyWrapper: React.FC<Props> = ({
-  leftComponent,
-  rightComponent,
-  centerComponent,
-}) => {
-  if (centerComponent) {
+const PasswordChangeBodyWrapper: React.FC<Props> = (props) => {
+  const { leftComponent, rightComponent, centerComponent } = props;
+  const tabView = useMediaQuery(`(max-width: 735px)`);
+  if (tabView) {
     return (
       <Grid container alignItems="center" spacing={3}>
         <Grid item xs={12}>
