@@ -7,6 +7,7 @@ import {
   TO_EDITPROFILE_PAGE,
   TO_EXPLORE_PAGE,
   TO_LOGIN_PAGE,
+  TO_PASSWORDCHANGE_PAGE,
   TO_PASSWORDRESET_PAGE,
   TO_POSTCOMMENTS_PAGE,
   TO_POSTLIKES_PAGE,
@@ -18,6 +19,7 @@ import {
 import ProtectedRoute from "./protected-route";
 import RedirectedRoute from "./redirected-route";
 import HomeRoute from "./home-route";
+import NotFoundPage from "../common/not-found";
 import ExplorePage from "../containers/explore";
 import ProfilePage from "../containers/profile";
 import PostPage from "../containers/post";
@@ -28,6 +30,7 @@ import SignupPage from "../containers/signup";
 import VerifyEmailPage from "../containers/verify-email";
 import LoginPage from "../containers/login";
 import PasswordResetPage from "../containers/password-reset";
+import PasswordChangePage from "../containers/password-change";
 import ActivityPage from "../containers/activity";
 import EditProfilePage from "../containers/edit-profile";
 
@@ -50,6 +53,11 @@ const Routes = () => {
         exact
         component={EditProfilePage}
       />
+      <ProtectedRoute
+        path={TO_PASSWORDCHANGE_PAGE}
+        exact
+        component={PasswordChangePage}
+      />
       <ProtectedRoute path={TO_EXPLORE_PAGE} exact component={ExplorePage} />
       <Route path={TO_POST_PAGE} exact component={PostPage} />
       <Route path={TO_POSTCOMMENTS_PAGE} exact component={PostCommentsPage} />
@@ -66,7 +74,9 @@ const Routes = () => {
         exact
         component={PasswordResetPage}
       />
-      <Route path={TO_PROFILE_PAGE} component={ProfilePage} />
+
+      <Route path={TO_PROFILE_PAGE} exact component={ProfilePage} />
+      <Route component={NotFoundPage} />
       <HomeRoute />
     </Switch>
   );
