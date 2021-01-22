@@ -5,7 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import AddPostHeader from "../../components/add-post/header";
 import AddPostBody from "../../components/add-post/body";
-import { resizeFile } from "../../utils/helpers/index";
+import { fileOptions, resizeFile } from "../../utils/helpers/index";
 import { debug } from "../../utils/services/debugService";
 import http from "../../utils/services/httpService";
 import { CREATE_POST } from "../../utils/mutations/post";
@@ -38,19 +38,26 @@ const AddPostPage: React.FC = () => {
   };
 
   onPageMount.current = async () => {
-    const fileUrls: string[] = [];
+    const images: Blob[] = [];
 
     if (pathname.includes("style")) {
       if (state) {
         for (const file of state) {
-          const image = (await resizeFile(file, 300, 300)) as string;
+          const options: fileOptions = {
+            file,
+            maxHeight: 300,
+            maxWidth: 300,
+            minHeight: 50,
+            minWidth: 50,
+          };
+          const image = (await resizeFile(options)) as Blob;
 
           debug.log(image);
 
-          fileUrls.push(image);
+          images.push(image);
         }
 
-        setInputImages(fileUrls);
+        setInputImages(images);
       } else {
         history.replace(TO_HOME_PAGE);
       }
@@ -88,9 +95,7 @@ const AddPostPage: React.FC = () => {
       const signedUrls = data.createPost as string[];
 
       signedUrls.forEach(async (url, index) => {
-        const binary = new FormData();
-        binary.append("file", inputImages[index]);
-        await http.put(url, binary, { withCredentials: false });
+        await http.put(url, inputImages[index], { withCredentials: false });
       });
 
       history.push(TO_HOME_PAGE);

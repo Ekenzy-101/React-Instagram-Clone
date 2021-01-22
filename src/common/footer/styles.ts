@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.paper,
+    boxShadow: "none",
     width: "inherit",
     maxWidth: "inherit",
     height: "50px",

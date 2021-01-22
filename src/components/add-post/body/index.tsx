@@ -6,7 +6,7 @@ import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { useStyles } from "./styles";
 
 interface Props {
-  images: string[];
+  images: Blob[];
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
@@ -16,7 +16,7 @@ const AddPostBody: React.FC<Props> = ({ images, onChange }) => {
   // Other Hooks
   const classes = useStyles();
   const { state, pathname } = useLocation() as {
-    state: string[];
+    state: Blob[];
     pathname: string;
   };
 
@@ -27,7 +27,7 @@ const AddPostBody: React.FC<Props> = ({ images, onChange }) => {
         {images.map((img, index) => (
           <Avatar
             variant="square"
-            src={img}
+            src={URL.createObjectURL(img)}
             key={index}
             className={classes.image}
           />
@@ -46,7 +46,7 @@ const AddPostBody: React.FC<Props> = ({ images, onChange }) => {
           placeholder="Write a caption..."
         ></textarea>
         <Avatar
-          src={state[0]}
+          src={URL.createObjectURL(state[0])}
           className={classes.smallImage}
           variant="square"
         />

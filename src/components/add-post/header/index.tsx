@@ -7,7 +7,7 @@ import { useStyles } from "./styles";
 import { TO_CREATEDETAILS_PAGE } from "../../../utils/constants/routes";
 
 interface Props {
-  images: string[];
+  images: Blob[];
   onSubmit: () => void;
 }
 
