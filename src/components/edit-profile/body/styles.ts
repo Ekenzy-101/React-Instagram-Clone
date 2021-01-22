@@ -62,6 +62,8 @@ export const useStyles = makeStyles((theme) => ({
       width: "90%",
       margin: "0 auto 0.5rem auto",
       textAlign: "left",
+      display: "flex",
+      alignItems: "center",
     },
   },
 }));
