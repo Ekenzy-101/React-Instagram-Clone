@@ -42,6 +42,7 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexGrow: 1,
     resize: "none",
+    background: "inherit",
     fontFamily: "inherit",
   },
   commentByAvatar: {
@@ -61,6 +62,9 @@ export const useStyles = makeStyles((theme) => ({
   commentByGroup: {
     display: "flex",
     marginBottom: "0.3rem",
+    [theme.breakpoints.between("xs", 735)]: {
+      marginBottom: "0.8rem",
+    },
   },
   commentContainer: {
     display: "flex",
@@ -71,9 +75,26 @@ export const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
     minHeight: "55px",
     maxHeight: "80px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 9px !important",
+    },
   },
   commentContent: {
-    minHeight: "calc(100% - 210px)",
+    maxHeight: "380px",
+    minHeight: "380px",
+    overflow: "auto",
+    [theme.breakpoints.down(825)]: {
+      maxHeight: "360px",
+      minHeight: "360px",
+    },
+    [theme.breakpoints.down(790)]: {
+      maxHeight: "340px",
+      minHeight: "340px",
+    },
+    [theme.breakpoints.down(770)]: {
+      maxHeight: "320px",
+      minHeight: "320px",
+    },
   },
   createdAt: {
     textTransform: "uppercase",
@@ -103,7 +124,7 @@ export const useStyles = makeStyles((theme) => ({
     marginRight: "5px",
   },
   link: {
-    color: "#000",
+    color: "inherit",
     textDecoration: "none",
   },
   media: {
@@ -111,6 +132,12 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       paddingBottom: "105%",
     },
+  },
+  rounded: {
+    borderRadius: "0.7rem",
+    background: "#fff",
+    margin: "10px 0 !important",
+    border: "1px solid rgba(var(--b6a,219,219,219),1)",
   },
   stepper: {
     display: "flex",
@@ -133,6 +160,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   stepperButtonIcon: {
     fontSize: "15px !important",
+  },
+  submitBtn: {
+    textTransform: "capitalize",
+    color: `${theme.palette.primary.main} !important`,
+    fontWeight: 600,
+    padding: "0 !important",
+    width: "fit-content",
+    minWidth: "0",
   },
   username: {
     fontSize: "1rem",

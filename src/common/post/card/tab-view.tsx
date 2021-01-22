@@ -16,16 +16,26 @@ import PostCardCommonStepper from "./common/stepper";
 import PostCardCommonForm from "./common/form";
 interface Props {
   post: Post;
-  onToggleLike: () => void;
+  onTogglePostLike: () => void;
+  onTogglePostSave: () => void;
   onToggleCommentLike: (id: string) => void;
 }
 
 const PostCardTabView: React.FC<Props> = ({
   post,
-  onToggleLike,
+  onTogglePostLike,
+  onTogglePostSave,
   onToggleCommentLike,
 }) => {
-  const { user, image_urls, comments, created_at, caption, likes } = post;
+  const {
+    user,
+    image_urls,
+    comments,
+    created_at,
+    caption,
+    saves,
+    likes,
+  } = post;
   // Global Hooks
   const { user: authUser } = useUserContext()!;
 
@@ -38,6 +48,7 @@ const PostCardTabView: React.FC<Props> = ({
 
   // Other Logic
   const isPostLikedByUser = likes.some((like) => like.id === authUser?.id);
+  const isSavedByUser = saves.some((like) => like.id === authUser?.id);
 
   const isCommentLikedByUser = (comment: PostComment) => {
     return comment.likes.some((like) => like.id === authUser?.id);
@@ -55,7 +66,7 @@ const PostCardTabView: React.FC<Props> = ({
         <CardActions className={classes.cardActions}>
           <div className={classes.groupIcons}>
             <LoveSvg
-              onClick={onToggleLike}
+              onClick={onTogglePostLike}
               active={isPostLikedByUser}
               fill={isPostLikedByUser ? "#ed4956" : undefined}
             />
@@ -63,7 +74,7 @@ const PostCardTabView: React.FC<Props> = ({
             <DirectSvg onClick={() => setOpen1(true)} />
           </div>
           <PostCardCommonStepper mobile image_urls={image_urls} />
-          <SavedSvg onClick={() => setOpen1(true)} />
+          <SavedSvg active={isSavedByUser} onClick={onTogglePostSave} />
         </CardActions>
 
         <CardContent className={classes.cardContent}>
@@ -77,14 +88,16 @@ const PostCardTabView: React.FC<Props> = ({
           {likes.length ? (
             <Typography variant="body1">
               <strong>
-                {likes.length > 1
-                  ? `${likes.length} likes`
-                  : `${likes.length} like`}
+                <Link className={classes.link} to={`/p/${post.id}/liked_by/`}>
+                  {likes.length > 1
+                    ? `${likes.length} likes`
+                    : `${likes.length} like`}
+                </Link>
               </strong>
             </Typography>
           ) : null}
 
-          <div className={classes.commentByGroup}>
+          <div style={{ display: "flex", marginBottom: "0.3rem" }}>
             <strong className={classes.username}>
               <Link className={classes.link} to={`/${user.username}/`}>
                 {user.username}
@@ -97,11 +110,16 @@ const PostCardTabView: React.FC<Props> = ({
           </div>
           {comments.length > 1 ? (
             <Typography style={{ fontSize: "0.9rem" }} color="textSecondary">
-              View all {post.commentsCount} comments
+              <Link className={classes.link} to={`/p/${post.id}/comments/`}>
+                View all {post.commentsCount} comments
+              </Link>
             </Typography>
           ) : null}
-          {comments.map((comment, index) => (
-            <div className={classes.commentByGroup} key={index}>
+          {comments.slice(0, 2).map((comment, index) => (
+            <div
+              style={{ display: "flex", marginBottom: "0.3rem" }}
+              key={index}
+            >
               <strong className={classes.username}>
                 <Link
                   className={classes.link}

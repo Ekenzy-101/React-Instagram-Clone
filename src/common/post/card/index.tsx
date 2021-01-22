@@ -6,13 +6,17 @@ import { useMutation } from "@apollo/client";
 import PostCardTabView from "./tab-view";
 import PostCardDesktopView from "./desktop-view";
 import { Post } from "../../../utils/types/post";
-import { TOGGLE_LIKE } from "../../../utils/mutations/post";
+import {
+  TOGGLE_POST_LIKE,
+  TOGGLE_POST_SAVE,
+} from "../../../utils/mutations/post";
 import { debug } from "../../../utils/services/debugService";
 import { TO_LOGIN_PAGE } from "../../../utils/constants/routes";
 import { useUserContext } from "../../../utils/context/user";
 import {
   updateCommentLikes,
   updatePostLikes,
+  updatePostSaves,
 } from "../../../utils/helpers/like";
 import { TOGGLE_COMMENT_LIKE } from "../../../utils/mutations/comment";
 
@@ -26,18 +30,42 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
   const { user } = useUserContext()!;
 
   // Other Hooks
-  const [toggleLike] = useMutation(TOGGLE_LIKE, { variables: { id: post.id } });
+  const [togglePostLike] = useMutation(TOGGLE_POST_LIKE, {
+    variables: { id: post.id },
+  });
+  const [togglePostSave] = useMutation(TOGGLE_POST_SAVE, {
+    variables: { id: post.id },
+  });
   const [toggleCommentLike] = useMutation(TOGGLE_COMMENT_LIKE);
   const history = useHistory();
   const { pathname } = useLocation();
 
   // Event Handler
-  const handleToggleLike = async () => {
+  const handleTogglePostLike = async () => {
     try {
       debug.log("Svg clicked");
-      await toggleLike({
+      await togglePostLike({
         update(cache) {
           updatePostLikes(cache, user!, post);
+        },
+      });
+    } catch (error) {
+      debug.error(error.message);
+
+      if (error.message.includes("Unauthorized")) {
+        history.push(TO_LOGIN_PAGE, pathname);
+      } else {
+        toast(error?.message);
+      }
+    }
+  };
+
+  const handleTogglePostSave = async () => {
+    try {
+      debug.log("Svg clicked");
+      await togglePostSave({
+        update(cache) {
+          updatePostSaves(cache, user!, post);
         },
       });
     } catch (error) {
@@ -76,7 +104,8 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
     return (
       <PostCardTabView
         post={post}
-        onToggleLike={handleToggleLike}
+        onTogglePostLike={handleTogglePostLike}
+        onTogglePostSave={handleTogglePostSave}
         onToggleCommentLike={handleToggleCommentLike}
       />
     );
@@ -84,7 +113,8 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
   return (
     <PostCardDesktopView
       post={post}
-      onToggleLike={handleToggleLike}
+      onTogglePostLike={handleTogglePostLike}
+      onTogglePostSave={handleTogglePostSave}
       onToggleCommentLike={handleToggleCommentLike}
     />
   );

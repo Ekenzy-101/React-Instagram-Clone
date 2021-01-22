@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -8,12 +7,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useLongPress } from "react-use";
 import { useMutation } from "@apollo/client";
 import toast from "react-hot-toast";
 
-import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import SavedSvg from "../../svgs/SavedSvg";
 import CommentSvg from "../../svgs/CommentSvg";
 import DirectSvg from "../../svgs/DirectSvg";
@@ -28,23 +24,23 @@ import { useUserContext } from "../../../utils/context/user";
 import NotSupportedModal from "../../not-supported-modal";
 import PostCommentModal from "../modal/comment";
 import PostCardCommonForm from "./common/form";
-import {
-  deletePostComment,
-  parseCommentDate,
-} from "../../../utils/helpers/comment";
+import PostCardCommonComments from "./common/comments";
+import { deletePostComment } from "../../../utils/helpers/comment";
 import { debug } from "../../../utils/services/debugService";
 interface Props {
   post: Post;
-  onToggleLike: () => void;
+  onTogglePostLike: () => void;
+  onTogglePostSave: () => void;
   onToggleCommentLike: (id: string) => void;
 }
 
 const PostCardDesktopView: React.FC<Props> = ({
   post,
-  onToggleLike,
+  onTogglePostLike,
+  onTogglePostSave,
   onToggleCommentLike,
 }) => {
-  const { user, image_urls, created_at, comments, caption, likes } = post;
+  const { image_urls, created_at, likes, saves } = post;
 
   // Global Hooks
   const { user: authUser } = useUserContext()!;
@@ -60,18 +56,6 @@ const PostCardDesktopView: React.FC<Props> = ({
   // Other Hooks
   const classes = useStyles();
   const [deleteComment] = useMutation(DELETE_COMMENT);
-  const longPressEvent = useLongPress(
-    (e) => {
-      const target = e.target as EventTarget & { id: string };
-      const comment = comments.find((c) => c.id === target.id);
-      setActiveComment(comment);
-      setOpen2(true);
-    },
-    {
-      isPreventDefault: true,
-      delay: 2000,
-    }
-  );
 
   // Event Handlers
   const handleDelete = async () => {
@@ -92,10 +76,7 @@ const PostCardDesktopView: React.FC<Props> = ({
 
   // Other Logic
   const isLikedByUser = likes.some((like) => like.id === authUser?.id);
-
-  const isCommentLikedByUser = (comment: PostComment) => {
-    return comment.likes.some((like) => like.id === authUser?.id);
-  };
+  const isSavedByUser = saves.some((like) => like.id === authUser?.id);
 
   // JSX
   return (
@@ -119,85 +100,12 @@ const PostCardDesktopView: React.FC<Props> = ({
             <Divider />
 
             <CardContent className={classes.commentContent}>
-              <div className={classes.commentByGroup}>
-                <Avatar
-                  src={user.image_url ? user.image_url : PROFILE_PIC_URL}
-                  className={classes.commentByAvatar}
-                />
-                <div className={classes.commentByBody}>
-                  <Typography
-                    style={{ marginBottom: "0.5rem" }}
-                    variant="caption"
-                  >
-                    <strong style={{ marginRight: "0.5rem" }}>
-                      <Link className={classes.link} to={`/${user.username}/`}>
-                        {user.username}
-                      </Link>
-                    </strong>
-                    {caption}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    {parseCommentDate(created_at)}
-                  </Typography>
-                </div>
-              </div>
-              {comments.map((comment, index) => (
-                <div key={index}>
-                  <div className={classes.commentByGroup}>
-                    <Avatar
-                      src={
-                        comment.user.image_url
-                          ? comment.user.image_url
-                          : PROFILE_PIC_URL
-                      }
-                      className={classes.commentByAvatar}
-                    />
-                    <div
-                      {...longPressEvent}
-                      id={comment.id}
-                      className={classes.commentByBody}
-                    >
-                      <Typography
-                        style={{ marginBottom: "0.5rem" }}
-                        variant="caption"
-                        id={comment.id}
-                      >
-                        <strong
-                          id={comment.id}
-                          style={{ marginRight: "0.5rem" }}
-                        >
-                          <Link
-                            className={classes.link}
-                            to={`/${comment.user.username}/`}
-                          >
-                            {comment.user.username}
-                          </Link>
-                        </strong>
-                        {comment.content}
-                      </Typography>
-                      <Typography
-                        id={comment.id}
-                        variant="caption"
-                        color="textSecondary"
-                      >
-                        {parseCommentDate(comment.created_at)}{" "}
-                        <strong>Reply</strong>
-                      </Typography>
-                    </div>
-                    <div>
-                      <LoveSvg
-                        active={isCommentLikedByUser(comment)}
-                        fill={
-                          isCommentLikedByUser(comment) ? "#ed4956" : undefined
-                        }
-                        width={12}
-                        height={12}
-                        onClick={() => onToggleCommentLike(comment.id)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <PostCardCommonComments
+                setActiveComment={setActiveComment}
+                post={post}
+                setOpen={setOpen2}
+                onToggleCommentLike={onToggleCommentLike}
+              />
             </CardContent>
 
             <Divider />
@@ -205,14 +113,14 @@ const PostCardDesktopView: React.FC<Props> = ({
             <CardActions className={classes.cardActions}>
               <div className={classes.groupIcons}>
                 <LoveSvg
-                  onClick={onToggleLike}
+                  onClick={onTogglePostLike}
                   active={isLikedByUser}
                   fill={isLikedByUser ? "#ed4956" : undefined}
                 />
                 <CommentSvg />
                 <DirectSvg onClick={() => setOpen1(true)} />
               </div>
-              <SavedSvg onClick={() => setOpen1(true)} />
+              <SavedSvg active={isSavedByUser} onClick={onTogglePostSave} />
             </CardActions>
 
             <CardContent className={classes.cardContent}>
@@ -222,7 +130,7 @@ const PostCardDesktopView: React.FC<Props> = ({
                   className={classes.likedByAvatar}
                 />
                 <Typography variant="body1">
-                  <strong>46 others</strong>
+                <strong>46 others</strong>
                 </Typography>
               </div> */}
               {likes.length ? (
