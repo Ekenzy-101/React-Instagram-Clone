@@ -1,35 +1,33 @@
-import { Divider, Grid } from "@material-ui/core";
+import { Divider, Grid, Hidden } from "@material-ui/core";
 import { CropDinOutlined } from "@material-ui/icons";
 import React from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+
 import GridSvg from "../../../common/svgs/GridSvg";
 import SavedSvg from "../../../common/svgs/SavedSvg";
 import TaggedSvg from "../../../common/svgs/TaggedSvg";
 import { UserProfile } from "../../../utils/types/user";
-import ProfileBodyPosts from "./posts";
-import ProfileBodySaved from "./saved";
-import ProfileBodyTagged from "./tagged";
+import { useUserContext } from "../../../utils/context/user";
 import { useStyles } from "./style";
-import {
-  TO_PROFILESAVED_PAGE,
-  TO_PROFILETAGGED_PAGE,
-  TO_PROFILE_PAGE,
-} from "../../../utils/constants/routes";
-
 interface Props {
   user: UserProfile;
 }
 
 const ProfileBodyMobileView: React.FC<Props> = ({ user }) => {
+  // Global State Hooks
+  const { user: authUser } = useUserContext()!;
+
   // Other Hooks
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
 
+  // Event Handler
   const handleClick = (path: string) => {
     history.push(path);
   };
 
+  // Other Logic
   const getFillColor = (path: string) => {
     if (location.pathname === path) return "#0095f6";
 
@@ -39,9 +37,11 @@ const ProfileBodyMobileView: React.FC<Props> = ({ user }) => {
   const TAGGED_URL = `/${user.username}/tagged/`;
   const SAVED_URL = `/${user.username}/saved/`;
   const ROOT_URL = `/${user.username}/`;
+
+  const isAuthUser = authUser?.id === user?.id;
   // JSX
   return (
-    <>
+    <Hidden smUp>
       <Divider />
       <Grid
         container
@@ -60,26 +60,17 @@ const ProfileBodyMobileView: React.FC<Props> = ({ user }) => {
         <Grid item>
           <CropDinOutlined className={classes.feedIcon} />
         </Grid>
-        <Grid onClick={() => handleClick(SAVED_URL)} item>
-          <SavedSvg fill={getFillColor(SAVED_URL)} />
-        </Grid>
+        {isAuthUser ? (
+          <Grid onClick={() => handleClick(SAVED_URL)} item>
+            <SavedSvg fill={getFillColor(SAVED_URL)} />
+          </Grid>
+        ) : null}
         <Grid onClick={() => handleClick(TAGGED_URL)} item>
           <TaggedSvg fill={getFillColor(TAGGED_URL)} />
         </Grid>
       </Grid>
       <Divider />
-      <Switch>
-        <Route exact path={TO_PROFILE_PAGE}>
-          <ProfileBodyPosts posts={user.posts!} />
-        </Route>
-        <Route exact path={TO_PROFILESAVED_PAGE}>
-          <ProfileBodySaved />
-        </Route>
-        <Route exact path={TO_PROFILETAGGED_PAGE}>
-          <ProfileBodyTagged />
-        </Route>
-      </Switch>
-    </>
+    </Hidden>
   );
 };
 

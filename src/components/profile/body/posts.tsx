@@ -1,19 +1,27 @@
 import React from "react";
+import { Link, useParams } from "react-router-dom";
+import { Avatar, Grid, Typography } from "@material-ui/core";
+
 import { Post } from "../../../utils/types/post";
-import { Grid, Typography } from "@material-ui/core";
-import ProfileBodyCard from "./card";
-import { useStyles } from "./style";
-import { Link } from "react-router-dom";
 import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
-import { POST_PIC_URL } from "../../../utils/constants/url";
-
+import { CAMERA_LOGO_URL, POST_PIC_URL } from "../../../utils/constants/url";
+import { useUserContext } from "../../../utils/context/user";
+import ProfileBodyCard from "./card";
+import { useStyles } from "./style";
 interface Props {
   posts: Post[];
 }
 
 const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
+  // Global Hooks
+  const { user } = useUserContext()!;
+
+  // Other Hooks
   const classes = useStyles();
+  const { username } = useParams() as { username: string };
+
+  // JSX
   if (posts.length)
     return (
       <div className="explore-grid-container" style={{ padding: 0 }}>
@@ -30,7 +38,7 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
                   variant="body1"
                   style={{ color: "#fff", marginLeft: "0.5rem" }}
                 >
-                  {post?.likes?.length}
+                  {post?.saves?.length}
                 </Typography>
               </div>
               <div>
@@ -39,7 +47,7 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
                   variant="body1"
                   style={{ color: "#fff", marginLeft: "0.5rem" }}
                 >
-                  {post?.comments?.length}
+                  {post?.commentsCount}
                 </Typography>
               </div>
             </div>
@@ -50,18 +58,32 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
       </div>
     );
 
+  if (user && user.username === username)
+    return (
+      <div style={{ marginTop: "-8px", height: "100%" }}>
+        <Typography
+          style={{ margin: "0.8rem 0.5rem 0.5rem 0.8rem", fontWeight: "bold" }}
+        >
+          Getting Started
+        </Typography>
+        <Grid container className={classes.flexContainer} spacing={1}>
+          <ProfileBodyCard />
+          <ProfileBodyCard />
+          <ProfileBodyCard />
+        </Grid>
+      </div>
+    );
+
   return (
-    <div style={{ marginTop: "-8px", height: "100%" }}>
-      <Typography
-        style={{ margin: "0.8rem 0.5rem 0.5rem 0.8rem", fontWeight: "bold" }}
-      >
-        Getting Started
-      </Typography>
-      <Grid container className={classes.flexContainer} spacing={1}>
-        <ProfileBodyCard />
-        <ProfileBodyCard />
-        <ProfileBodyCard />
-      </Grid>
+    <div className={classes.bodyRoot}>
+      <div className={classes.bodyWrapper}>
+        <div className={classes.svgWrapper}>
+          <Avatar src={CAMERA_LOGO_URL} className={classes.cameraLogo} />
+        </div>
+        <Typography variant="h6" className={classes.bodyTitle}>
+          No Posts Yet
+        </Typography>
+      </div>
     </div>
   );
 };

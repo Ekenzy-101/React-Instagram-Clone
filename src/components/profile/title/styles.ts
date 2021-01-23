@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core";
-import { red } from "@material-ui/core/colors";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +21,9 @@ export const useStyles = makeStyles((theme) => ({
       width: "150px",
       height: "150px",
     },
+  },
+  checkIcon: {
+    fontSize: "0.8rem",
   },
   editBtn: {
     textTransform: "none",
@@ -46,16 +48,41 @@ export const useStyles = makeStyles((theme) => ({
     color: "#8e8e8e",
   },
   followBtn: {
-    textTransform: "capitalize",
+    textTransform: "none",
+    boxShadow: "none",
+    width: "7rem",
+    color: "#fff",
+    background: `${theme.palette.primary.main} !important`,
+  },
+  followingBtn: {
+    textTransform: "none",
+    boxShadow: "none",
+    color: "#000",
+    border: "1px solid rgba(var(--b6a,219,219,219),1)",
+    background: "#fff !important",
   },
   gridItem: {
     display: "flex",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  danBtn: {
-    color: red[600],
-    fontWeight: 600,
+  optionBtn: {
+    textTransform: "none",
+    boxShadow: "none",
+    color: "#000",
+    border: "1px solid rgba(var(--b6a,219,219,219),1)",
+    background: "#fff !important",
+    minWidth: "55px",
+    height: "38px",
+    marginLeft: "1rem",
+    padding: "6px 0",
+  },
+  // danBtn: {
+  //   color: red[600],
+  //   fontWeight: 600,
+  // },
+  peopleIcon: {
+    fontSize: "1rem",
   },
   username: {
     marginBottom: "0.4rem",

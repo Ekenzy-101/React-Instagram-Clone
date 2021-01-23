@@ -1,5 +1,5 @@
-import React from "react";
-import { Avatar, Button, Grid, Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import { Avatar, Button, Grid, Hidden, Typography } from "@material-ui/core";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { useStyles } from "./styles";
 import { UserProfile } from "../../../utils/types/user";
@@ -7,20 +7,49 @@ import { useUserContext } from "../../../utils/context/user";
 import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
 import { Link } from "react-router-dom";
+import { Person, Check } from "@material-ui/icons";
+import LoadingSpinner from "../../../common/loading/spinner";
+import ProfileTitleUnfollowModal from "./modal/unfollow";
+import NotSupportedModal from "../../../common/not-supported-modal";
 interface Props {
   user: UserProfile;
+  submitted: boolean;
+  onToggleFollow: () => void;
 }
 
-const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
+const ProfileTitleDesktopView: React.FC<Props> = ({
+  user,
+  onToggleFollow,
+  submitted,
+}) => {
   // Global State Hooks
   const { user: authUser } = useUserContext()!;
+
+  // State Hooks
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
 
   // Other Hooks
   const classes = useStyles();
 
+  // Other Logic
+  const isFollowingUser = user.followers?.some(
+    (follower) => follower?.id === authUser?.id
+  );
+  const isFollowedByUser = user.following?.some(
+    (follower) => follower?.id === authUser?.id
+  );
+
   // JSX
   return (
-    <>
+    <Hidden xsDown>
+      <ProfileTitleUnfollowModal
+        open={open}
+        onClose={() => setOpen(false)}
+        user={user}
+        onToggleFollow={onToggleFollow}
+      />
+      <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
       <Grid
         container
         className={classes.root}
@@ -29,9 +58,9 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
       >
         <Grid xs={3} item>
           <Avatar
-            src={PROFILE_PIC_URL}
+            src={user.image_url ? user.image_url : PROFILE_PIC_URL}
             className={classes.avatar}
-            alt="image"
+            alt={user.username}
           />
         </Grid>
 
@@ -51,14 +80,26 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
                   </Link>
                   <SettingsSvg width={24} height={24} />
                 </>
+              ) : isFollowingUser ? (
+                <>
+                  <Button
+                    onClick={() => setOpen1(true)}
+                    className={classes.followingBtn}
+                  >
+                    Message
+                  </Button>
+                  <Button
+                    onClick={() => setOpen(true)}
+                    className={classes.optionBtn}
+                  >
+                    <Person className={classes.peopleIcon} />
+                    <Check className={classes.checkIcon} />
+                  </Button>
+                </>
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.followBtn}
-                  disableElevation
-                >
-                  Follow Back
+                <Button className={classes.followBtn} onClick={onToggleFollow}>
+                  {submitted ? "" : isFollowedByUser ? "Follow Back" : "Follow"}
+                  {submitted ? <LoadingSpinner width={24} height={24} /> : null}
                 </Button>
               )}
             </Grid>
@@ -93,7 +134,17 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
               <strong>{user.name}</strong>
             </Typography>
             <Typography variant="body1">{user.bio}</Typography>
-            <Typography component="a" variant="body1">
+            <Typography
+              component="a"
+              style={{
+                color: "#00376b",
+                fontWeight: 600,
+                textDecoration: "none",
+              }}
+              href={user.website}
+              referrerPolicy="no-referrer"
+              rel="no-opener"
+            >
               {user.website}
             </Typography>
           </Grid>
@@ -106,7 +157,7 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Hidden>
   );
 };
 

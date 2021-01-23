@@ -36,11 +36,11 @@ const ProfileTitleUnfollowModal: React.FC<Props> = ({
     >
       <DialogContent className={classes.dialogBtn} dividers>
         <Avatar
-          src={user.image_url ? user.image_url : PROFILE_PIC_URL}
+          src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
           className={classes.avatar}
         />
         <Typography variant="body1" style={{ marginBottom: "1rem" }}>
-          Unfollow @{user.username}?
+          Unfollow @{user?.username}?
         </Typography>
       </DialogContent>
       <DialogContent

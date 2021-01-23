@@ -38,7 +38,6 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: "14px",
   },
   card: {
-    // margin: "auto",
     width: "250px",
     height: "238px",
     padding: "0 10px",
@@ -46,6 +45,10 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
+  },
+  cameraLogo: {
+    width: "40px",
+    height: "40px",
   },
   feedIcon: {
     fontSize: "1.5rem",
@@ -57,7 +60,6 @@ export const useStyles = makeStyles((theme) => ({
     flexWrap: "nowrap",
     overflowX: "auto",
   },
-
   gridItem: {
     display: "flex",
     justifyContent: "space-around",

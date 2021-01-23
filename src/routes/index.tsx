@@ -74,10 +74,10 @@ const Routes = () => {
         exact
         component={PasswordResetPage}
       />
-
-      <Route path={TO_PROFILE_PAGE} exact component={ProfilePage} />
-      <Route component={NotFoundPage} />
+      <Route path={TO_PROFILE_PAGE} component={ProfilePage} />
       <HomeRoute />
+
+      <Route component={NotFoundPage} />
     </Switch>
   );
 };
