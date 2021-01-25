@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../../../common/loading/spinner";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
-import { PROFILE_PIC_URL } from "../../../utils/constants/url";
+import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { useUserContext } from "../../../utils/context/user";
 import { UserProfile } from "../../../utils/types/user";
 import { useStyles } from "./styles";
@@ -20,15 +20,22 @@ import NotSupportedModal from "../../../common/not-supported-modal";
 
 interface Props {
   user: UserProfile;
+  profile: UserProfile;
   submitted: boolean;
-  onToggleFollow: () => void;
+  isUploading: boolean;
+  onToggleFollow: (userId: string) => void;
+  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ProfileTitleMobileView: React.FC<Props> = ({
-  user,
-  onToggleFollow,
-  submitted,
-}) => {
+const ProfileTitleMobileView: React.FC<Props> = (props) => {
+  const {
+    user,
+    profile,
+    submitted,
+    isUploading,
+    onUpload,
+    onToggleFollow,
+  } = props;
   // Global State Hooks
   const { user: authUser } = useUserContext()!;
 
@@ -40,12 +47,15 @@ const ProfileTitleMobileView: React.FC<Props> = ({
   const classes = useStyles();
 
   // Other Logic
-  const isFollowingUser = user.followers?.some(
-    (follower) => follower?.id === authUser?.id
-  );
-  const isFollowedByUser = user.following?.some(
-    (follower) => follower?.id === authUser?.id
-  );
+  const isFollowingUser = (id: string) => {
+    return profile?.followers?.some((f) => f.id === id);
+  };
+
+  const isFollowedByUser = (id: string) => {
+    return profile?.following?.some((f) => f.id === id);
+  };
+
+  const isAuthUser = authUser?.id === user.id;
 
   // JSX
   return (
@@ -59,11 +69,34 @@ const ProfileTitleMobileView: React.FC<Props> = ({
       />
       <Grid container className={classes.root} alignItems="center" spacing={3}>
         <Grid xs={3} item>
-          <Avatar
-            src={PROFILE_PIC_URL}
-            className={classes.avatar}
-            alt="image"
-          />
+          {isAuthUser ? (
+            <div className="file-input-wrapper">
+              <input
+                type="file"
+                id="file-input"
+                accept="image/png,image/jpeg"
+                style={{ width: 75, height: 75 }}
+                onChange={onUpload}
+              />
+              <Avatar
+                src={
+                  isUploading
+                    ? LOADING_GIF_URL
+                    : user.image_url
+                    ? PROFILE_PIC_URL
+                    : PROFILE_PIC_URL
+                }
+                className={classes.avatar}
+                alt="image"
+              />
+            </div>
+          ) : (
+            <Avatar
+              src={PROFILE_PIC_URL}
+              className={classes.avatar}
+              alt="image"
+            />
+          )}
         </Grid>
         <Grid xs={8} item style={{ marginLeft: "0.5rem" }}>
           <Typography className={classes.username} variant="h5">
@@ -73,7 +106,7 @@ const ProfileTitleMobileView: React.FC<Props> = ({
             <Link to={TO_EDITPROFILE_PAGE} className={classes.editBtn}>
               Edit Profile
             </Link>
-          ) : isFollowingUser ? (
+          ) : isFollowedByUser(user?.id!) ? (
             <>
               <Button
                 onClick={() => setOpen1(true)}
@@ -90,14 +123,22 @@ const ProfileTitleMobileView: React.FC<Props> = ({
               </Button>
             </>
           ) : (
-            <Button className={classes.followBtn} onClick={onToggleFollow}>
-              {submitted ? "" : isFollowedByUser ? "Follow Back" : "Follow"}
-              {submitted ? <LoadingSpinner width={24} height={24} /> : null}
+            <Button
+              className={classes.followBtn}
+              onClick={() => onToggleFollow(user?.id!)}
+            >
+              {submitted ? (
+                <LoadingSpinner width={24} height={24} />
+              ) : isFollowingUser(user?.id!) ? (
+                "Follow Back"
+              ) : (
+                "Follow"
+              )}
             </Button>
           )}
         </Grid>
         <Grid xs={12} item>
-          <Typography variant="body1">
+          <Typography style={{ width: "95%" }} variant="body1">
             <strong>{user.name}</strong>
           </Typography>
           <Typography
@@ -106,6 +147,7 @@ const ProfileTitleMobileView: React.FC<Props> = ({
               color: "#00376b",
               fontWeight: 600,
               textDecoration: "none",
+              width: "95%",
             }}
             href={user.website}
             referrerPolicy="no-referrer"
@@ -113,7 +155,9 @@ const ProfileTitleMobileView: React.FC<Props> = ({
           >
             {user.website}
           </Typography>
-          <Typography variant="body1">{user.bio}</Typography>
+          <Typography style={{ width: "95%" }} variant="body1">
+            {user.bio}
+          </Typography>
         </Grid>
         <Grid xs={12} item>
           <Typography color="textSecondary" variant="body1">
@@ -131,22 +175,26 @@ const ProfileTitleMobileView: React.FC<Props> = ({
         spacing={3}
       >
         <Grid item>
-          <Typography>
+          <Typography style={{ width: "100%", textAlign: "center" }}>
             <strong>{user.posts?.length}</strong>
           </Typography>
           <Typography color="textSecondary">posts</Typography>
         </Grid>
         <Grid item>
-          <Typography>
-            <strong>{user.followersCount}</strong>
-          </Typography>
-          <Typography color="textSecondary">followers</Typography>
+          <Link className={classes.link} to={`/${user.username}/followers/`}>
+            <Typography style={{ width: "100%", textAlign: "center" }}>
+              <strong>{user.followersCount}</strong>
+            </Typography>
+            <Typography color="textSecondary">followers</Typography>
+          </Link>
         </Grid>
         <Grid item>
-          <Typography>
-            <strong>{user.followingCount}</strong>
-          </Typography>
-          <Typography color="textSecondary">following</Typography>
+          <Link className={classes.link} to={`/${user.username}/following/`}>
+            <Typography style={{ width: "100%", textAlign: "center" }}>
+              <strong>{user.followingCount}</strong>
+            </Typography>
+            <Typography color="textSecondary">following</Typography>
+          </Link>
         </Grid>
       </Grid>
     </Hidden>

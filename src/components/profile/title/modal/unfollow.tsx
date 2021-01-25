@@ -8,7 +8,7 @@ import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
 interface Props {
   open: boolean;
   onClose: () => void;
-  onToggleFollow: () => void;
+  onToggleFollow: (userId: string) => void;
   user: UserProfile;
 }
 const ProfileTitleUnfollowModal: React.FC<Props> = ({
@@ -22,7 +22,7 @@ const ProfileTitleUnfollowModal: React.FC<Props> = ({
 
   // Event Handlers
   const handleClick = async () => {
-    await onToggleFollow();
+    await onToggleFollow(user?.id!);
     onClose();
   };
 

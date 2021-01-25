@@ -1,10 +1,64 @@
 import React from "react";
-import { useStyles } from "./style";
-import SavedSvg from "../../../common/svgs/SavedSvg";
 import { Typography } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
-const ProfileBodySaved: React.FC = () => {
+import { useStyles } from "./style";
+import CommentSvg from "../../../common/svgs/CommentSvg";
+import SavedSvg from "../../../common/svgs/SavedSvg";
+import LoveSvg from "../../../common/svgs/LoveSvg";
+import { Post } from "../../../utils/types/post";
+import { POST_PIC_URL } from "../../../utils/constants/url";
+interface Props {
+  savedPosts: Post[];
+}
+
+const ProfileBodySaved: React.FC<Props> = (props) => {
+  const { savedPosts } = props;
+
+  // Other Hooks
   const classes = useStyles();
+
+  // JSX
+  if (savedPosts.length)
+    return (
+      <>
+        <Typography className={classes.savedText} color="textSecondary">
+          Only you can see what you've saved
+        </Typography>
+        <div className="explore-grid-container" style={{ padding: 0 }}>
+          {savedPosts.map((post) => (
+            <Link
+              to={`/p/${post.id}/`}
+              key={post.id}
+              className="explore-grid-item single-grid-square"
+            >
+              <div className="after">
+                <div>
+                  <LoveSvg fill="#fff" active width={22} height={22} />
+                  <Typography
+                    variant="body1"
+                    style={{ color: "#fff", marginLeft: "0.5rem" }}
+                  >
+                    {post?.likes?.length}
+                  </Typography>
+                </div>
+                <div>
+                  <CommentSvg fill="#fff" width={22} height={22} />
+                  <Typography
+                    variant="body1"
+                    style={{ color: "#fff", marginLeft: "0.5rem" }}
+                  >
+                    {post?.commentsCount}
+                  </Typography>
+                </div>
+              </div>
+
+              <img src={POST_PIC_URL} alt="Post" />
+            </Link>
+          ))}
+        </div>
+      </>
+    );
 
   return (
     <div className={classes.bodyRoot}>

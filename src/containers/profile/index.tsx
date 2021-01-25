@@ -7,7 +7,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_USER } from "../../utils/queries/user";
+import { GET_RELATED_USERS, GET_USER } from "../../utils/queries/user";
 import LoadingPage from "../../common/loading/page";
 import { debug } from "../../utils/services/debugService";
 import { UserProfile } from "../../utils/types/user";
@@ -20,7 +20,7 @@ import {
   TO_PROFILE_PAGE,
 } from "../../utils/constants/routes";
 import { useUserContext } from "../../utils/context/user";
-import { updateUserFollowers } from "../../utils/helpers/user";
+import { updateAuthUserFollowers } from "../../utils/helpers/user";
 import ProfileSavedPage from "./saved";
 import ProfileTaggedPage from "./tagged";
 import ProfilePostsPage from "./posts";
@@ -37,7 +37,9 @@ const ProfilePage: React.FC = () => {
   const { data, loading, refetch } = useQuery(GET_USER, {
     variables: { username },
   });
-  const [toggleFollow, { loading: loading1 }] = useMutation(TOGGLE_FOLLOW);
+  const { data: data1, loading: loading1 } = useQuery(GET_RELATED_USERS);
+
+  const [toggleFollow, { loading: submitted }] = useMutation(TOGGLE_FOLLOW);
 
   // Effect Hooks
   usePageTitle(`@${username} - Instagram photos and videos`);
@@ -48,14 +50,17 @@ const ProfilePage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const user = data?.user as UserProfile;
+  const profile = data1?.profile as UserProfile;
+  const isAuthUser = authUser?.id === user?.id;
+
   // Event Handler
-  const handleToggleFollow = async () => {
-    const { id } = data?.user as UserProfile;
+  const handleToggleFollow = async (userId: string) => {
     try {
       await toggleFollow({
-        variables: { id },
+        variables: { id: userId },
         update(cache) {
-          updateUserFollowers(cache, data as { user: UserProfile }, authUser!);
+          updateAuthUserFollowers(cache, profile, userId);
         },
       });
     } catch (error) {
@@ -69,44 +74,47 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  debug.log(data);
+  debug.table(data);
+  debug.table(data1);
 
-  const user = data?.user as UserProfile;
-  const isAuthUser = authUser?.id === user?.id;
   // JSX
-  if (loading) return <LoadingPage />;
-
+  if (loading || loading1) return <LoadingPage />;
   if (!user) return <NotFoundPage />;
 
   return (
-    <Switch>
-      <Route path={TO_PROFILESAVED_PAGE} exact>
-        {isAuthUser ? (
-          <ProfileSavedPage
+    <>
+      <Switch>
+        <Route path={TO_PROFILESAVED_PAGE} exact>
+          {isAuthUser ? (
+            <ProfileSavedPage
+              onToggleFollow={handleToggleFollow}
+              user={user}
+              profile={profile}
+              submitted={submitted}
+            />
+          ) : (
+            <NotFoundPage />
+          )}
+        </Route>
+        <Route path={TO_PROFILETAGGED_PAGE} exact>
+          <ProfileTaggedPage
             onToggleFollow={handleToggleFollow}
             user={user}
-            submitted={loading1}
+            submitted={submitted}
+            profile={profile}
           />
-        ) : (
-          <NotFoundPage />
-        )}
-      </Route>
-      <Route path={TO_PROFILETAGGED_PAGE} exact>
-        <ProfileTaggedPage
-          onToggleFollow={handleToggleFollow}
-          user={user}
-          submitted={loading1}
-        />
-      </Route>
-      <Route path={TO_PROFILE_PAGE} exact>
-        <ProfilePostsPage
-          onToggleFollow={handleToggleFollow}
-          user={user}
-          submitted={loading1}
-        />
-      </Route>
-      <Route component={NotFoundPage} />
-    </Switch>
+        </Route>
+        <Route path={TO_PROFILE_PAGE} exact>
+          <ProfilePostsPage
+            onToggleFollow={handleToggleFollow}
+            user={user}
+            profile={profile}
+            submitted={submitted}
+          />
+        </Route>
+        <Route component={NotFoundPage} />
+      </Switch>
+    </>
   );
 };
 

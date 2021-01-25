@@ -1,55 +1,88 @@
 import React, { useState } from "react";
+import { Person, Check } from "@material-ui/icons";
+import { Link } from "react-router-dom";
 import { Avatar, Button, Grid, Hidden, Typography } from "@material-ui/core";
-import { PROFILE_PIC_URL } from "../../../utils/constants/url";
+
 import { useStyles } from "./styles";
+import ProfileTitleUnfollowModal from "./modal/unfollow";
+import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { UserProfile } from "../../../utils/types/user";
 import { useUserContext } from "../../../utils/context/user";
-import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
-import { Link } from "react-router-dom";
-import { Person, Check } from "@material-ui/icons";
+import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import LoadingSpinner from "../../../common/loading/spinner";
-import ProfileTitleUnfollowModal from "./modal/unfollow";
 import NotSupportedModal from "../../../common/not-supported-modal";
+import { modalState } from "../../../utils/types/modal";
+import UsersModal from "../../../common/users-modal";
 interface Props {
+  profile: UserProfile;
   user: UserProfile;
   submitted: boolean;
-  onToggleFollow: () => void;
+  isUploading: boolean;
+  onToggleFollow: (userId: string) => void;
+  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ProfileTitleDesktopView: React.FC<Props> = ({
-  user,
-  onToggleFollow,
-  submitted,
-}) => {
+const ProfileTitleDesktopView: React.FC<Props> = (props) => {
+  const {
+    profile,
+    user,
+    onToggleFollow,
+    submitted,
+    onUpload,
+    isUploading,
+  } = props;
   // Global State Hooks
   const { user: authUser } = useUserContext()!;
 
   // State Hooks
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
 
   // Other Logic
-  const isFollowingUser = user.followers?.some(
-    (follower) => follower?.id === authUser?.id
-  );
-  const isFollowedByUser = user.following?.some(
-    (follower) => follower?.id === authUser?.id
-  );
+  const isFollowingUser = (id: string) => {
+    return profile?.followers?.some((f) => f.id === id);
+  };
+
+  const isFollowedByUser = (id: string) => {
+    return profile?.following?.some((f) => f.id === id);
+  };
+
+  const isAuthUser = authUser?.id === user.id;
 
   // JSX
   return (
     <Hidden xsDown>
+      <UsersModal
+        title="Followers"
+        submitted={submitted}
+        open={show === "followers"}
+        onClose={() => setShow("none")}
+        users={user.followers!}
+        profile={profile}
+        onToggleFollow={onToggleFollow}
+      />
+      <UsersModal
+        title="Following"
+        submitted={submitted}
+        open={show === "following"}
+        onClose={() => setShow("none")}
+        users={user.following!}
+        profile={profile}
+        onToggleFollow={onToggleFollow}
+      />
       <ProfileTitleUnfollowModal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={show === "unfollow"}
+        onClose={() => setShow("none")}
         user={user}
         onToggleFollow={onToggleFollow}
       />
-      <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
+      <NotSupportedModal
+        open={show === "not-supported"}
+        onClose={() => setShow("none")}
+      />
       <Grid
         container
         className={classes.root}
@@ -57,11 +90,34 @@ const ProfileTitleDesktopView: React.FC<Props> = ({
         spacing={3}
       >
         <Grid xs={3} item>
-          <Avatar
-            src={user.image_url ? user.image_url : PROFILE_PIC_URL}
-            className={classes.avatar}
-            alt={user.username}
-          />
+          {isAuthUser ? (
+            <div className="file-input-wrapper">
+              <input
+                type="file"
+                id="file-input"
+                accept="image/png,image/jpeg"
+                style={{ width: 150, height: 150 }}
+                onChange={onUpload}
+              />
+              <Avatar
+                src={
+                  isUploading
+                    ? LOADING_GIF_URL
+                    : user.image_url
+                    ? PROFILE_PIC_URL
+                    : PROFILE_PIC_URL
+                }
+                className={classes.avatar}
+                alt="image"
+              />
+            </div>
+          ) : (
+            <Avatar
+              src={PROFILE_PIC_URL}
+              className={classes.avatar}
+              alt="image"
+            />
+          )}
         </Grid>
 
         <Grid xs={7} item style={{ marginLeft: "0.5rem" }}>
@@ -80,16 +136,16 @@ const ProfileTitleDesktopView: React.FC<Props> = ({
                   </Link>
                   <SettingsSvg width={24} height={24} />
                 </>
-              ) : isFollowingUser ? (
+              ) : isFollowedByUser(user?.id!) ? (
                 <>
                   <Button
-                    onClick={() => setOpen1(true)}
+                    onClick={() => setShow("not-supported")}
                     className={classes.followingBtn}
                   >
                     Message
                   </Button>
                   <Button
-                    onClick={() => setOpen(true)}
+                    onClick={() => setShow("unfollow")}
                     className={classes.optionBtn}
                   >
                     <Person className={classes.peopleIcon} />
@@ -97,9 +153,17 @@ const ProfileTitleDesktopView: React.FC<Props> = ({
                   </Button>
                 </>
               ) : (
-                <Button className={classes.followBtn} onClick={onToggleFollow}>
-                  {submitted ? "" : isFollowedByUser ? "Follow Back" : "Follow"}
-                  {submitted ? <LoadingSpinner width={24} height={24} /> : null}
+                <Button
+                  className={classes.followBtn}
+                  onClick={() => onToggleFollow(user?.id!)}
+                >
+                  {submitted ? (
+                    <LoadingSpinner width={24} height={24} />
+                  ) : isFollowingUser(user?.id!) ? (
+                    "Follow Back"
+                  ) : (
+                    "Follow"
+                  )}
                 </Button>
               )}
             </Grid>
@@ -118,12 +182,18 @@ const ProfileTitleDesktopView: React.FC<Props> = ({
               </Typography>
             </Grid>
             <Grid item>
-              <Typography>
+              <Typography
+                onClick={() => setShow("followers")}
+                className={classes.link}
+              >
                 <strong>{user.followersCount}</strong> followers
               </Typography>
             </Grid>
             <Grid item>
-              <Typography>
+              <Typography
+                onClick={() => setShow("following")}
+                className={classes.link}
+              >
                 <strong>{user.followingCount}</strong> following
               </Typography>
             </Grid>

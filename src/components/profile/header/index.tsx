@@ -11,9 +11,10 @@ import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import MobileViewHeader from "../../../common/header/mobile-view";
 interface Props {
   user: UserProfile;
+  onOpen: () => void;
 }
 
-const ProfileHeader: React.FC<Props> = ({ user }) => {
+const ProfileHeader: React.FC<Props> = ({ user, onOpen }) => {
   // Global Hooks
   const { user: authUser } = useUserContext()!;
 
@@ -29,7 +30,7 @@ const ProfileHeader: React.FC<Props> = ({ user }) => {
       <Toolbar className={classes.toolbar}>
         {isAuthUserPage ? (
           <Hidden smUp>
-            <SettingsSvg />
+            <SettingsSvg onClick={onOpen} />
             <Typography color="textPrimary" variant="h6">
               {user.username}
             </Typography>

@@ -7,9 +7,10 @@ import { useStyles } from "./styles";
 import ProfileWrapper from "../../components/profile/wrapper";
 
 interface Props {
+  profile: UserProfile;
   user: UserProfile;
   submitted: boolean;
-  onToggleFollow: () => void;
+  onToggleFollow: (userId: string) => void;
 }
 
 const ProfilePostsPage: React.FC<Props> = (props) => {

@@ -66,6 +66,11 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
+  link: {
+    color: "inherit",
+    textDecoration: "none",
+    cursor: "pointer",
+  },
   optionBtn: {
     textTransform: "none",
     boxShadow: "none",
@@ -77,10 +82,6 @@ export const useStyles = makeStyles((theme) => ({
     marginLeft: "1rem",
     padding: "6px 0",
   },
-  // danBtn: {
-  //   color: red[600],
-  //   fontWeight: 600,
-  // },
   peopleIcon: {
     fontSize: "1rem",
   },

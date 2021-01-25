@@ -36,6 +36,7 @@ export const useStyles = makeStyles((theme) => ({
   bodyContent: {
     textAlign: "center",
     fontSize: "14px",
+    marginBottom: "1rem",
   },
   card: {
     width: "250px",
@@ -83,6 +84,14 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: "50%",
     margin: "1rem auto",
     border: "2px solid #222",
+  },
+  savedText: {
+    textAlign: "center",
+    fontSize: "1rem",
+    marginBottom: "1rem",
+    [theme.breakpoints.only("xs")]: {
+      margin: "0.5rem 0",
+    },
   },
   username: {
     marginBottom: "0.4rem",

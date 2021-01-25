@@ -6,6 +6,7 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: "100vh",
     width: "100%",
     maxWidth: "100vw",
+    paddingBottom: "3.4rem",
   },
   wrapper: {
     width: "598px",

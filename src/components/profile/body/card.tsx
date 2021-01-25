@@ -30,11 +30,7 @@ const ProfileBodyCard: React.FC = () => {
         >
           Add your name and bio so friends can find you
         </Typography>
-        <Button
-          variant="contained"
-          disableElevation
-          className={classes.gridItemBtn}
-        >
+        <Button disableElevation className={classes.gridItemBtn}>
           Edit Profile
         </Button>
       </Card>
