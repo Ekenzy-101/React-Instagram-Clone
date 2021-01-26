@@ -17,13 +17,15 @@ import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
 import { useUserContext } from "../../../../utils/context/user";
 import { debug } from "../../../../utils/services/debugService";
 import { useStyles } from "../styles";
+import clsx from "clsx";
 
 interface Props {
   post: Post;
   tabView?: boolean;
+  rounded?: boolean;
 }
 
-const PostCardCommonForm: React.FC<Props> = ({ post, tabView }) => {
+const PostCardCommonForm: React.FC<Props> = ({ post, tabView, rounded }) => {
   // Global State Hooks
   const { user: authUser } = useUserContext()!;
 
@@ -35,6 +37,7 @@ const PostCardCommonForm: React.FC<Props> = ({ post, tabView }) => {
   const classes = useStyles();
   const theme = useTheme();
 
+  // Event Handlers
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(event.target.value);
   };
@@ -54,10 +57,15 @@ const PostCardCommonForm: React.FC<Props> = ({ post, tabView }) => {
       toast(error.message);
     }
   };
+
+  const containerClassName = rounded
+    ? clsx(classes.commentContainer, classes.rounded)
+    : classes.commentContainer;
+
   return (
-    <Hidden xsDown>
+    <Hidden xsDown={rounded ? false : true}>
       <form style={{ width: "100%" }} onSubmit={handleSubmit}>
-        <CardContent className={classes.commentContainer}>
+        <CardContent className={containerClassName}>
           {authUser ? (
             <>
               <textarea
@@ -69,15 +77,10 @@ const PostCardCommonForm: React.FC<Props> = ({ post, tabView }) => {
                 onChange={handleChange}
               ></textarea>
               <Button
-                variant="text"
                 type="submit"
                 disabled={!content || loading}
-                style={{
-                  textTransform: "capitalize",
-                  color: theme.palette.primary.main,
-                  fontWeight: 600,
-                  opacity: !content || loading ? 0.5 : 1,
-                }}
+                style={{ opacity: !content || loading ? 0.5 : 1 }}
+                className={classes.submitBtn}
               >
                 Post
               </Button>
@@ -88,7 +91,7 @@ const PostCardCommonForm: React.FC<Props> = ({ post, tabView }) => {
                 to={{
                   pathname: TO_LOGIN_PAGE,
                   search: `?redirect_to=${encodeURIComponent(`/p/${post.id}`)}`,
-                  state: `/p/${post.id}`,
+                  state: `/p/${post.id}/`,
                 }}
                 style={{ color: theme.palette.primary.dark }}
                 className={classes.link}

@@ -9,7 +9,12 @@ interface Props {
   onClose: () => void;
   onLogout?: () => void;
 }
-const LogoutModal: React.FC<Props> = ({ open, onClose, mobileView }) => {
+const LogoutModal: React.FC<Props> = ({
+  open,
+  onClose,
+  onLogout,
+  mobileView,
+}) => {
   // Other Hooks
   const classes = useStyles();
 
@@ -33,7 +38,7 @@ const LogoutModal: React.FC<Props> = ({ open, onClose, mobileView }) => {
         </DialogContent>
 
         <DialogContent
-          // onClick={onClose}
+          onClick={onLogout}
           className={clsx(classes.dialogBtn, classes.primaryBtn)}
           dividers
         >

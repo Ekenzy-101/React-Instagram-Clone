@@ -5,9 +5,7 @@ interface Props {
   width?: number;
   height?: number;
   fill?: string;
-  onClick?:
-    | ((event: React.MouseEvent<SVGSVGElement, MouseEvent>) => void)
-    | undefined;
+  onClick?: (() => void) | undefined;
 }
 
 const LoveSvg: React.FC<Props> = ({ active, width, height, fill, onClick }) => {

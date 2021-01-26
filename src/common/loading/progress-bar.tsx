@@ -1,6 +1,5 @@
 import React from "react";
 import { useStyles } from "./styles";
-import "./styles.css";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
 
 const LoadingProgressBar: React.FC = () => {

@@ -1,6 +1,6 @@
 import { AppBar, Hidden, Paper, Toolbar, Typography } from "@material-ui/core";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 
 import { useStyles } from "./styles";
 import DesktopViewHeader from "../header";
@@ -10,6 +10,7 @@ import { TO_HOME_PAGE } from "../../utils/constants/routes";
 const NotFoundPage: React.FC = () => {
   // Other Hooks
   const classes = useStyles();
+  const { path, params } = useRouteMatch();
 
   // JSX
   return (
@@ -29,7 +30,10 @@ const NotFoundPage: React.FC = () => {
         <Typography className={classes.subTitle}>
           The link you followed may be broken, or the page may have been
           removed. {"  "}
-          <Link className={classes.link} to={TO_HOME_PAGE}>
+          <Link
+            className={classes.link}
+            to={{ pathname: TO_HOME_PAGE, state: { from: path, ...params } }}
+          >
             Go back to Instagram.
           </Link>
         </Typography>

@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -27,34 +28,47 @@ import PostCardCommonForm from "./common/form";
 import PostCardCommonComments from "./common/comments";
 import { deletePostComment } from "../../../utils/helpers/comment";
 import { debug } from "../../../utils/services/debugService";
+import { UserProfile } from "../../../utils/types/user";
+import UsersModal from "../../users-modal";
+import { modalState } from "../../../utils/types/modal";
+import { TO_LOGIN_PAGE } from "../../../utils/constants/routes";
+import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 interface Props {
+  submitted: boolean;
   post: Post;
+  profile?: UserProfile;
   onTogglePostLike: () => void;
   onTogglePostSave: () => void;
   onToggleCommentLike: (id: string) => void;
+  onToggleFollow: (userId: string) => void;
 }
 
 const PostCardDesktopView: React.FC<Props> = ({
   post,
+  profile,
+  submitted,
+  onToggleFollow,
   onTogglePostLike,
   onTogglePostSave,
   onToggleCommentLike,
 }) => {
-  const { image_urls, created_at, likes, saves } = post;
+  const { image_urls, created_at, likes, saves, likesCount } = post;
 
   // Global Hooks
   const { user: authUser } = useUserContext()!;
 
   // State Hooks
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
   const [activeComment, setActiveComment] = useState<undefined | PostComment>(
     undefined
   );
 
   // Other Hooks
   const classes = useStyles();
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const { path, params } = useRouteMatch();
   const [deleteComment] = useMutation(DELETE_COMMENT);
 
   // Event Handlers
@@ -66,11 +80,18 @@ const PostCardDesktopView: React.FC<Props> = ({
           deletePostComment(cache, post, activeComment!);
         },
       });
-      setOpen2(false);
+      setShow("none");
     } catch (error) {
       debug.error(error);
-      setOpen2(false);
-      toast(error?.message);
+      setShow("none");
+      if (error.message.includes("Unauthorized")) {
+        history.push(
+          `${TO_LOGIN_PAGE}?redirect_to=${encodeURIComponent(pathname)}`,
+          pathname
+        );
+      } else {
+        toast(error?.message);
+      }
     }
   };
 
@@ -78,17 +99,47 @@ const PostCardDesktopView: React.FC<Props> = ({
   const isLikedByUser = likes.some((like) => like.id === authUser?.id);
   const isSavedByUser = saves.some((like) => like.id === authUser?.id);
 
+  const getRelatedUser: () => UserProfile | undefined = () => {
+    const authUserFollowing = profile?.following;
+    let relatedUser: UserProfile | undefined;
+    if (authUserFollowing) {
+      authUserFollowing.forEach((u) => {
+        relatedUser = post?.likes?.find((l) => l.id === u.id);
+        if (relatedUser) return;
+      });
+    }
+    return relatedUser;
+  };
+
+  const firstRelatedUser = getRelatedUser();
+
   // JSX
   return (
     <>
-      <PostModal open={open} onClose={() => setOpen(false)} post={post} />
+      <UsersModal
+        title="Likes"
+        users={likes}
+        submitted={submitted}
+        onToggleFollow={onToggleFollow}
+        profile={profile}
+        open={show === "users"}
+        onClose={() => setShow("none")}
+      />
+      <PostModal
+        open={show === "post"}
+        onClose={() => setShow("none")}
+        post={post}
+      />
       <PostCommentModal
-        open={open2}
-        onClose={() => setOpen2(false)}
+        open={show === "post-comment"}
+        onClose={() => setShow("none")}
         comment={activeComment}
         onDelete={handleDelete}
       />
-      <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
+      <NotSupportedModal
+        open={show === "not-supported"}
+        onClose={() => setShow("none")}
+      />
       <Card variant="outlined" className={classes.root}>
         <Grid container>
           <Grid item xs={7} style={{ position: "relative" }}>
@@ -96,14 +147,20 @@ const PostCardDesktopView: React.FC<Props> = ({
           </Grid>
 
           <Grid item xs={5}>
-            <PostCardCommonHeader onClick={() => setOpen(true)} post={post} />
+            <PostCardCommonHeader
+              onToggleFollow={onToggleFollow}
+              profile={profile}
+              onClick={() => setShow("post")}
+              post={post}
+              submitted={submitted}
+            />
             <Divider />
 
             <CardContent className={classes.commentContent}>
               <PostCardCommonComments
                 setActiveComment={setActiveComment}
                 post={post}
-                setOpen={setOpen2}
+                onOpenModal={() => setShow("post-comment")}
                 onToggleCommentLike={onToggleCommentLike}
               />
             </CardContent>
@@ -118,27 +175,50 @@ const PostCardDesktopView: React.FC<Props> = ({
                   fill={isLikedByUser ? "#ed4956" : undefined}
                 />
                 <CommentSvg />
-                <DirectSvg onClick={() => setOpen1(true)} />
+                <DirectSvg onClick={() => setShow("not-supported")} />
               </div>
               <SavedSvg active={isSavedByUser} onClick={onTogglePostSave} />
             </CardActions>
 
             <CardContent className={classes.cardContent}>
-              {/* <div className={classes.likedByGroup}>
-                <Avatar
-                  src={PROFILE_PIC_URL}
-                  className={classes.likedByAvatar}
-                />
-                <Typography variant="body1">
-                <strong>46 others</strong>
-                </Typography>
-              </div> */}
-              {likes.length ? (
+              {firstRelatedUser && likes.length > 1 ? (
+                <div className={classes.likedByGroup}>
+                  <Avatar
+                    src={PROFILE_PIC_URL}
+                    className={classes.likedByAvatar}
+                  />
+                  <Typography variant="body1">
+                    Liked by{" "}
+                    <strong>
+                      <Link
+                        className={classes.link}
+                        to={{
+                          pathname: `/${firstRelatedUser.username}/`,
+                          state: { from: path, ...params },
+                        }}
+                      >{` ${firstRelatedUser.username} `}</Link>
+                    </strong>{" "}
+                    and{" "}
+                    <strong
+                      className={classes.link}
+                      onClick={() => setShow("users")}
+                    >
+                      {" "}
+                      {likesCount - 1} others
+                    </strong>
+                  </Typography>
+                </div>
+              ) : likes.length ? (
                 <Typography variant="body1">
                   <strong>
-                    {likes.length > 1
-                      ? `${likes.length} likes`
-                      : `${likes.length} like`}
+                    <span
+                      className={classes.link}
+                      onClick={() => setShow("users")}
+                    >
+                      {likes.length > 1
+                        ? `${likes.length} likes`
+                        : `${likes.length} like`}
+                    </span>
                   </strong>
                 </Typography>
               ) : null}

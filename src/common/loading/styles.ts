@@ -16,9 +16,13 @@ export const useStyles = makeStyles((theme) => ({
     borderBottom: "1px solid rgba(var(--b6a,219,219,219),1)",
   },
   greyLogo: {
-    width: "70px",
-    height: "70px",
+    width: "60px",
+    height: "60px",
     opacity: 0.6,
+  },
+  spinner: {
+    width: 30,
+    height: 30,
   },
   toolbar: {
     justifyContent: "center",

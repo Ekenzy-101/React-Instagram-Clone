@@ -1,4 +1,3 @@
-import { useApolloClient } from "@apollo/client";
 import {
   Paper,
   AppBar,
@@ -18,10 +17,11 @@ import { useHistory } from "react-router-dom";
 import {
   TO_EDITPROFILE_PAGE,
   TO_HOME_PAGE,
+  TO_PASSWORDCHANGE_PAGE,
 } from "../../utils/constants/routes";
-import { GET_AUTH_USER } from "../../utils/queries/user";
 import { logout } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
+import { modalState } from "../../utils/types/modal";
 import LogoutModal from "../logout-modal";
 import { useStyles } from "./styles";
 
@@ -31,12 +31,11 @@ interface Props {
 
 const AccountNavMobileView: React.FC<Props> = ({ onClose }) => {
   // State Hooks
-  const [open, setOpen] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
   const history = useHistory();
-  const client = useApolloClient();
 
   // Event Handlers
   const handleClick = (path: string) => {
@@ -46,13 +45,7 @@ const AccountNavMobileView: React.FC<Props> = ({ onClose }) => {
   const handleLogout = async () => {
     try {
       await logout();
-
-      await client.cache.writeQuery({
-        query: GET_AUTH_USER,
-        data: { profile: null },
-      });
-
-      history.push(TO_HOME_PAGE);
+      window.location.replace(TO_HOME_PAGE);
     } catch (error) {
       debug.error(error?.response?.status, error?.response?.data);
 
@@ -63,14 +56,15 @@ const AccountNavMobileView: React.FC<Props> = ({ onClose }) => {
       }
     }
   };
+
   // JSX
   return (
     <Paper className={classes.root}>
       <Hidden smUp>
         <LogoutModal
-          open={open}
+          open={show === "logout"}
           mobileView
-          onClose={() => setOpen(false)}
+          onClose={() => setShow("none")}
           onLogout={handleLogout}
         />
         <AppBar position="sticky" className={classes.appbar}>
@@ -100,7 +94,7 @@ const AccountNavMobileView: React.FC<Props> = ({ onClose }) => {
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem
-            onClick={() => handleClick(TO_EDITPROFILE_PAGE)}
+            onClick={() => handleClick(TO_PASSWORDCHANGE_PAGE)}
             className={classes.listItem}
           >
             <ListItemText primary="Change Password" />
@@ -109,7 +103,10 @@ const AccountNavMobileView: React.FC<Props> = ({ onClose }) => {
             </ListItemSecondaryAction>
           </ListItem>
           <br />
-          <ListItem onClick={() => setOpen(true)} className={classes.listItem}>
+          <ListItem
+            onClick={() => setShow("logout")}
+            className={classes.listItem}
+          >
             <ListItemText
               primaryTypographyProps={{ className: classes.dangerText }}
               primary="Log Out"

@@ -1,6 +1,13 @@
-import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import {
+  Avatar,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from "@material-ui/core";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import React, { useState } from "react";
+import { useMedia } from "react-use";
 
 import SavedSvg from "../../svgs/SavedSvg";
 import CommentSvg from "../../svgs/CommentSvg";
@@ -9,23 +16,33 @@ import LoveSvg from "../../svgs/LoveSvg";
 import { useStyles } from "./styles";
 import { Post, PostComment } from "../../../utils/types/post";
 import PostModal from "../modal";
+import UsersModal from "../../users-modal";
 import NotSupportedModal from "../../not-supported-modal";
 import { useUserContext } from "../../../utils/context/user";
 import PostCardCommonHeader from "./common/header";
 import PostCardCommonStepper from "./common/stepper";
 import PostCardCommonForm from "./common/form";
+import { UserProfile } from "../../../utils/types/user";
+import { modalState } from "../../../utils/types/modal";
+import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 interface Props {
+  submitted: boolean;
   post: Post;
+  profile?: UserProfile;
   onTogglePostLike: () => void;
   onTogglePostSave: () => void;
   onToggleCommentLike: (id: string) => void;
+  onToggleFollow: (userId: string) => void;
 }
 
 const PostCardTabView: React.FC<Props> = ({
   post,
+  submitted,
+  profile,
   onTogglePostLike,
   onTogglePostSave,
   onToggleCommentLike,
+  onToggleFollow,
 }) => {
   const {
     user,
@@ -35,16 +52,19 @@ const PostCardTabView: React.FC<Props> = ({
     caption,
     saves,
     likes,
+    likesCount,
   } = post;
   // Global Hooks
   const { user: authUser } = useUserContext()!;
 
   // State Hooks
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
+  const history = useHistory();
+  const { path, params } = useRouteMatch();
+  const mobileView = useMedia(`(max-width: 600px)`);
 
   // Other Logic
   const isPostLikedByUser = likes.some((like) => like.id === authUser?.id);
@@ -54,13 +74,49 @@ const PostCardTabView: React.FC<Props> = ({
     return comment.likes.some((like) => like.id === authUser?.id);
   };
 
+  const getRelatedUser: () => UserProfile | undefined = () => {
+    const authUserFollowing = profile?.following;
+    let relatedUser: UserProfile | undefined;
+    if (authUserFollowing) {
+      authUserFollowing.forEach((u) => {
+        relatedUser = post?.likes?.find((l) => l.id === u.id);
+        if (relatedUser) return;
+      });
+    }
+    return relatedUser;
+  };
+
+  const firstRelatedUser = getRelatedUser();
+
   // JSX
   return (
     <>
-      <PostModal open={open} post={post} onClose={() => setOpen(false)} />
-      <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
+      <UsersModal
+        title="Likes"
+        users={likes}
+        submitted={submitted}
+        onToggleFollow={onToggleFollow}
+        profile={profile}
+        open={show === "users"}
+        onClose={() => setShow("none")}
+      />
+      <PostModal
+        open={show === "post"}
+        post={post}
+        onClose={() => setShow("none")}
+      />
+      <NotSupportedModal
+        open={show === "not-supported"}
+        onClose={() => setShow("none")}
+      />
       <Card variant="outlined" className={classes.root}>
-        <PostCardCommonHeader onClick={() => setOpen(true)} post={post} />
+        <PostCardCommonHeader
+          onToggleFollow={onToggleFollow}
+          profile={profile}
+          onClick={() => setShow("post")}
+          post={post}
+          submitted={submitted}
+        />
         <PostCardCommonStepper image_urls={image_urls} />
 
         <CardActions className={classes.cardActions}>
@@ -70,36 +126,96 @@ const PostCardTabView: React.FC<Props> = ({
               active={isPostLikedByUser}
               fill={isPostLikedByUser ? "#ed4956" : undefined}
             />
-            <CommentSvg />
-            <DirectSvg onClick={() => setOpen1(true)} />
+            <CommentSvg
+              onClick={() =>
+                history.push(`/p/${post.id}/comments/`, {
+                  from: path,
+                  ...params,
+                })
+              }
+            />
+            <DirectSvg onClick={() => setShow("not-supported")} />
           </div>
           <PostCardCommonStepper mobile image_urls={image_urls} />
           <SavedSvg active={isSavedByUser} onClick={onTogglePostSave} />
         </CardActions>
 
         <CardContent className={classes.cardContent}>
-          {/* <div className={classes.likedByGroup}>
-            <Avatar src={PROFILE_PIC_URL} className={classes.likedByAvatar} />
-            <Typography variant="body1">
-              Liked by <strong>bubuniverse</strong> and{" "}
-              <strong>46 others</strong>
-            </Typography>
-          </div> */}
-          {likes.length ? (
+          {firstRelatedUser ? (
+            <div className={classes.likedByGroup}>
+              <Avatar src={PROFILE_PIC_URL} className={classes.likedByAvatar} />
+              <Typography variant="body1">
+                Liked by{" "}
+                <strong>
+                  <Link
+                    className={classes.link}
+                    to={{
+                      pathname: `/${firstRelatedUser.username}/`,
+                      state: { from: path, ...params },
+                    }}
+                  >{` ${firstRelatedUser.username} `}</Link>
+                </strong>
+                and{" "}
+                <strong>
+                  {mobileView ? (
+                    <Link
+                      className={classes.link}
+                      to={{
+                        pathname: `/p/${post.id}/liked_by/`,
+                        state: { from: path, ...params },
+                      }}
+                    >
+                      {likesCount - 1} others
+                    </Link>
+                  ) : (
+                    <span
+                      className={classes.link}
+                      onClick={() => setShow("users")}
+                    >
+                      {likesCount - 1} others
+                    </span>
+                  )}
+                </strong>
+              </Typography>
+            </div>
+          ) : likes.length ? (
             <Typography variant="body1">
               <strong>
-                <Link className={classes.link} to={`/p/${post.id}/liked_by/`}>
-                  {likes.length > 1
-                    ? `${likes.length} likes`
-                    : `${likes.length} like`}
-                </Link>
+                {mobileView ? (
+                  <Link
+                    className={classes.link}
+                    to={{
+                      pathname: `/p/${post.id}/liked_by/`,
+                      state: { from: path, ...params },
+                    }}
+                  >
+                    {likes.length > 1
+                      ? `${likes.length} likes`
+                      : `${likes.length} like`}
+                  </Link>
+                ) : (
+                  <span
+                    className={classes.link}
+                    onClick={() => setShow("users")}
+                  >
+                    {likes.length > 1
+                      ? `${likes.length} likes`
+                      : `${likes.length} like`}
+                  </span>
+                )}
               </strong>
             </Typography>
           ) : null}
 
           <div style={{ display: "flex", marginBottom: "0.3rem" }}>
             <strong className={classes.username}>
-              <Link className={classes.link} to={`/${user.username}/`}>
+              <Link
+                className={classes.link}
+                to={{
+                  pathname: `/${user.username}/`,
+                  state: { from: path, ...params },
+                }}
+              >
                 {user.username}
               </Link>
             </strong>
@@ -110,7 +226,13 @@ const PostCardTabView: React.FC<Props> = ({
           </div>
           {comments.length > 1 ? (
             <Typography style={{ fontSize: "0.9rem" }} color="textSecondary">
-              <Link className={classes.link} to={`/p/${post.id}/comments/`}>
+              <Link
+                className={classes.link}
+                to={{
+                  pathname: `/p/${post.id}/comments/`,
+                  state: { from: path, ...params },
+                }}
+              >
                 View all {post.commentsCount} comments
               </Link>
             </Typography>
@@ -123,7 +245,10 @@ const PostCardTabView: React.FC<Props> = ({
               <strong className={classes.username}>
                 <Link
                   className={classes.link}
-                  to={`/${comment.user.username}/`}
+                  to={{
+                    pathname: `/${comment.user.username}/`,
+                    state: { from: path, ...params },
+                  }}
                 >
                   {comment.user.username}
                 </Link>

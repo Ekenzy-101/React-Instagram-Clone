@@ -1,6 +1,7 @@
+import clsx from "clsx";
 import { Hidden, Avatar, Grid } from "@material-ui/core";
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useRouteMatch } from "react-router-dom";
 
 import {
   IG_MONOCHROME_LOGO_URL,
@@ -20,9 +21,9 @@ import {
   TO_SIGNUP_PAGE,
 } from "../../utils/constants/routes";
 import HeaderMenu from "./menu";
-import clsx from "clsx";
 import { useUserContext } from "../../utils/context/user";
 import NotSupportedModal from "../not-supported-modal";
+import { modalState } from "../../utils/types/modal";
 
 const DesktopViewHeader = () => {
   // Global State Hooks
@@ -30,11 +31,12 @@ const DesktopViewHeader = () => {
 
   // State Hooks
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
-  const [open, setOpen] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
   const { pathname } = useLocation();
+  const { path, params } = useRouteMatch();
 
   // Event Handlers
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -44,8 +46,14 @@ const DesktopViewHeader = () => {
   // JSX
   return (
     <Hidden only="xs">
-      <NotSupportedModal open={open} onClose={() => setOpen(false)} />
-      <Link to={TO_HOME_PAGE} className={classes.navLink}>
+      <NotSupportedModal
+        open={show === "not-supported"}
+        onClose={() => setShow("none")}
+      />
+      <Link
+        to={{ pathname: TO_HOME_PAGE, state: { from: path, ...params } }}
+        className={classes.navLink}
+      >
         <Avatar
           src={IG_MONOCHROME_LOGO_URL}
           className={classes.brandLogo}
@@ -59,20 +67,38 @@ const DesktopViewHeader = () => {
         {user ? (
           <>
             <Grid item>
-              <Link to={TO_HOME_PAGE} className={classes.navLink}>
+              <Link
+                to={{
+                  pathname: TO_HOME_PAGE,
+                  state: { from: path, ...params },
+                }}
+                className={classes.navLink}
+              >
                 <HomeSvg />
               </Link>
             </Grid>
             <Grid item>
-              <DirectSvg onClick={() => setOpen(true)} />
+              <DirectSvg onClick={() => setShow("not-supported")} />
             </Grid>
             <Grid item>
-              <Link to={TO_EXPLORE_PAGE} className={classes.navLink}>
+              <Link
+                to={{
+                  pathname: TO_EXPLORE_PAGE,
+                  state: { from: path, ...params },
+                }}
+                className={classes.navLink}
+              >
                 <ExploreSvg />
               </Link>
             </Grid>
             <Grid item>
-              <Link to={TO_ACTIVITY_PAGE} className={classes.navLink}>
+              <Link
+                to={{
+                  pathname: TO_ACTIVITY_PAGE,
+                  state: { from: path, ...params },
+                }}
+                className={classes.navLink}
+              >
                 <LoveSvg active={pathname === TO_ACTIVITY_PAGE} />
               </Link>
             </Grid>

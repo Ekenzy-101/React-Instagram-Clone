@@ -6,8 +6,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { useApolloClient } from "@apollo/client";
+import { useLocation, Link, useRouteMatch } from "react-router-dom";
 
 import ProfileSvg from "../svgs/ProfileSvg";
 import SavedSvg from "../svgs/SavedSvg";
@@ -17,45 +16,37 @@ import { debug } from "../../utils/services/debugService";
 import { useUserContext } from "../../utils/context/user";
 import { logout } from "../../utils/services/authService";
 import toast from "react-hot-toast";
-import { TO_HOME_PAGE } from "../../utils/constants/routes";
+import {
+  TO_EDITPROFILE_PAGE,
+  TO_HOME_PAGE,
+} from "../../utils/constants/routes";
 import NotSupportedModal from "../not-supported-modal";
 import LogoutModal from "../logout-modal";
-import { GET_AUTH_USER } from "../../utils/queries/user";
+import { useStyles } from "./styles";
+import { modalState } from "../../utils/types/modal";
 interface Props {
   anchorElement: null | HTMLElement;
   setAnchorElement: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
 }
 const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
   // State Hooks
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
-  const history = useHistory();
   const { pathname } = useLocation();
+  const { path, params } = useRouteMatch();
   const { user } = useUserContext()!;
-  const client = useApolloClient();
-
-  // Event Handler
-  const handleClick = (path: string) => {
-    setAnchorElement(null);
-    history.push(path);
-  };
+  const classes = useStyles();
 
   const handleLogout = async () => {
-    setOpen1(true);
+    setShow("logout");
     try {
       await logout();
       setAnchorElement(null);
 
-      await client.cache.writeQuery({
-        query: GET_AUTH_USER,
-        data: { profile: null },
-      });
-
       pathname === TO_HOME_PAGE
-        ? history.push(TO_HOME_PAGE)
-        : history.push(TO_HOME_PAGE);
+        ? window.location.reload()
+        : window.location.replace(TO_HOME_PAGE);
     } catch (error) {
       debug.error(error?.response?.status, error?.response?.data);
 
@@ -68,42 +59,68 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
   };
 
   // JSX
-
   return (
     <>
-      <NotSupportedModal open={open} onClose={() => setOpen(false)} />
-      <LogoutModal open={open1} onClose={() => setOpen1(false)} />
+      <NotSupportedModal
+        open={show === "not-supported"}
+        onClose={() => setShow("none")}
+      />
+      <LogoutModal open={show === "logout"} onClose={() => setShow("none")} />
       <Menu
         id="header-menu"
         anchorEl={anchorElement}
         style={{ width: "25rem", left: 0 }}
         keepMounted
         transformOrigin={{
-          vertical: -50,
+          vertical: -30,
           horizontal: "left",
         }}
         open={Boolean(anchorElement)}
         onClose={() => setAnchorElement(null)}
       >
-        <MenuItem onClick={() => handleClick(`/${user?.username}/`)}>
-          <ListItemIcon>
-            <ProfileSvg width={16} height={16} />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </MenuItem>
-        <MenuItem onClick={() => handleClick(`/${user?.username}/saved/`)}>
-          <ListItemIcon>
-            <SavedSvg width={16} height={16} />
-          </ListItemIcon>
-          <ListItemText primary="Saved" />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <SettingsSvg width={16} height={16} />
-          </ListItemIcon>
-          <ListItemText primary="Settings" />
-        </MenuItem>
-        <MenuItem onClick={() => setOpen(true)}>
+        <Link
+          className={classes.link}
+          to={{
+            pathname: `/${user?.username}/`,
+            state: { from: path, ...params },
+          }}
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <ProfileSvg width={16} height={16} />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+          </MenuItem>
+        </Link>
+        <Link
+          className={classes.link}
+          to={{
+            pathname: `/${user?.username}/saved/`,
+            state: { from: path, ...params },
+          }}
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <SavedSvg width={16} height={16} />
+            </ListItemIcon>
+            <ListItemText primary="Saved" />
+          </MenuItem>
+        </Link>
+        <Link
+          className={classes.link}
+          to={{
+            pathname: TO_EDITPROFILE_PAGE,
+            state: { from: path, ...params },
+          }}
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <SettingsSvg width={16} height={16} />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </MenuItem>
+        </Link>
+        <MenuItem onClick={() => setShow("not-supported")}>
           <ListItemIcon>
             <SwitchAccountSvg />
           </ListItemIcon>

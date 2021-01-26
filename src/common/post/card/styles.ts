@@ -126,6 +126,7 @@ export const useStyles = makeStyles((theme) => ({
   link: {
     color: "inherit",
     textDecoration: "none",
+    cursor: "pointer",
   },
   media: {
     paddingBottom: "125%",

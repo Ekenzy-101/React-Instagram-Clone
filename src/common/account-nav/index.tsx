@@ -1,6 +1,7 @@
 import { Grid, List, ListItem, ListItemText } from "@material-ui/core";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useRouteMatch } from "react-router-dom";
+
 import {
   TO_EDITPROFILE_PAGE,
   TO_PASSWORDCHANGE_PAGE,
@@ -8,7 +9,11 @@ import {
 import { useStyles } from "./styles";
 
 const AccountNav: React.FC = () => {
+  // Other Hooks
   const classes = useStyles();
+  const { path, params } = useRouteMatch();
+
+  // JSX
   return (
     <Grid item xs={3}>
       <List className={classes.list}>
@@ -16,7 +21,10 @@ const AccountNav: React.FC = () => {
           <NavLink
             activeClassName={classes.activeLink}
             className={classes.navLink}
-            to={TO_EDITPROFILE_PAGE}
+            to={{
+              pathname: TO_EDITPROFILE_PAGE,
+              state: { from: path, ...params },
+            }}
           >
             <ListItemText
               primaryTypographyProps={{

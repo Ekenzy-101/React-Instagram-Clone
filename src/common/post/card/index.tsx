@@ -19,13 +19,17 @@ import {
   updatePostSaves,
 } from "../../../utils/helpers/like";
 import { TOGGLE_COMMENT_LIKE } from "../../../utils/mutations/comment";
+import { UserProfile } from "../../../utils/types/user";
+import { updateAuthUserFollowers } from "../../../utils/helpers/user";
+import { TOGGLE_FOLLOW } from "../../../utils/mutations/user";
 
 interface Props {
   tabView?: boolean;
   post: Post;
+  profile?: UserProfile;
 }
 
-const PostCard: React.FC<Props> = ({ tabView, post }) => {
+const PostCard: React.FC<Props> = ({ tabView, post, profile }) => {
   // Global Hook
   const { user } = useUserContext()!;
 
@@ -37,6 +41,7 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
     variables: { id: post.id },
   });
   const [toggleCommentLike] = useMutation(TOGGLE_COMMENT_LIKE);
+  const [toggleFollow, { loading }] = useMutation(TOGGLE_FOLLOW);
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -53,7 +58,10 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
       debug.error(error.message);
 
       if (error.message.includes("Unauthorized")) {
-        history.push(TO_LOGIN_PAGE, pathname);
+        history.push(
+          `${TO_LOGIN_PAGE}?redirect_to=${encodeURIComponent(pathname)}`,
+          pathname
+        );
       } else {
         toast(error?.message);
       }
@@ -72,7 +80,10 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
       debug.error(error.message);
 
       if (error.message.includes("Unauthorized")) {
-        history.push(TO_LOGIN_PAGE, pathname);
+        history.push(
+          `${TO_LOGIN_PAGE}?redirect_to=${encodeURIComponent(pathname)}`,
+          pathname
+        );
       } else {
         toast(error?.message);
       }
@@ -99,23 +110,51 @@ const PostCard: React.FC<Props> = ({ tabView, post }) => {
     }
   };
 
+  const handleToggleFollow = async (userId: string) => {
+    try {
+      await toggleFollow({
+        variables: { id: userId },
+        update(cache) {
+          const authUser = profile as UserProfile | null;
+          updateAuthUserFollowers(cache, authUser, userId);
+        },
+      });
+    } catch (error) {
+      debug.error(error?.message);
+      if (error?.message.includes("Unauthorized")) {
+        history.push(
+          `${TO_LOGIN_PAGE}?redirect_to=${encodeURIComponent(pathname)}`,
+          pathname
+        );
+      } else {
+        toast(error?.message);
+      }
+    }
+  };
+
   // JSX
   if (tabView) {
     return (
       <PostCardTabView
         post={post}
+        submitted={loading}
+        profile={profile}
         onTogglePostLike={handleTogglePostLike}
         onTogglePostSave={handleTogglePostSave}
         onToggleCommentLike={handleToggleCommentLike}
+        onToggleFollow={handleToggleFollow}
       />
     );
   }
   return (
     <PostCardDesktopView
       post={post}
+      submitted={loading}
+      profile={profile}
       onTogglePostLike={handleTogglePostLike}
       onTogglePostSave={handleTogglePostSave}
       onToggleCommentLike={handleToggleCommentLike}
+      onToggleFollow={handleToggleFollow}
     />
   );
 };

@@ -1,7 +1,7 @@
 import { Hidden, Avatar, Grid } from "@material-ui/core";
 import React from "react";
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 
 import { IG_MONOCHROME_LOGO_URL } from "../../utils/constants/url";
 import {
@@ -13,9 +13,13 @@ import { useStyles } from "./styles";
 
 const MobileViewHeader: React.FC = () => {
   const classes = useStyles();
+  const { path, params } = useRouteMatch();
   return (
     <Hidden smUp>
-      <Link to={TO_HOME_PAGE} className={classes.navLink}>
+      <Link
+        to={{ pathname: TO_HOME_PAGE, state: { from: path, ...params } }}
+        className={classes.navLink}
+      >
         <Avatar
           src={IG_MONOCHROME_LOGO_URL}
           className={classes.brandLogo}

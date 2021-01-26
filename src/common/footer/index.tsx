@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
   const { user } = useUserContext()!;
 
   // Other Hooks
-  const { path, url } = useRouteMatch();
+  const { path, url, params } = useRouteMatch();
   const classes = useStyles();
   const history = useHistory();
 
@@ -54,11 +54,23 @@ const Footer: React.FC = () => {
       <>
         <AppBar position="fixed" className={classes.root}>
           <Toolbar className={classes.toolbar}>
-            <Link to={TO_HOME_PAGE} className={classes.navLink}>
+            <Link
+              to={{
+                pathname: TO_HOME_PAGE,
+                state: { from: path, ...params },
+              }}
+              className={classes.navLink}
+            >
               <HomeSvg />
             </Link>
 
-            <Link to={TO_EXPLORE_PAGE} className={classes.navLink}>
+            <Link
+              to={{
+                pathname: TO_EXPLORE_PAGE,
+                state: { from: path, ...params },
+              }}
+              className={classes.navLink}
+            >
               <SearchOutlined
                 className={classes.searchIcon}
                 style={{
@@ -76,10 +88,22 @@ const Footer: React.FC = () => {
                 onChange={handleChange}
               />
             </div>
-            <Link to={TO_ACTIVITY_PAGE} className={classes.navLink}>
+            <Link
+              to={{
+                pathname: TO_ACTIVITY_PAGE,
+                state: { from: path, ...params },
+              }}
+              className={classes.navLink}
+            >
               <LoveSvg active={url === TO_ACTIVITY_PAGE} />
             </Link>
-            <Link to={`/${user?.username}/`} className={classes.navLink}>
+            <Link
+              to={{
+                pathname: `/${user?.username}/`,
+                state: { from: path, ...params },
+              }}
+              className={classes.navLink}
+            >
               <Grid
                 item
                 className={classes.gridItem}

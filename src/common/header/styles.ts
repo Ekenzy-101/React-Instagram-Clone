@@ -17,6 +17,11 @@ export const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     textDecoration: "none",
   },
+  link: {
+    cursor: "pointer",
+    textDecoration: "none",
+    color: "inherit",
+  },
   loginBtn: {
     background: theme.palette.primary.main,
     color: "#fff",
