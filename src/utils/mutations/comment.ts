@@ -21,8 +21,35 @@ export const DELETE_COMMENT = gql`
   }
 `;
 
+export const DELETE_REPLY = gql`
+  mutation deleteReply($id: String!) {
+    deleteReply(id: $id)
+  }
+`;
+
+export const REPLY_COMMENT = gql`
+  mutation createReply($comment_id: String!, $content: String!) {
+    createReply(comment_id: $comment_id, content: $content) {
+      id
+      content
+      created_at
+      user {
+        id
+        username
+        image_url
+      }
+    }
+  }
+`;
+
 export const TOGGLE_COMMENT_LIKE = gql`
   mutation toggleCommentLike($id: String!) {
     toggleCommentLike(id: $id)
+  }
+`;
+
+export const TOGGLE_REPLY_LIKE = gql`
+  mutation toggleReplyLike($id: String!) {
+    toggleReplyLike(id: $id)
   }
 `;

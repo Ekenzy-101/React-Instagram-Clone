@@ -10,23 +10,24 @@ import Footer from "../../common/footer";
 import LoadingPage from "../../common/loading/page";
 import { GET_AUTH_USER_INFO } from "../../utils/queries/user";
 import { debug } from "../../utils/services/debugService";
-import { UserProfile } from "../../utils/types/user";
+import { User } from "../../utils/types/user";
 import { fileOptions, resizeFile } from "../../utils/helpers";
 import http from "../../utils/services/httpService";
 import { UPDATE_PROFILE_PIC } from "../../utils/mutations/user";
 import { useStyles } from "./styles";
+import { useHistory, useLocation } from "react-router-dom";
+import { TO_LOGIN_PAGE } from "../../utils/constants/routes";
 
 const EditProfilePage: React.FC = () => {
   // Other Hooks
   const classes = useStyles();
+  const history = useHistory();
+  const { pathname } = useLocation();
   const { data, loading } = useQuery(GET_AUTH_USER_INFO);
   const [updateProfilePic, { loading: loading1 }] = useMutation(
     UPDATE_PROFILE_PIC
   );
-
   useTitle("Edit Profile - Instagram");
-
-  debug.table(data?.profile);
 
   // Event Handlers
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,12 +72,20 @@ const EditProfilePage: React.FC = () => {
         });
       } catch (error) {
         debug.error(error?.message);
-        toast(error?.message);
+        if (error.message.includes("Unauthorized")) {
+          history.push(
+            `${TO_LOGIN_PAGE}?next=${encodeURIComponent(pathname)}`,
+            pathname
+          );
+        } else {
+          toast(error?.message);
+        }
       }
     }
   };
 
-  const profile = data?.profile as UserProfile;
+  const profile = data?.profile as User;
+  debug.table(profile);
 
   // JSX
   if (loading) return <LoadingPage />;

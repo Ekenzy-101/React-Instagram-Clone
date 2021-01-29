@@ -6,11 +6,11 @@ import { useHistory } from "react-router-dom";
 import { useStyles } from "./styles";
 import DesktopViewHeader from "../../../common/header";
 import MobileViewHeader from "../../../common/header/mobile-view";
-import { useUserContext } from "../../../utils/context/user";
+import { useUser } from "../../../utils/context/user";
 
 const PostHeader: React.FC = () => {
   // Global State Hooks
-  const { user } = useUserContext()!;
+  const { user } = useUser();
 
   // Other Hooks
   const classes = useStyles();
@@ -27,7 +27,7 @@ const PostHeader: React.FC = () => {
               onClick={() => history.goBack()}
             />
             <Typography color="textPrimary">
-              <strong>Photo</strong>
+              <strong>Post</strong>
             </Typography>
             <Typography></Typography>
           </Hidden>

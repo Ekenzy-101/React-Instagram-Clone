@@ -1,9 +1,10 @@
+import { useApolloClient } from "@apollo/client";
 import { Paper } from "@material-ui/core";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { useTitle } from "react-use";
 
 import useForm from "../../common/hooks/useForm";
-import usePageTitle from "../../common/hooks/usePageTitle";
 import LoadingPage from "../../common/loading/page";
 import SignupFooter from "../../components/signup/footer";
 import SignupHeader from "../../components/signup/header";
@@ -12,27 +13,25 @@ import {
   TO_HOME_PAGE,
   TO_VERIFYEMAIL_PAGE,
 } from "../../utils/constants/routes";
-import { useUserContext } from "../../utils/context/user";
 import {
   validateEmail,
   validateName,
   validatePassword,
   validateUsername,
 } from "../../utils/helpers/validation";
+import { GET_AUTH_USER } from "../../utils/queries/user";
 import { loginWithFacebook, register } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
-import { User } from "../../utils/types/user";
 import { useStyles } from "./styles";
 
 const SignupPage: React.FC = () => {
-  // Global State Hooks
-  const { setUser } = useUserContext()!;
-
   // State Hooks
   const [pageLoading, setPageLoading] = useState(false);
 
   // Other Hooks
+  const client = useApolloClient();
   const history = useHistory();
+  const { state } = useLocation();
   const classes = useStyles();
   const {
     renderInput,
@@ -47,9 +46,7 @@ const SignupPage: React.FC = () => {
     password: "",
     username: "",
   });
-
-  // Effect Hooks
-  usePageTitle("Signup - Instagram");
+  useTitle("Signup - Instagram");
 
   // Event Handlers
   const handleFacebookResponse = async (response: any) => {
@@ -65,8 +62,9 @@ const SignupPage: React.FC = () => {
 
       debug.log(data);
 
-      setUser(data as User);
-      history.push(TO_HOME_PAGE);
+      const authUser = { __typename: "User", ...data };
+      client.writeQuery({ query: GET_AUTH_USER, data: { profile: authUser } });
+      state ? history.push(state as string) : history.push(TO_HOME_PAGE);
     } catch (error) {
       debug.log(error?.response?.status, error?.response?.data);
 
@@ -109,16 +107,27 @@ const SignupPage: React.FC = () => {
       <SignupHeader />
       <SignupWrapper onFacebookResponse={handleFacebookResponse}>
         <form onSubmit={handleSubmit}>
-          {renderInput("Email", "email", validateEmail)}
-          {renderInput("Full Name", "name", validateName)}
-          {renderInput("User Name", "username", validateUsername)}
-          {renderInput(
-            "Password",
-            "password",
-            validatePassword,
-            undefined,
-            "password"
-          )}
+          {renderInput({
+            label: "Email",
+            name: "email",
+            validate: validateEmail,
+          })}
+          {renderInput({
+            label: "Fullname",
+            name: "name",
+            validate: validateName,
+          })}
+          {renderInput({
+            label: "Username",
+            name: "username",
+            validate: validateUsername,
+          })}
+          {renderInput({
+            label: "Password",
+            name: "password",
+            validate: validatePassword,
+            type: "password",
+          })}
           {renderButton("Sign up")}
           <p></p>
           {renderErrorMessage()}

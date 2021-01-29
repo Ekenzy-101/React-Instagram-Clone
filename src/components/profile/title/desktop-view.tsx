@@ -1,54 +1,61 @@
 import React, { useState } from "react";
 import { Person, Check } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import { Avatar, Button, Grid, Hidden, Typography } from "@material-ui/core";
 
 import { useStyles } from "./styles";
 import ProfileTitleUnfollowModal from "./modal/unfollow";
 import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
-import { UserProfile } from "../../../utils/types/user";
-import { useUserContext } from "../../../utils/context/user";
+import { User } from "../../../utils/types/user";
+import { useUser } from "../../../utils/context/user";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
 import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import LoadingSpinner from "../../../common/loading/spinner";
 import NotSupportedModal from "../../../common/not-supported-modal";
 import { modalState } from "../../../utils/types/modal";
 import UsersModal from "../../../common/users-modal";
+import { useFollow } from "../../../utils/context/follow";
 interface Props {
-  profile: UserProfile;
-  user: UserProfile;
-  submitted: boolean;
+  user: User;
   isUploading: boolean;
-  onToggleFollow: (userId: string) => void;
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileTitleDesktopView: React.FC<Props> = (props) => {
-  const {
-    profile,
-    user,
-    onToggleFollow,
-    submitted,
-    onUpload,
-    isUploading,
-  } = props;
+  const { user, onUpload, isUploading } = props;
   // Global State Hooks
-  const { user: authUser } = useUserContext()!;
+  const { user: authUser } = useUser();
+  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
+  const { path, params } = useRouteMatch();
 
   // Other Logic
   const isFollowingUser = (id: string) => {
-    return profile?.followers?.some((f) => f.id === id);
+    return authUser?.followers?.some((f) => f.id === id);
   };
 
   const isFollowedByUser = (id: string) => {
-    return profile?.following?.some((f) => f.id === id);
+    return authUser?.following?.some((f) => f.id === id);
   };
+
+  const getRelatedUser: () => User | undefined = () => {
+    const authUserFollowing = authUser?.following;
+    let relatedUser: User | undefined;
+    if (authUserFollowing) {
+      authUserFollowing.forEach((u) => {
+        relatedUser = user?.followers?.find((f) => f.id === u.id);
+        if (relatedUser) return;
+      });
+    }
+    return relatedUser;
+  };
+
+  const firstRelatedUser = getRelatedUser();
 
   const isAuthUser = authUser?.id === user.id;
 
@@ -57,27 +64,20 @@ const ProfileTitleDesktopView: React.FC<Props> = (props) => {
     <Hidden xsDown>
       <UsersModal
         title="Followers"
-        submitted={submitted}
         open={show === "followers"}
         onClose={() => setShow("none")}
         users={user.followers!}
-        profile={profile}
-        onToggleFollow={onToggleFollow}
       />
       <UsersModal
         title="Following"
-        submitted={submitted}
         open={show === "following"}
         onClose={() => setShow("none")}
         users={user.following!}
-        profile={profile}
-        onToggleFollow={onToggleFollow}
       />
       <ProfileTitleUnfollowModal
         open={show === "unfollow"}
         onClose={() => setShow("none")}
         user={user}
-        onToggleFollow={onToggleFollow}
       />
       <NotSupportedModal
         open={show === "not-supported"}
@@ -131,7 +131,13 @@ const ProfileTitleDesktopView: React.FC<Props> = (props) => {
             <Grid style={{ display: "flex", alignItems: "center" }} item>
               {user.username === authUser?.username ? (
                 <>
-                  <Link to={TO_EDITPROFILE_PAGE} className={classes.editBtn}>
+                  <Link
+                    to={{
+                      pathname: TO_EDITPROFILE_PAGE,
+                      state: { from: path, ...params },
+                    }}
+                    className={classes.editBtn}
+                  >
                     Edit Profile
                   </Link>
                   <SettingsSvg width={24} height={24} />
@@ -155,7 +161,7 @@ const ProfileTitleDesktopView: React.FC<Props> = (props) => {
               ) : (
                 <Button
                   className={classes.followBtn}
-                  onClick={() => onToggleFollow(user?.id!)}
+                  onClick={() => handleToggleFollow(user)}
                 >
                   {submitted ? (
                     <LoadingSpinner width={24} height={24} />
@@ -220,10 +226,23 @@ const ProfileTitleDesktopView: React.FC<Props> = (props) => {
           </Grid>
           <br />
           <Grid xs={12} item>
-            <Typography color="textSecondary" variant="body1">
-              Followed by <strong style={{ color: "black" }}>iamsheriff</strong>{" "}
-              +6more
-            </Typography>
+            {firstRelatedUser ? (
+              <Typography color="textSecondary" variant="body1">
+                <strong>
+                  Followed by{" "}
+                  <Link
+                    className={classes.link}
+                    style={{ color: "#262626" }}
+                    to={{
+                      pathname: `/${firstRelatedUser?.username}/`,
+                      state: { from: path, ...params },
+                    }}
+                  >
+                    {firstRelatedUser?.username}
+                  </Link>
+                </strong>{" "}
+              </Typography>
+            ) : null}{" "}
           </Grid>
         </Grid>
       </Grid>

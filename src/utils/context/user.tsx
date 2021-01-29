@@ -1,33 +1,38 @@
-import { ApolloQueryResult, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React, { createContext, useContext } from "react";
 import LoadingPage from "../../common/loading/page";
 import { GET_AUTH_USER } from "../queries/user";
 import { User } from "../types/user";
 
-const UserContext = createContext<null | {
-  user: null | User;
-  setUser: (
-    variables?: Partial<Record<string, any>> | undefined
-  ) => Promise<ApolloQueryResult<any>>;
-}>(null);
+const UserContext = createContext<
+  | undefined
+  | {
+      user: null | User;
+    }
+>(undefined);
 
 export const UserProvider: React.FC = ({ children }) => {
-  const { data, loading, refetch } = useQuery(GET_AUTH_USER);
+  // Other Hooks
+  const { data, loading } = useQuery(GET_AUTH_USER);
 
   // JSX
   if (loading) return <LoadingPage />;
 
   return (
     <UserContext.Provider
-      value={{ user: data ? (data.profile as User) : null, setUser: refetch }}
+      value={{
+        user: data ? (data.profile as User) : null,
+      }}
     >
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUserContext = () => {
+export const useUser = () => {
   const context = useContext(UserContext);
-
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
   return context;
 };

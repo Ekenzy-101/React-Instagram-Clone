@@ -7,7 +7,10 @@ import CommentSvg from "../../../common/svgs/CommentSvg";
 import SavedSvg from "../../../common/svgs/SavedSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import { Post } from "../../../utils/types/post";
-import { POST_PIC_URL } from "../../../utils/constants/url";
+import {
+  MULTI_PHOTO_LOGO_URL,
+  POST_PIC_URL,
+} from "../../../utils/constants/url";
 interface Props {
   savedPosts: Post[];
 }
@@ -25,7 +28,10 @@ const ProfileBodySaved: React.FC<Props> = (props) => {
         <Typography className={classes.savedText} color="textSecondary">
           Only you can see what you've saved
         </Typography>
-        <div className="explore-grid-container" style={{ padding: 0 }}>
+        <div
+          className="explore-grid-container"
+          style={{ padding: 0, maxWidth: 760, margin: "auto" }}
+        >
           {savedPosts.map((post) => (
             <Link
               to={`/p/${post.id}/`}
@@ -52,7 +58,12 @@ const ProfileBodySaved: React.FC<Props> = (props) => {
                   </Typography>
                 </div>
               </div>
-
+              {post?.image_urls?.length > 1 ? (
+                <span
+                  style={{ backgroundImage: `url(${MULTI_PHOTO_LOGO_URL})` }}
+                  className={classes.multiPhoto}
+                ></span>
+              ) : null}
               <img src={POST_PIC_URL} alt="Post" />
             </Link>
           ))}

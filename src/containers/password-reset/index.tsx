@@ -1,8 +1,9 @@
 import { Avatar, Paper, Typography } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTitle } from "react-use";
+
 import useForm from "../../common/hooks/useForm";
-import usePageTitle from "../../common/hooks/usePageTitle";
 import PasswordResetFooter from "../../components/password-reset/footer";
 import PasswordResetHeader from "../../components/password-reset/header";
 import { TO_SIGNUP_PAGE } from "../../utils/constants/routes";
@@ -12,9 +13,9 @@ import { useStyles } from "./styles";
 const PasswordResetPage: React.FC = () => {
   const classes = useStyles();
   const { renderButton, renderInput } = useForm({});
+  useTitle("Reset Password - Instagram");
 
-  // Effect Hooks
-  usePageTitle("Reset Password - Instagram");
+  // JSX
   return (
     <Paper variant="outlined" square className={classes.root}>
       <PasswordResetHeader />
@@ -32,7 +33,7 @@ const PasswordResetPage: React.FC = () => {
               Enter your email and we'll send you a link to get back into your
               account
             </Typography>
-            {renderInput("Email", "email")}
+            {renderInput({ label: "Email", name: "email" })}
             {renderButton("Send Login Link")}
             <div className={classes.dividerGroup}>
               <div className={classes.divider}></div>

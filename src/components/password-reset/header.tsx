@@ -10,13 +10,15 @@ const PasswordResetHeader: React.FC = () => {
 
   // JSX
   return (
-    <AppBar position="sticky" variant="outlined" className={classes.appbar}>
+    <AppBar position="fixed" className={classes.appbar}>
       <Toolbar className={classes.toolbar}>
         <Avatar
           src={IG_MONOCHROME_LOGO_URL}
           variant="square"
           className={classes.brandLogo}
         />
+        <p></p>
+        <p></p>
       </Toolbar>
     </AppBar>
   );

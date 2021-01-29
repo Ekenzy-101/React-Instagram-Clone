@@ -11,6 +11,9 @@ export const REPLY_FRAGMENT = gql`
       username
       image_url
     }
+    likes {
+      id
+    }
   }
 `;
 

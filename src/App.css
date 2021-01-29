@@ -1,8 +1,10 @@
 #file-input {
   opacity: 0;
+  z-index: 4;
   width: 30px;
   height: 30px;
   position: absolute;
+  cursor: pointer;
 }
 
 .file-input-wrapper {

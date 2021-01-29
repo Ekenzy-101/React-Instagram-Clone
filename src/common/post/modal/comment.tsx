@@ -3,13 +3,13 @@ import clsx from "clsx";
 import { Dialog, DialogContent } from "@material-ui/core";
 
 import { useStyles } from "./styles";
-import { useUserContext } from "../../../utils/context/user";
-import { PostComment } from "../../../utils/types/post";
+import { useUser } from "../../../utils/context/user";
+import { PostComment, ReplyComment } from "../../../utils/types/post";
 
 interface Props {
   open: boolean;
-  comment: PostComment | undefined;
-  onDelete?: () => void;
+  comment?: PostComment | ReplyComment;
+  onDelete: () => void;
   onClose: () => void;
 }
 const PostCommentModal: React.FC<Props> = ({
@@ -19,7 +19,7 @@ const PostCommentModal: React.FC<Props> = ({
   comment,
 }) => {
   // Global Hooks
-  const { user: authUser } = useUserContext()!;
+  const { user: authUser } = useUser()!;
 
   // Other Hooks
   const classes = useStyles();

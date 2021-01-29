@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { Post } from "../../../utils/types/post";
-import { useUserContext } from "../../../utils/context/user";
+import { useUser } from "../../../utils/context/user";
 import { useCopyToClipboard } from "react-use";
 import toast from "react-hot-toast";
 
@@ -16,7 +16,7 @@ interface Props {
 
 const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
   // Global Context
-  const { user } = useUserContext()!;
+  const { user } = useUser();
 
   // Other Hooks
   const classes = useStyles();

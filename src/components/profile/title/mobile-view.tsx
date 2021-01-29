@@ -8,64 +8,73 @@ import {
 } from "@material-ui/core";
 import { Check, Person } from "@material-ui/icons";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
+
 import LoadingSpinner from "../../../common/loading/spinner";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
 import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
-import { useUserContext } from "../../../utils/context/user";
-import { UserProfile } from "../../../utils/types/user";
+import { useUser } from "../../../utils/context/user";
+import { User } from "../../../utils/types/user";
 import { useStyles } from "./styles";
 import ProfileTitleUnfollowModal from "./modal/unfollow";
 import NotSupportedModal from "../../../common/not-supported-modal";
-
+import { modalState } from "../../../utils/types/modal";
+import { useFollow } from "../../../utils/context/follow";
 interface Props {
-  user: UserProfile;
-  profile: UserProfile;
-  submitted: boolean;
+  user: User;
   isUploading: boolean;
-  onToggleFollow: (userId: string) => void;
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileTitleMobileView: React.FC<Props> = (props) => {
-  const {
-    user,
-    profile,
-    submitted,
-    isUploading,
-    onUpload,
-    onToggleFollow,
-  } = props;
+  const { user, isUploading, onUpload } = props;
   // Global State Hooks
-  const { user: authUser } = useUserContext()!;
+  const { user: authUser } = useUser();
+  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
+  const [show, setShow] = useState<modalState>("none");
 
   // Other Styles
   const classes = useStyles();
+  const { path, params } = useRouteMatch();
 
   // Other Logic
   const isFollowingUser = (id: string) => {
-    return profile?.followers?.some((f) => f.id === id);
+    return authUser?.followers?.some((f) => f.id === id);
   };
 
   const isFollowedByUser = (id: string) => {
-    return profile?.following?.some((f) => f.id === id);
+    return authUser?.following?.some((f) => f.id === id);
   };
+
+  const getRelatedUser: () => User | undefined = () => {
+    const authUserFollowing = authUser?.following;
+    let relatedUser: User | undefined;
+    if (authUserFollowing) {
+      authUserFollowing.forEach((u) => {
+        relatedUser = user?.followers?.find((f) => f.id === u.id);
+        if (relatedUser) return;
+      });
+    }
+    return relatedUser;
+  };
+
+  const firstRelatedUser = getRelatedUser();
 
   const isAuthUser = authUser?.id === user.id;
 
   // JSX
   return (
     <Hidden smUp>
-      <NotSupportedModal open={open1} onClose={() => setOpen1(false)} />
+      <NotSupportedModal
+        open={show === "not-supported"}
+        onClose={() => setShow("none")}
+      />
       <ProfileTitleUnfollowModal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={show === "unfollow"}
+        onClose={() => setShow("none")}
         user={user}
-        onToggleFollow={onToggleFollow}
       />
       <Grid container className={classes.root} alignItems="center" spacing={3}>
         <Grid xs={3} item>
@@ -103,19 +112,25 @@ const ProfileTitleMobileView: React.FC<Props> = (props) => {
             <span style={{ marginRight: "1rem" }}>{user.username}</span>
           </Typography>
           {user.username === authUser?.username ? (
-            <Link to={TO_EDITPROFILE_PAGE} className={classes.editBtn}>
+            <Link
+              to={{
+                pathname: TO_EDITPROFILE_PAGE,
+                state: { from: path, ...params },
+              }}
+              className={classes.editBtn}
+            >
               Edit Profile
             </Link>
           ) : isFollowedByUser(user?.id!) ? (
             <>
               <Button
-                onClick={() => setOpen1(true)}
+                onClick={() => setShow("not-supported")}
                 className={classes.followingBtn}
               >
                 Message
               </Button>
               <Button
-                onClick={() => setOpen(true)}
+                onClick={() => setShow("unfollow")}
                 className={classes.optionBtn}
               >
                 <Person className={classes.peopleIcon} />
@@ -125,7 +140,7 @@ const ProfileTitleMobileView: React.FC<Props> = (props) => {
           ) : (
             <Button
               className={classes.followBtn}
-              onClick={() => onToggleFollow(user?.id!)}
+              onClick={() => handleToggleFollow(user)}
             >
               {submitted ? (
                 <LoadingSpinner width={24} height={24} />
@@ -160,10 +175,23 @@ const ProfileTitleMobileView: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
         <Grid xs={12} item>
-          <Typography color="textSecondary" variant="body1">
-            Followed by <strong style={{ color: "black" }}>iamsheriff</strong>{" "}
-            +6more
-          </Typography>
+          {firstRelatedUser ? (
+            <Typography color="textSecondary" variant="body1">
+              <strong>
+                Followed by{" "}
+                <Link
+                  className={classes.link}
+                  style={{ color: "#262626" }}
+                  to={{
+                    pathname: `/${firstRelatedUser?.username}/`,
+                    state: { from: path, ...params },
+                  }}
+                >
+                  {firstRelatedUser?.username}
+                </Link>
+              </strong>{" "}
+            </Typography>
+          ) : null}{" "}
         </Grid>
       </Grid>
       <Divider />
@@ -181,7 +209,13 @@ const ProfileTitleMobileView: React.FC<Props> = (props) => {
           <Typography color="textSecondary">posts</Typography>
         </Grid>
         <Grid item>
-          <Link className={classes.link} to={`/${user.username}/followers/`}>
+          <Link
+            className={classes.link}
+            to={{
+              pathname: `/${user.username}/followers/`,
+              state: { from: path, ...params },
+            }}
+          >
             <Typography style={{ width: "100%", textAlign: "center" }}>
               <strong>{user.followersCount}</strong>
             </Typography>
@@ -189,7 +223,13 @@ const ProfileTitleMobileView: React.FC<Props> = (props) => {
           </Link>
         </Grid>
         <Grid item>
-          <Link className={classes.link} to={`/${user.username}/following/`}>
+          <Link
+            className={classes.link}
+            to={{
+              pathname: `/${user.username}/following/`,
+              state: { from: path, ...params },
+            }}
+          >
             <Typography style={{ width: "100%", textAlign: "center" }}>
               <strong>{user.followingCount}</strong>
             </Typography>

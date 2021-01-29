@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-import { useUserContext } from "../utils/context/user";
+import { useUser } from "../utils/context/user";
 import { TO_HOME_PAGE } from "../utils/constants/routes";
 
 interface Props {
@@ -18,7 +18,7 @@ const RedirectedRoute: React.FC<Props> = ({
   exact,
   ...rest
 }) => {
-  const { user } = useUserContext()!;
+  const { user } = useUser();
 
   return (
     <Route

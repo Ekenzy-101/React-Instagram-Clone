@@ -1,45 +1,53 @@
+import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
 import { Avatar, Divider, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { useLongPress } from "react-use";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+
+import { debug } from "../../../../utils/services/debugService";
 import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import { Post, PostComment } from "../../../../utils/types/post";
-import { parseCommentDate } from "../../../../utils/helpers/comment";
-import LoveSvg from "../../../svgs/LoveSvg";
+import {
+  parseCommentDate,
+  deletePostComment,
+} from "../../../../utils/helpers/comment";
+import PostCardCommonComment from "./comment";
 import { useStyles } from "../styles";
-import { useUserContext } from "../../../../utils/context/user";
-
+import { DELETE_COMMENT } from "../../../../utils/mutations/comment";
+import { modalState } from "../../../../utils/types/modal";
+import PostCommentModal from "../../modal/comment";
+import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
 interface Props {
   post: Post;
-  setActiveComment: React.Dispatch<
+  setCommentToReply?: React.Dispatch<
     React.SetStateAction<PostComment | undefined>
   >;
-  onOpenModal: () => void;
-  onToggleCommentLike: (id: string) => void;
   divider?: boolean;
 }
+
 const PostCardCommonComments: React.FC<Props> = (props) => {
-  const {
-    post,
-    setActiveComment,
-    onOpenModal,
-    onToggleCommentLike,
-    divider,
-  } = props;
+  const { post, setCommentToReply, divider } = props;
   const { user, caption, created_at, comments } = post;
 
-  // Global State Hooks
-  const { user: authUser } = useUserContext()!;
+  // State Hooks
+  const [show, setShow] = useState<modalState>("none");
+  const [commentToDelete, setCommentToDelete] = useState<
+    undefined | PostComment
+  >(undefined);
 
   // Other Hooks
   const classes = useStyles();
+  const { pathname } = useLocation();
+  const history = useHistory();
+  const [deleteComment] = useMutation(DELETE_COMMENT);
   const { path, params } = useRouteMatch();
   const longPressEvent = useLongPress(
     (e) => {
       const target = e.target as EventTarget & { id: string };
       const comment = comments.find((c) => c.id === target.id);
-      setActiveComment(comment);
-      onOpenModal();
+      setCommentToDelete(comment);
+      setShow("post-comment");
     },
     {
       isPreventDefault: true,
@@ -47,14 +55,39 @@ const PostCardCommonComments: React.FC<Props> = (props) => {
     }
   );
 
-  // Other Logic
-  const isCommentLikedByUser = (comment: PostComment) => {
-    return comment.likes.some((like) => like.id === authUser?.id);
+  // Event Handlers
+  const handleDeleteComment = async () => {
+    try {
+      setShow("none");
+      await deleteComment({
+        variables: { id: commentToDelete?.id },
+        update(cache) {
+          deletePostComment({ cache, post, comment: commentToDelete! });
+        },
+      });
+    } catch (error) {
+      debug.error(error);
+      setShow("none");
+      if (error.message.includes("Unauthorized")) {
+        history.push(
+          `${TO_LOGIN_PAGE}?redirect_to=${encodeURIComponent(pathname)}`,
+          pathname
+        );
+      } else {
+        toast(error?.message);
+      }
+    }
   };
 
   // JSX
   return (
     <>
+      <PostCommentModal
+        open={show === "post-comment"}
+        onClose={() => setShow("none")}
+        comment={commentToDelete}
+        onDelete={handleDeleteComment}
+      />
       <div className={classes.commentByGroup}>
         <Avatar
           src={user.image_url ? user.image_url : PROFILE_PIC_URL}
@@ -87,71 +120,13 @@ const PostCardCommonComments: React.FC<Props> = (props) => {
         </>
       ) : null}
       {comments.map((comment, index) => (
-        <div key={index}>
-          <div className={classes.commentByGroup}>
-            <Avatar
-              src={
-                comment.user.image_url
-                  ? comment.user.image_url
-                  : PROFILE_PIC_URL
-              }
-              className={classes.commentByAvatar}
-            />
-            <div
-              {...longPressEvent}
-              id={comment.id}
-              className={classes.commentByBody}
-            >
-              <Typography
-                style={{ marginBottom: "0.5rem", fontSize: "0.9rem" }}
-                variant="body1"
-                id={comment.id}
-              >
-                <strong id={comment.id} style={{ marginRight: "0.5rem" }}>
-                  <Link
-                    className={classes.link}
-                    to={{
-                      pathname: `/${comment.user.username}/`,
-                      state: { from: path, ...params },
-                    }}
-                  >
-                    {comment.user.username}
-                  </Link>
-                </strong>
-                {comment.content.split("\n").map((c, i) => (
-                  <span key={i}>
-                    {c}
-                    <br />
-                  </span>
-                ))}
-              </Typography>
-              <Typography
-                id={comment.id}
-                variant="caption"
-                color="textSecondary"
-              >
-                {parseCommentDate(comment.created_at)}
-                {comment.likes.length ? (
-                  <strong style={{ marginLeft: "12px" }}>
-                    {comment.likes.length > 1
-                      ? `${comment.likes.length} likes`
-                      : `${comment.likes.length} like`}
-                  </strong>
-                ) : null}
-                <strong style={{ marginLeft: "12px" }}>Reply</strong>
-              </Typography>
-            </div>
-            <div>
-              <LoveSvg
-                active={isCommentLikedByUser(comment)}
-                fill={isCommentLikedByUser(comment) ? "#ed4956" : undefined}
-                width={12}
-                height={12}
-                onClick={() => onToggleCommentLike(comment.id)}
-              />
-            </div>
-          </div>
-        </div>
+        <PostCardCommonComment
+          key={index}
+          comment={comment}
+          post={post}
+          setCommentToReply={setCommentToReply!}
+          onLongPress={longPressEvent}
+        />
       ))}
     </>
   );

@@ -7,19 +7,15 @@ import { UPDATE_PROFILE_PIC } from "../../../utils/mutations/user";
 import { GET_AUTH_USER_INFO } from "../../../utils/queries/user";
 import http from "../../../utils/services/httpService";
 import { debug } from "../../../utils/services/debugService";
-import { UserProfile } from "../../../utils/types/user";
+import { User } from "../../../utils/types/user";
 import ProfileBodyDesktopView from "../body/desktop-view";
 import ProfileBodyMobileView from "../body/mobile-view";
 import ProfileHeader from "../header";
 import ProfileTitleDesktopView from "../title/desktop-view";
 import ProfileTitleMobileView from "../title/mobile-view";
 import AccountNavMobileView from "../../../common/account-nav/mobile-view";
-
 interface Props {
-  profile: UserProfile;
-  user: UserProfile;
-  submitted: boolean;
-  onToggleFollow: (userId: string) => void;
+  user: User;
 }
 
 const ProfileWrapper: React.FC<Props> = (props) => {
@@ -82,12 +78,12 @@ const ProfileWrapper: React.FC<Props> = (props) => {
       <ProfileHeader user={user} onOpen={() => setOpen(true)} />
       <div>
         <ProfileTitleMobileView
-          {...props}
+          user={user}
           onUpload={handleUpload}
           isUploading={loading}
         />
         <ProfileTitleDesktopView
-          {...props}
+          user={user}
           onUpload={handleUpload}
           isUploading={loading}
         />

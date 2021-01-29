@@ -75,6 +75,14 @@ export const useStyles = makeStyles((theme) => ({
     color: "#fff",
     background: `${theme.palette.primary.main} !important`,
   },
+  multiPhoto: {
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "0 0",
+    height: "32px",
+    width: "32px",
+    position: "absolute",
+    right: "2%",
+  },
   svgWrapper: {
     width: "62px",
     height: "62px",

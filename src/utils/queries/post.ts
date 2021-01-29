@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { POST_FRAGMENT } from "../fragments/post";
 import { COMMENT_FRAGMENT } from "../fragments/comment";
-// import { USER_FRAGMENT } from "../fragments/user";
 
 export const GET_POST = gql`
   query getPost($id: String!) {
@@ -51,7 +50,7 @@ export const GET_POST_LIKES = gql`
 
 export const GET_POSTS = gql`
   query {
-    posts {
+    posts(random: false) {
       ...PostFragment
       comments(count: 2) {
         ...CommentFragment
@@ -60,4 +59,15 @@ export const GET_POSTS = gql`
   }
   ${COMMENT_FRAGMENT}
   ${POST_FRAGMENT}
+`;
+
+export const GET_RANDOM_POSTS = gql`
+  query {
+    posts(random: true) {
+      id
+      image_urls
+      commentsCount
+      likesCount
+    }
+  }
 `;

@@ -16,13 +16,13 @@ import AccountNav from "../../../common/account-nav";
 import { useStyles } from "./styles";
 import EditProfileBodyWrapper from "./wrapper";
 import useForm from "../../../common/hooks/useForm";
-import { UserProfile } from "../../../utils/types/user";
+import { User } from "../../../utils/types/user";
 import { UPDATE_PROFILE_INFO } from "../../../utils/mutations/user";
 import LoadingSpinner from "../../../common/loading/spinner";
 import { GET_AUTH_USER_INFO } from "../../../utils/queries/user";
 
 interface Props {
-  profile: UserProfile;
+  profile: User;
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isUploading: boolean;
 }

@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
 
 const InputImagesContext = createContext<null | {
-  inputImages: string[];
-  setInputImages: React.Dispatch<React.SetStateAction<string[]>>;
+  inputImages: Blob[];
+  setInputImages: React.Dispatch<React.SetStateAction<Blob[]>>;
 }>(null);
 
 export const InputImagesProvider: React.FC = ({ children }) => {
-  const [inputImages, setInputImages] = useState<string[]>([]);
+  const [inputImages, setInputImages] = useState<Blob[]>([]);
 
   return (
     <InputImagesContext.Provider value={{ inputImages, setInputImages }}>

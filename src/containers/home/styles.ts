@@ -3,7 +3,10 @@ import { makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
-    minHeight: "calc(100vh - 3.4rem)",
+    minHeight: "100vh",
+    width: "100%",
+    maxWidth: "100vw",
+    paddingBottom: "3.2rem",
   },
   wrapper: {
     width: "598px",

@@ -6,8 +6,12 @@ import toast from "react-hot-toast";
 import { Post } from "../../../utils/types/post";
 import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
-import { CAMERA_LOGO_URL, POST_PIC_URL } from "../../../utils/constants/url";
-import { useUserContext } from "../../../utils/context/user";
+import {
+  CAMERA_LOGO_URL,
+  POST_PIC_URL,
+  MULTI_PHOTO_LOGO_URL,
+} from "../../../utils/constants/url";
+import { useUser } from "../../../utils/context/user";
 // import ProfileBodyCard from "./card";
 import { useStyles } from "./style";
 import { TO_CREATESTYLE_PAGE } from "../../../utils/constants/routes";
@@ -17,7 +21,7 @@ interface Props {
 
 const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
   // Global Hooks
-  const { user } = useUserContext()!;
+  const { user } = useUser()!;
 
   // Other Hooks
   const classes = useStyles();
@@ -79,7 +83,12 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
                 </Typography>
               </div>
             </div>
-
+            {post?.image_urls?.length > 1 ? (
+              <span
+                style={{ backgroundImage: `url(${MULTI_PHOTO_LOGO_URL})` }}
+                className={classes.multiPhoto}
+              ></span>
+            ) : null}
             <img src={POST_PIC_URL} alt="Post" />
           </Link>
         ))}

@@ -5,18 +5,18 @@ import { useHistory } from "react-router-dom";
 
 import { useStyles } from "./styles";
 import DesktopViewHeader from "../../../common/header";
-import { UserProfile } from "../../../utils/types/user";
-import { useUserContext } from "../../../utils/context/user";
+import { User } from "../../../utils/types/user";
+import { useUser } from "../../../utils/context/user";
 import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import MobileViewHeader from "../../../common/header/mobile-view";
 interface Props {
-  user: UserProfile;
+  user: User;
   onOpen: () => void;
 }
 
 const ProfileHeader: React.FC<Props> = ({ user, onOpen }) => {
   // Global Hooks
-  const { user: authUser } = useUserContext()!;
+  const { user: authUser } = useUser()!;
 
   // Other Hooks
   const classes = useStyles();

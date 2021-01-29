@@ -21,13 +21,13 @@ import {
   TO_SIGNUP_PAGE,
 } from "../../utils/constants/routes";
 import HeaderMenu from "./menu";
-import { useUserContext } from "../../utils/context/user";
+import { useUser } from "../../utils/context/user";
 import NotSupportedModal from "../not-supported-modal";
 import { modalState } from "../../utils/types/modal";
 
 const DesktopViewHeader = () => {
   // Global State Hooks
-  const { user } = useUserContext()!;
+  const { user } = useUser();
 
   // State Hooks
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);

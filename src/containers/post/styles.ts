@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   wrapper: {
     margin: "auto",
-    width: "816px",
+    maxWidth: "816px",
     display: "block",
     [theme.breakpoints.down("xs")]: {
       width: "100%",

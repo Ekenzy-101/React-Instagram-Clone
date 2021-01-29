@@ -10,56 +10,53 @@ import {
 import { useStyles } from "./styles";
 import { Close } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import ProfileTitleUnfollowModal from "../../components/profile/title/modal/unfollow";
 
-import { PROFILE_PIC_URL } from "../../utils/constants/url";
-import { UserProfile } from "../../utils/types/user";
 import LoadingSpinner from "../loading/spinner";
+import ProfileTitleUnfollowModal from "../../components/profile/title/modal/unfollow";
+import { PROFILE_PIC_URL } from "../../utils/constants/url";
+import { User } from "../../utils/types/user";
 import { modalState } from "../../utils/types/modal";
+import { useUser } from "../../utils/context/user";
+import { useFollow } from "../../utils/context/follow";
 
 interface Props {
   open: boolean;
-  submitted: boolean;
   title: string;
-  users: UserProfile[];
-  profile?: UserProfile;
+  users: User[];
   onClose?: () => void;
-  onToggleFollow: (userId: string) => void;
 }
 const UsersModal: React.FC<Props> = (props) => {
-  const {
-    open,
-    submitted,
-    onClose,
-    title,
-    users,
-    profile,
-    onToggleFollow,
-  } = props;
+  const { open, onClose, title, users } = props;
+
+  // Global State Hooks
+  const { user: authUser } = useUser();
+  const { handleToggleFollow, submitted } = useFollow();
+
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   // Other Hooks
   const classes = useStyles();
 
   // Event Handlers
-  const handleOpen = (user: UserProfile) => {
+  const handleOpen = (user: User) => {
     setSelectedUser(user);
     setShow("unfollow");
   };
 
-  const handleClick = (user: UserProfile) => {
+  const handleClick = (user: User) => {
     setSelectedUser(user);
-    onToggleFollow(user.id!);
+    handleToggleFollow(user);
   };
 
+  // Other Logic
   const isFollowingUser = (id: string) => {
-    return profile?.followers?.some((f) => f.id === id);
+    return authUser?.followers?.some((f) => f.id === id);
   };
 
   const isFollowedByUser = (id: string) => {
-    return profile?.following?.some((f) => f.id === id);
+    return authUser?.following?.some((f) => f.id === id);
   };
 
   // JSX
@@ -68,7 +65,6 @@ const UsersModal: React.FC<Props> = (props) => {
       <ProfileTitleUnfollowModal
         open={show === "unfollow"}
         onClose={() => setShow("none")}
-        onToggleFollow={() => onToggleFollow(selectedUser?.id!)}
         user={selectedUser!}
       />
       <Dialog
@@ -86,7 +82,7 @@ const UsersModal: React.FC<Props> = (props) => {
         </DialogTitle>
         <DialogContent className={classes.content} dividers>
           {users
-            ?.filter((u) => u.id !== profile?.id)
+            ?.filter((u) => u.id !== authUser?.id)
             ?.map((u) => (
               <div className={classes.wrapper} key={u.id}>
                 <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />

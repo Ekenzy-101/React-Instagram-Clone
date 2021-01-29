@@ -14,12 +14,12 @@ import {
   TO_HOME_PAGE,
   TO_PROFILE_PAGE,
 } from "../../utils/constants/routes";
-import { useUserContext } from "../../utils/context/user";
+import { useUser } from "../../utils/context/user";
 import toast from "react-hot-toast";
 
 const Footer: React.FC = () => {
   // Global State Hooks
-  const { user } = useUserContext()!;
+  const { user } = useUser();
 
   // Other Hooks
   const { path, url, params } = useRouteMatch();
@@ -49,6 +49,7 @@ const Footer: React.FC = () => {
   };
 
   // JSX
+  if (!user) return null;
   return (
     <Hidden smUp>
       <>

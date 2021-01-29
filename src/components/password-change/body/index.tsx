@@ -18,7 +18,7 @@ import PasswordChangeBodyWrapper from "./wrapper";
 import useForm from "../../../common/hooks/useForm";
 import { UPDATE_PASSWORD } from "../../../utils/mutations/user";
 import LoadingSpinner from "../../../common/loading/spinner";
-import { useUserContext } from "../../../utils/context/user";
+import { useUser } from "../../../utils/context/user";
 
 const obj = {
   password: "",
@@ -28,7 +28,7 @@ const obj = {
 
 const PasswordChangeBody: React.FC = () => {
   // Global State Hooks
-  const { user } = useUserContext()!;
+  const { user } = useUser()!;
 
   // Other Hooks
   const classes = useStyles();

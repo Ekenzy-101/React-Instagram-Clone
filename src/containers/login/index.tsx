@@ -1,9 +1,10 @@
+import { useApolloClient } from "@apollo/client";
 import { Hidden, Paper, Typography } from "@material-ui/core";
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useTitle } from "react-use";
 
 import useForm from "../../common/hooks/useForm";
-import usePageTitle from "../../common/hooks/usePageTitle";
 import LoadingPage from "../../common/loading/page";
 import LoginFooter from "../../components/login/footer";
 import LoginHeader from "../../components/login/header";
@@ -12,26 +13,24 @@ import {
   TO_HOME_PAGE,
   TO_PASSWORDRESET_PAGE,
 } from "../../utils/constants/routes";
-import { useUserContext } from "../../utils/context/user";
 import {
   validateEmail,
   validatePassword,
 } from "../../utils/helpers/validation";
+import { GET_AUTH_USER } from "../../utils/queries/user";
 import { login, loginWithFacebook } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
-import { User } from "../../utils/types/user";
 import { useStyles } from "./styles";
 
 const LoginPage: React.FC = () => {
-  // Global State Hooks
-  const { setUser } = useUserContext()!;
-
   // State Hooks
   const [pageLoading, setPageLoading] = useState(false);
 
   // Other Hooks
   const classes = useStyles();
+  const client = useApolloClient();
   const history = useHistory();
+  const { state } = useLocation();
   const {
     renderInput,
     renderButton,
@@ -43,9 +42,7 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
-
-  // Effect Hooks
-  usePageTitle("Login - Instagram");
+  useTitle("Login - Instagram");
 
   // Event Handlers
   const handleFacebookResponse = async (response: any) => {
@@ -61,8 +58,10 @@ const LoginPage: React.FC = () => {
 
       debug.log(data);
 
-      setUser(data as User);
-      history.push(TO_HOME_PAGE);
+      const authUser = { __typename: "User", ...data };
+      client.writeQuery({ query: GET_AUTH_USER, data: { profile: authUser } });
+
+      state ? history.push(state as string) : history.push(TO_HOME_PAGE);
     } catch (error) {
       debug.log(error?.response?.status, error?.response?.data);
 
@@ -85,8 +84,9 @@ const LoginPage: React.FC = () => {
 
       debug.log(data);
 
-      setUser(data as User);
-      history.push(TO_HOME_PAGE);
+      const authUser = { __typename: "User", ...data };
+      client.writeQuery({ query: GET_AUTH_USER, data: { profile: authUser } });
+      state ? history.push(state as string) : history.push(TO_HOME_PAGE);
     } catch (error) {
       setFormState("initial");
 
@@ -111,14 +111,17 @@ const LoginPage: React.FC = () => {
         onFacebookResponse={handleFacebookResponse}
       >
         <form onSubmit={handleSubmit}>
-          {renderInput("Email", "email", validateEmail)}
-          {renderInput(
-            "Password",
-            "password",
-            validatePassword,
-            undefined,
-            "password"
-          )}
+          {renderInput({
+            label: "Email",
+            name: "email",
+            validate: validateEmail,
+          })}
+          {renderInput({
+            label: "Password",
+            name: "password",
+            validate: validatePassword,
+            type: "password",
+          })}
           <Hidden smUp>
             <Typography className={classes.linkWrapper}>
               <Link to={TO_PASSWORDRESET_PAGE} className={classes.link}>

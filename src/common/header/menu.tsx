@@ -13,7 +13,7 @@ import SavedSvg from "../svgs/SavedSvg";
 import SettingsSvg from "../svgs/SettingsSvg";
 import SwitchAccountSvg from "../svgs/SwitchAccountSvg";
 import { debug } from "../../utils/services/debugService";
-import { useUserContext } from "../../utils/context/user";
+import { useUser } from "../../utils/context/user";
 import { logout } from "../../utils/services/authService";
 import toast from "react-hot-toast";
 import {
@@ -35,7 +35,7 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
   // Other Hooks
   const { pathname } = useLocation();
   const { path, params } = useRouteMatch();
-  const { user } = useUserContext()!;
+  const { user } = useUser();
   const classes = useStyles();
 
   const handleLogout = async () => {
@@ -69,11 +69,11 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
       <Menu
         id="header-menu"
         anchorEl={anchorElement}
-        style={{ width: "25rem", left: 0 }}
+        style={{ left: 30 }}
         keepMounted
         transformOrigin={{
           vertical: -30,
-          horizontal: "left",
+          horizontal: "right",
         }}
         open={Boolean(anchorElement)}
         onClose={() => setAnchorElement(null)}
@@ -85,8 +85,8 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
             state: { from: path, ...params },
           }}
         >
-          <MenuItem>
-            <ListItemIcon>
+          <MenuItem className={classes.menuItem}>
+            <ListItemIcon className={classes.listItemIcon}>
               <ProfileSvg width={16} height={16} />
             </ListItemIcon>
             <ListItemText primary="Profile" />
@@ -99,8 +99,8 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
             state: { from: path, ...params },
           }}
         >
-          <MenuItem>
-            <ListItemIcon>
+          <MenuItem className={classes.menuItem}>
+            <ListItemIcon className={classes.listItemIcon}>
               <SavedSvg width={16} height={16} />
             </ListItemIcon>
             <ListItemText primary="Saved" />
@@ -113,21 +113,24 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
             state: { from: path, ...params },
           }}
         >
-          <MenuItem>
-            <ListItemIcon>
+          <MenuItem className={classes.menuItem}>
+            <ListItemIcon className={classes.listItemIcon}>
               <SettingsSvg width={16} height={16} />
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </MenuItem>
         </Link>
-        <MenuItem onClick={() => setShow("not-supported")}>
-          <ListItemIcon>
+        <MenuItem
+          className={classes.menuItem}
+          onClick={() => setShow("not-supported")}
+        >
+          <ListItemIcon className={classes.listItemIcon}>
             <SwitchAccountSvg />
           </ListItemIcon>
-          <ListItemText primary="Switch Account" />
+          <ListItemText primary="Switch Accounts" />
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleLogout}>
+        <MenuItem className={classes.menuItem} onClick={handleLogout}>
           <ListItemText primary="Logout" />
         </MenuItem>
       </Menu>

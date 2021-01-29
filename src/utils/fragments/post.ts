@@ -12,6 +12,9 @@ export const POST_FRAGMENT = gql`
     likes {
       ...UserFragment
     }
+    saves {
+      id
+    }
     user {
       ...UserFragment
     }

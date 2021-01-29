@@ -4,45 +4,46 @@ import { Link } from "react-router-dom";
 
 import LoadingSpinner from "../../../common/loading/spinner";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
-import { UserProfile } from "../../../utils/types/user";
+import { useFollow } from "../../../utils/context/follow";
+import { useUser } from "../../../utils/context/user";
+import { User } from "../../../utils/types/user";
 import ProfileTitleUnfollowModal from "../../profile/title/modal/unfollow";
 import { useStyles } from "./styles";
 
 interface Props {
-  user: UserProfile;
-  submitted: boolean;
-  profile: UserProfile | null;
-  onToggleFollow: (userId: string) => {};
+  user: User;
 }
 
-const ProfileFollowingBody: React.FC<Props> = (props) => {
-  const { user, profile, submitted, onToggleFollow } = props;
+const ProfileFollowingBody: React.FC<Props> = ({ user }) => {
+  // Global State Hooks
+  const { user: authUser } = useUser();
+  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   // Other Hooks
   const classes = useStyles();
 
   // Event Handlers
-  const handleOpen = (user: UserProfile) => {
+  const handleOpen = (user: User) => {
     setSelectedUser(user);
     setOpen(true);
   };
 
-  const handleClick = (user: UserProfile) => {
+  const handleClick = (user: User) => {
     setSelectedUser(user);
-    onToggleFollow(user.id!);
+    handleToggleFollow(user);
   };
 
   // Other Logic
   const isFollowingUser = (id: string) => {
-    return profile?.followers?.some((f) => f.id === id);
+    return authUser?.followers?.some((f) => f.id === id);
   };
 
   const isFollowedByUser = (id: string) => {
-    return profile?.following?.some((f) => f.id === id);
+    return authUser?.following?.some((f) => f.id === id);
   };
 
   // JSX
@@ -51,12 +52,11 @@ const ProfileFollowingBody: React.FC<Props> = (props) => {
       <ProfileTitleUnfollowModal
         open={open}
         onClose={() => setOpen(false)}
-        onToggleFollow={() => onToggleFollow(selectedUser?.id!)}
         user={selectedUser!}
       />
       <br />
       {user?.following
-        ?.filter((l) => l?.id !== profile?.id)
+        ?.filter((l) => l?.id !== authUser?.id)
         .map((l) => (
           <div className={classes.wrapper} key={l.id}>
             <Avatar

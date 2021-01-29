@@ -9,9 +9,9 @@ export const useStyles = makeStyles((theme) => ({
     borderBottom: "1px solid rgba(var(--b6a,219,219,219),1)",
   },
   icon: {
-    width: "30px",
-    height: "30px",
-    color: "#494949",
+    width: "25px",
+    height: "25px",
+    color: "#262626",
     cursor: "pointer",
   },
   toolbar: {

@@ -47,3 +47,9 @@ export const UPDATE_PROFILE_INFO = gql`
     )
   }
 `;
+
+export const UPDATE_PROFILE_PIC = gql`
+  mutation {
+    updateProfilePicture
+  }
+`;

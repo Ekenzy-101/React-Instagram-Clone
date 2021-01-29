@@ -11,6 +11,8 @@ export const useStyles = makeStyles((theme) => ({
   backIcon: {
     cursor: "pointer",
     color: "#262626",
+    width: "25px",
+    height: "25px",
   },
   toolbar: {
     justifyContent: "space-between",

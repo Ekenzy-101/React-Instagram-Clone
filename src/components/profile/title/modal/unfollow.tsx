@@ -1,28 +1,31 @@
 import { Avatar, Dialog, DialogContent, Typography } from "@material-ui/core";
 import React from "react";
 import clsx from "clsx";
-import { useStyles } from "./styles";
-import { UserProfile } from "../../../../utils/types/user";
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
 
+import { useStyles } from "./styles";
+import { User } from "../../../../utils/types/user";
+import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { useFollow } from "../../../../utils/context/follow";
 interface Props {
   open: boolean;
   onClose: () => void;
-  onToggleFollow: (userId: string) => void;
-  user: UserProfile;
+  user: User;
 }
+
 const ProfileTitleUnfollowModal: React.FC<Props> = ({
   open,
   onClose,
   user,
-  onToggleFollow,
 }) => {
+  // Global Hooks
+  const { handleToggleFollow } = useFollow();
+
   // Other Hooks
   const classes = useStyles();
 
   // Event Handlers
   const handleClick = async () => {
-    await onToggleFollow(user?.id!);
+    await handleToggleFollow(user);
     onClose();
   };
 

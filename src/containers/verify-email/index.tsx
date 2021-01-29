@@ -1,28 +1,25 @@
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
+import { useTitle } from "react-use";
 import toast from "react-hot-toast";
 import { useHistory, useLocation } from "react-router-dom";
 
 import useForm from "../../common/hooks/useForm";
-import usePageTitle from "../../common/hooks/usePageTitle";
 import VerifyEmailHeader from "../../components/verify-email/header";
 import VerifyEmailWrapper from "../../components/verify-email/wrapper";
 import { TO_HOME_PAGE } from "../../utils/constants/routes";
-import { useUserContext } from "../../utils/context/user";
 import { RESEND_VERIFICATION_CODE } from "../../utils/mutations/user";
 import { validateCode } from "../../utils/helpers/validation";
 import { verifyEmail } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
-import { User } from "../../utils/types/user";
 import { useStyles } from "./styles";
+import { GET_AUTH_USER } from "../../utils/queries/user";
 
 const VerifyEmailPage: React.FC = () => {
-  // Global State Hooks
-  const { setUser } = useUserContext()!;
-
   // Other Hooks
   const [resendCode] = useMutation(RESEND_VERIFICATION_CODE);
+  const client = useApolloClient();
   const classes = useStyles();
   const { state } = useLocation();
   const history = useHistory();
@@ -36,12 +33,13 @@ const VerifyEmailPage: React.FC = () => {
   } = useForm({ code: "" });
 
   // Effect Hooks
-  usePageTitle("Verify Email - Instagram");
+  useTitle("Verify Email - Instagram");
 
   useEffect(() => {
     if (!state) {
       history.goBack();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   // Event Handlers
@@ -56,7 +54,8 @@ const VerifyEmailPage: React.FC = () => {
       });
       debug.log(data);
 
-      setUser(data as User);
+      const authUser = { __typename: "User", ...data };
+      client.writeQuery({ query: GET_AUTH_USER, data: { profile: authUser } });
       history.push(TO_HOME_PAGE);
     } catch (error) {
       debug.error(error?.response?.status, error?.response?.data);
@@ -95,7 +94,11 @@ const VerifyEmailPage: React.FC = () => {
       <div className={classes.wrapper}>
         <VerifyEmailWrapper onClick={handleClick} email={state as string}>
           <form onSubmit={handleSubmit}>
-            {renderInput("Confirmation Code", "code", validateCode)}
+            {renderInput({
+              label: "Confirmation Code",
+              name: "code",
+              validate: validateCode,
+            })}
             {renderButton("Next")}
             {renderErrorMessage()}
           </form>

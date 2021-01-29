@@ -1,6 +1,7 @@
 import igGreyLogo from "../images/instagram-grey.png";
 import igMonoChromeLogo from "../images/instagram-logo.png";
 import igMonoChromeLogo1 from "../images/instagram-logo-1.png";
+import multiPhotoLogo from "../images/multi.png";
 import lockLogo from "../images/lock.png";
 import profilePic from "../images/default-1.jpg";
 import postPic from "../images/burger.jpg";
@@ -19,3 +20,4 @@ export const FACEBOOK_LITE_LOGO_URL = facebookLiteLogo;
 export const FACEBOOK_DARK_LOGO_URL = facebookDarkLogo;
 export const LOADING_GIF_URL = loadingGif;
 export const CAMERA_LOGO_URL = cameraLogo;
+export const MULTI_PHOTO_LOGO_URL = multiPhotoLogo;

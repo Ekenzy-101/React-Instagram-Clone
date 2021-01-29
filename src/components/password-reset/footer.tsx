@@ -12,7 +12,7 @@ const PasswordResetFooter: React.FC = () => {
   // JSX
   return (
     <AppBar position="sticky" variant="outlined" className={classes.footer}>
-      <Toolbar className={classes.toolbar}>
+      <Toolbar style={{ justifyContent: "center" }} className={classes.toolbar}>
         <Link to={TO_LOGIN_PAGE} className={classes.link}>
           Back to Login
         </Link>

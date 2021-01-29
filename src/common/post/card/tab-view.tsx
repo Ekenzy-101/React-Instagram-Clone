@@ -18,32 +18,20 @@ import { Post, PostComment } from "../../../utils/types/post";
 import PostModal from "../modal";
 import UsersModal from "../../users-modal";
 import NotSupportedModal from "../../not-supported-modal";
-import { useUserContext } from "../../../utils/context/user";
+import { useUser } from "../../../utils/context/user";
 import PostCardCommonHeader from "./common/header";
 import PostCardCommonStepper from "./common/stepper";
 import PostCardCommonForm from "./common/form";
-import { UserProfile } from "../../../utils/types/user";
+import { User } from "../../../utils/types/user";
 import { modalState } from "../../../utils/types/modal";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
+import { usePost } from "../../../utils/context/post";
+import { useComment } from "../../../utils/context/comment";
 interface Props {
-  submitted: boolean;
   post: Post;
-  profile?: UserProfile;
-  onTogglePostLike: () => void;
-  onTogglePostSave: () => void;
-  onToggleCommentLike: (id: string) => void;
-  onToggleFollow: (userId: string) => void;
 }
 
-const PostCardTabView: React.FC<Props> = ({
-  post,
-  submitted,
-  profile,
-  onTogglePostLike,
-  onTogglePostSave,
-  onToggleCommentLike,
-  onToggleFollow,
-}) => {
+const PostCardTabView: React.FC<Props> = ({ post }) => {
   const {
     user,
     image_urls,
@@ -52,10 +40,11 @@ const PostCardTabView: React.FC<Props> = ({
     caption,
     saves,
     likes,
-    likesCount,
   } = post;
   // Global Hooks
-  const { user: authUser } = useUserContext()!;
+  const { user: authUser } = useUser();
+  const { handleTogglePostLike, handleTogglePostSave } = usePost();
+  const { handleToggleCommentLike } = useComment();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
@@ -74,11 +63,10 @@ const PostCardTabView: React.FC<Props> = ({
     return comment.likes.some((like) => like.id === authUser?.id);
   };
 
-  const getRelatedUser: () => UserProfile | undefined = () => {
-    const authUserFollowing = profile?.following;
-    let relatedUser: UserProfile | undefined;
-    if (authUserFollowing) {
-      authUserFollowing.forEach((u) => {
+  const getRelatedUser: () => User | undefined = () => {
+    let relatedUser: User | undefined;
+    if (authUser?.followers) {
+      authUser?.followers?.forEach((u) => {
         relatedUser = post?.likes?.find((l) => l.id === u.id);
         if (relatedUser) return;
       });
@@ -94,9 +82,6 @@ const PostCardTabView: React.FC<Props> = ({
       <UsersModal
         title="Likes"
         users={likes}
-        submitted={submitted}
-        onToggleFollow={onToggleFollow}
-        profile={profile}
         open={show === "users"}
         onClose={() => setShow("none")}
       />
@@ -110,19 +95,13 @@ const PostCardTabView: React.FC<Props> = ({
         onClose={() => setShow("none")}
       />
       <Card variant="outlined" className={classes.root}>
-        <PostCardCommonHeader
-          onToggleFollow={onToggleFollow}
-          profile={profile}
-          onClick={() => setShow("post")}
-          post={post}
-          submitted={submitted}
-        />
+        <PostCardCommonHeader onClick={() => setShow("post")} post={post} />
         <PostCardCommonStepper image_urls={image_urls} />
 
         <CardActions className={classes.cardActions}>
           <div className={classes.groupIcons}>
             <LoveSvg
-              onClick={onTogglePostLike}
+              onClick={() => handleTogglePostLike(post)}
               active={isPostLikedByUser}
               fill={isPostLikedByUser ? "#ed4956" : undefined}
             />
@@ -137,14 +116,17 @@ const PostCardTabView: React.FC<Props> = ({
             <DirectSvg onClick={() => setShow("not-supported")} />
           </div>
           <PostCardCommonStepper mobile image_urls={image_urls} />
-          <SavedSvg active={isSavedByUser} onClick={onTogglePostSave} />
+          <SavedSvg
+            active={isSavedByUser}
+            onClick={() => handleTogglePostSave(post)}
+          />
         </CardActions>
 
         <CardContent className={classes.cardContent}>
           {firstRelatedUser ? (
             <div className={classes.likedByGroup}>
               <Avatar src={PROFILE_PIC_URL} className={classes.likedByAvatar} />
-              <Typography variant="body1">
+              <Typography className={classes.text} variant="body1">
                 Liked by{" "}
                 <strong>
                   <Link
@@ -165,21 +147,21 @@ const PostCardTabView: React.FC<Props> = ({
                         state: { from: path, ...params },
                       }}
                     >
-                      {likesCount - 1} others
+                      {likes.length - 1} others
                     </Link>
                   ) : (
                     <span
                       className={classes.link}
                       onClick={() => setShow("users")}
                     >
-                      {likesCount - 1} others
+                      {likes.length - 1} others
                     </span>
                   )}
                 </strong>
               </Typography>
             </div>
           ) : likes.length ? (
-            <Typography variant="body1">
+            <Typography className={classes.text} variant="body1">
               <strong>
                 {mobileView ? (
                   <Link
@@ -262,7 +244,9 @@ const PostCardTabView: React.FC<Props> = ({
                   fill={isCommentLikedByUser(comment) ? "#ed4956" : undefined}
                   width={12}
                   height={12}
-                  onClick={() => onToggleCommentLike(comment.id)}
+                  onClick={() =>
+                    handleToggleCommentLike({ post, id: comment.id })
+                  }
                 />
               </div>
             </div>

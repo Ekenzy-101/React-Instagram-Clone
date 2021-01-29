@@ -6,16 +6,16 @@ import { useHistory, useLocation } from "react-router-dom";
 import GridSvg from "../../../common/svgs/GridSvg";
 import SavedSvg from "../../../common/svgs/SavedSvg";
 import TaggedSvg from "../../../common/svgs/TaggedSvg";
-import { UserProfile } from "../../../utils/types/user";
-import { useUserContext } from "../../../utils/context/user";
+import { User } from "../../../utils/types/user";
+import { useUser } from "../../../utils/context/user";
 import { useStyles } from "./style";
 interface Props {
-  user: UserProfile;
+  user: User;
 }
 
 const ProfileBodyMobileView: React.FC<Props> = ({ user }) => {
   // Global State Hooks
-  const { user: authUser } = useUserContext()!;
+  const { user: authUser } = useUser()!;
 
   // Other Hooks
   const classes = useStyles();

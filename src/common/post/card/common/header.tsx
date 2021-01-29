@@ -11,29 +11,28 @@ import { Link, useRouteMatch } from "react-router-dom";
 import ProfileTitleUnfollowModal from "../../../../components/profile/title/modal/unfollow";
 
 import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { useFollow } from "../../../../utils/context/follow";
+import { useUser } from "../../../../utils/context/user";
 import { modalState } from "../../../../utils/types/modal";
 import { Post } from "../../../../utils/types/post";
-import { UserProfile } from "../../../../utils/types/user";
 import LoadingSpinner from "../../../loading/spinner";
 import { useStyles } from "../styles";
-
 interface Props {
   onClick: () => void;
-  onToggleFollow: (userId: string) => void;
   post: Post;
-  submitted: boolean;
-  profile?: UserProfile;
 }
 
 const PostCardCommonHeader: React.FC<Props> = ({
   onClick,
-  profile,
-  onToggleFollow,
   post: { user, location },
-  submitted,
 }) => {
+  // Global Hooks
+  const { user: authUser } = useUser();
+  const { handleToggleFollow, submitted } = useFollow();
+
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
+
   // Other Hooks
   const classes = useStyles();
   const { path, params } = useRouteMatch() as {
@@ -42,10 +41,10 @@ const PostCardCommonHeader: React.FC<Props> = ({
   };
 
   // Other Logic
-  const isFollowingAuthUser = profile?.followers?.some(
+  const isFollowingAuthUser = authUser?.followers?.some(
     (f) => f.id === user?.id
   );
-  const isFollowedByAuthUser = profile?.following?.some(
+  const isFollowedByAuthUser = authUser?.following?.some(
     (f) => f.id === user?.id
   );
 
@@ -53,7 +52,6 @@ const PostCardCommonHeader: React.FC<Props> = ({
   return (
     <>
       <ProfileTitleUnfollowModal
-        onToggleFollow={onToggleFollow}
         user={user}
         open={show === "unfollow"}
         onClose={() => setShow("none")}
@@ -96,7 +94,7 @@ const PostCardCommonHeader: React.FC<Props> = ({
               <Button
                 style={{ marginLeft: "0.5rem" }}
                 className={classes.submitBtn}
-                onClick={() => onToggleFollow(user?.id!)}
+                onClick={() => handleToggleFollow(user)}
               >
                 {submitted ? (
                   <LoadingSpinner />

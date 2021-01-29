@@ -1,6 +1,15 @@
 import FileResizer from "react-image-file-resizer";
 
-export const resizeFile = (file: any, maxWidth: number, maxHeight: number) => {
+export interface fileOptions {
+  file: any;
+  maxWidth: number;
+  maxHeight: number;
+  minWidth?: number;
+  minHeight?: number;
+}
+
+export const resizeFile = (options: fileOptions) => {
+  const { file, maxHeight, maxWidth, minWidth, minHeight } = options;
   return new Promise((resolve) => {
     FileResizer.imageFileResizer(
       file,
@@ -12,7 +21,9 @@ export const resizeFile = (file: any, maxWidth: number, maxHeight: number) => {
       (uri) => {
         resolve(uri);
       },
-      "base64"
+      "blob",
+      minWidth,
+      minHeight
     );
   });
 };

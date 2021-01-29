@@ -119,8 +119,8 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   likedByAvatar: {
-    width: "1.2rem",
-    height: "1.2rem",
+    width: "20px",
+    height: "20px",
     marginRight: "5px",
   },
   link: {
@@ -169,6 +169,11 @@ export const useStyles = makeStyles((theme) => ({
     padding: "0 !important",
     width: "fit-content",
     minWidth: "0",
+  },
+  text: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.9rem",
+    },
   },
   username: {
     fontSize: "1rem",

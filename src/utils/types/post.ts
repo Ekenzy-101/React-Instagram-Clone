@@ -1,4 +1,4 @@
-import { UserProfile } from "./user";
+import { User } from "./user";
 
 export interface Post {
   __typename: "Post";
@@ -6,19 +6,21 @@ export interface Post {
   caption: string;
   location: string;
   image_urls: string[];
-  likes: UserProfile[];
+  likes: User[];
+  saves: User[];
   comments: PostComment[];
   commentsCount: number;
+  likesCount: number;
   created_at: string;
-  user: UserProfile;
+  user: User;
 }
 
 export interface PostComment {
   __typename: "PostComment";
   id: string;
-  user: UserProfile;
+  user: User;
   post: Post;
-  likes: UserProfile[];
+  likes: User[];
   replies: ReplyComment[];
   content: string;
   created_at: string;
@@ -27,9 +29,9 @@ export interface PostComment {
 export interface ReplyComment {
   __typename: "ReplyComment";
   id: string;
-  user: UserProfile;
+  user: User;
   post: Post;
-  likes: UserProfile[];
+  likes: User[];
   comment: PostComment;
   content: string;
   created_at: string;

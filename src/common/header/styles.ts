@@ -22,12 +22,19 @@ export const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "inherit",
   },
+  listItemIcon: {
+    minWidth: "30px",
+  },
   loginBtn: {
     background: theme.palette.primary.main,
     color: "#fff",
     borderRadius: "4px",
     padding: "5px 9px",
     fontWeight: 600,
+  },
+  menuItem: {
+    width: 230,
+    height: 37,
   },
   signUpBtn: {
     color: theme.palette.primary.main,

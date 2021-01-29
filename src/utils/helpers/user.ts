@@ -1,65 +1,77 @@
-import { User, UserProfile } from "../types/user";
-import { GET_RELATED_USERS, GET_USER } from "../queries/user";
+import { User } from "../types/user";
+import { GET_AUTH_USER, GET_USER } from "../queries/user";
 import { debug } from "../services/debugService";
 import { ApolloCache } from "@apollo/client";
 
-export const updateUserFollowers = (
+export const updateAuthUserFollowers = (
   cache: ApolloCache<any>,
-  data: { user: UserProfile },
-  authUser: User
+  authUser: User | null,
+  profile: User
 ) => {
-  const { followers, username } = data.user;
-  const isPresent = followers?.some((f) => f.id === authUser?.id);
+  const isPresent = authUser?.following?.some((f) => f.id === profile?.id);
 
   debug.log("isPresent", isPresent);
 
-  let newFollowers = [];
+  let newFollowing = [] as User[];
+
+  // Update the auth user's following and count accordingly
+
   if (isPresent) {
-    newFollowers = followers?.filter((f) => f.id !== authUser?.id) as User[];
-  } else {
-    newFollowers = [...followers!, { __typename: "User", id: authUser?.id }];
-  }
-
-  debug.log("newFollowers", newFollowers);
-
-  const newData = {
-    user: {
-      ...data.user,
-      followers: newFollowers,
-      followersCount: newFollowers.length,
-    },
-  } as {
-    user: UserProfile;
-  };
-
-  debug.log("newData", newData);
-
-  cache.writeQuery({
-    query: GET_USER,
-    data: newData,
-    variables: { username },
-  });
-};
-
-export const updateAuthUserFollowers = (
-  cache: ApolloCache<any>,
-  authUser: UserProfile | null,
-  userId: string
-) => {
-  const isPresent = authUser?.following?.some((f) => f.id === userId);
-  let newFollowing = [] as UserProfile[];
-  if (isPresent) {
-    newFollowing = [...authUser?.following?.filter((f) => f.id !== userId)!];
+    newFollowing = [
+      ...authUser?.following?.filter((f) => f.id !== profile?.id)!,
+    ];
   } else {
     newFollowing = [
       ...authUser?.following!,
-      { id: userId, __typename: "User" },
+      { id: profile?.id, __typename: "User" },
     ];
   }
 
+  debug.log("newFollowing", newFollowing);
+
   const newData = {
     profile: { ...authUser, following: newFollowing },
-  } as { profile: UserProfile };
+  } as { profile: User };
 
-  cache.writeQuery({ query: GET_RELATED_USERS, data: newData });
+  debug.log("newData", newData);
+
+  const userData = cache.readQuery({
+    query: GET_USER,
+    variables: { username: profile?.username },
+  }) as { user: User | null } | null;
+
+  if (userData?.user) {
+    let newFollowers = [] as User[];
+    let newFollowersCount = 0;
+
+    // Update the the profile followers and count accordingly
+    if (isPresent) {
+      newFollowersCount = userData?.user.followersCount! - 1;
+      newFollowers = [
+        ...userData?.user?.followers?.filter((f) => f.id !== authUser?.id)!,
+      ];
+    } else {
+      const { id, __typename, name, username, image_url } = authUser!;
+      newFollowersCount = userData?.user.followersCount! + 1;
+      newFollowers = [
+        ...userData?.user?.followers!,
+        { id, __typename, name, username, image_url },
+      ];
+    }
+    const newUserData = {
+      user: {
+        ...userData?.user,
+        followers: newFollowers,
+        followersCount: newFollowersCount,
+      },
+    } as { user: User };
+
+    cache.writeQuery({
+      query: GET_USER,
+      data: newUserData,
+      variables: { username: profile?.username },
+    });
+  }
+
+  cache.writeQuery({ query: GET_AUTH_USER, data: newData });
 };

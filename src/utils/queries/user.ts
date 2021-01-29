@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { USER_FRAGMENT } from "../fragments/user";
 
 export const GET_USER = gql`
   query getUser($username: String!) {
@@ -15,33 +16,57 @@ export const GET_USER = gql`
         }
         commentsCount
       }
+      savedPosts {
+        id
+        image_urls
+        likes {
+          id
+        }
+        commentsCount
+      }
       website
       image_url
       followers {
-        id
+        ...UserFragment
       }
       following {
-        id
+        ...UserFragment
       }
       followersCount
       followingCount
     }
   }
+  ${USER_FRAGMENT}
+`;
+
+export const GET_USER_FOLLOWERS = gql`
+  query getUser($username: String!) {
+    user(username: $username) {
+      id
+      followers {
+        ...UserFragment
+      }
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
+export const GET_USER_FOLLOWING = gql`
+  query getUser($username: String!) {
+    user(username: $username) {
+      id
+      following {
+        ...UserFragment
+      }
+    }
+  }
+  ${USER_FRAGMENT}
 `;
 
 export const GET_AUTH_USER = gql`
   query {
     profile {
-      id
-      username
-    }
-  }
-`;
-
-export const GET_RELATED_USERS = gql`
-  query {
-    profile {
-      id
+      ...UserFragment
       followers {
         id
       }
@@ -50,6 +75,7 @@ export const GET_RELATED_USERS = gql`
       }
     }
   }
+  ${USER_FRAGMENT}
 `;
 
 export const GET_AUTH_USER_INFO = gql`
