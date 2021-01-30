@@ -30,7 +30,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   title: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
   },
 }));

@@ -1,30 +1,21 @@
 import { useMutation } from "@apollo/client";
-import React, { createContext, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { TOGGLE_POST_LIKE, TOGGLE_POST_SAVE } from "../mutations/post";
-import { TO_LOGIN_PAGE } from "../constants/routes";
-import { useUser } from "./user";
-import { debug } from "../services/debugService";
-import { updatePostLikes, updatePostSaves } from "../helpers/like";
-import { Post } from "../types/post";
+import { TOGGLE_POST_LIKE, TOGGLE_POST_SAVE } from "../../utils/mutations/post";
+import { TO_LOGIN_PAGE } from "../../utils/constants/routes";
+import { useUser } from "../../utils/context/user";
+import { debug } from "../../utils/services/debugService";
+import { updatePostLikes, updatePostSaves } from "../../utils/helpers/like";
+import { Post } from "../../utils/types/post";
 
-const PostContext = createContext<
-  | {
-      handleTogglePostLike: (post: Post) => void;
-      handleTogglePostSave: (post: Post) => void;
-      isLikeSubmitted: boolean;
-      isSaveSubmitted: boolean;
-    }
-  | undefined
->(undefined);
+const usePost = () => {
+  // Global Hooks
+  const { user } = useUser();
 
-export const PostProvider: React.FC = ({ children }) => {
   // Other Hooks
   const [togglePostLike, { loading }] = useMutation(TOGGLE_POST_LIKE);
   const [togglePostSave, { loading: loading1 }] = useMutation(TOGGLE_POST_SAVE);
-  const { user } = useUser();
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -74,24 +65,12 @@ export const PostProvider: React.FC = ({ children }) => {
   };
 
   // JSX
-  return (
-    <PostContext.Provider
-      value={{
-        handleTogglePostLike,
-        handleTogglePostSave,
-        isLikeSubmitted: loading,
-        isSaveSubmitted: loading1,
-      }}
-    >
-      {children}
-    </PostContext.Provider>
-  );
+  return {
+    handleTogglePostLike,
+    handleTogglePostSave,
+    isLikeSubmitted: loading,
+    isSaveSubmitted: loading1,
+  };
 };
 
-export const usePost = () => {
-  const context = useContext(PostContext);
-  if (context === undefined) {
-    throw new Error("useUser must be used within a UserProvider");
-  }
-  return context;
-};
+export default usePost;

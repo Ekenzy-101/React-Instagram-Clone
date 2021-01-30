@@ -20,7 +20,7 @@ import { debug } from "../../../../utils/services/debugService";
 import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
 import { updateReplyLikes } from "../../../../utils/helpers/like";
 import { modalState } from "../../../../utils/types/modal";
-import { useComment } from "../../../../utils/context/comment";
+import useComment from "../../../../common/hooks/useComment";
 import PostCardCommonReply from "./reply";
 import { useStyles } from "../styles";
 import LoveSvg from "../../../svgs/LoveSvg";
@@ -52,7 +52,6 @@ const PostCardCommonComment: React.FC<Props> = ({
   const { replies } = comment;
   // Global State Hooks
   const { user: authUser } = useUser();
-  const { handleToggleCommentLike } = useComment();
 
   // State Hooks
   const [open, setOpen] = useState(false);
@@ -64,6 +63,7 @@ const PostCardCommonComment: React.FC<Props> = ({
   // Other Hooks
   const classes = useStyles();
   const { path, params } = useRouteMatch();
+  const { handleToggleCommentLike } = useComment();
   const history = useHistory();
   const { pathname } = useLocation();
   const [toggleReplyLike] = useMutation(TOGGLE_REPLY_LIKE);

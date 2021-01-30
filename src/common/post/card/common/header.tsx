@@ -11,7 +11,7 @@ import { Link, useRouteMatch } from "react-router-dom";
 import ProfileTitleUnfollowModal from "../../../../components/profile/title/modal/unfollow";
 
 import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
-import { useFollow } from "../../../../utils/context/follow";
+import useFollow from "../../../../common/hooks/useFollow";
 import { useUser } from "../../../../utils/context/user";
 import { modalState } from "../../../../utils/types/modal";
 import { Post } from "../../../../utils/types/post";
@@ -28,13 +28,13 @@ const PostCardCommonHeader: React.FC<Props> = ({
 }) => {
   // Global Hooks
   const { user: authUser } = useUser();
-  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
+  const { handleToggleFollow, submitted } = useFollow();
   const { path, params } = useRouteMatch() as {
     path: string;
     params: { id: string };

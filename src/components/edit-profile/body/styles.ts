@@ -12,6 +12,8 @@ export const useStyles = makeStyles((theme) => ({
     borderLeft: "2px solid #000",
   },
   avatar: {
+    display: "block",
+    borderRadius: "50%",
     width: "2.5rem",
     height: "2.5rem",
     marginLeft: "auto",

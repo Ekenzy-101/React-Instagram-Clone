@@ -1,6 +1,7 @@
 export type modalState =
   | "post"
   | "post-comment"
+  | "profile-picture"
   | "followers"
   | "following"
   | "users"

@@ -1,24 +1,15 @@
 import { useMutation } from "@apollo/client";
-import React, { createContext, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { TOGGLE_COMMENT_LIKE } from "../mutations/comment";
-import { TO_LOGIN_PAGE } from "../constants/routes";
-import { useUser } from "./user";
-import { debug } from "../services/debugService";
-import { updateCommentLikes } from "../helpers/like";
-import { Post } from "../types/post";
+import { TOGGLE_COMMENT_LIKE } from "../../utils/mutations/comment";
+import { TO_LOGIN_PAGE } from "../../utils/constants/routes";
+import { useUser } from "../../utils/context/user";
+import { debug } from "../../utils/services/debugService";
+import { updateCommentLikes } from "../../utils/helpers/like";
+import { Post } from "../../utils/types/post";
 
-const CommentContext = createContext<
-  | {
-      handleToggleCommentLike: (options: { post: Post; id: string }) => void;
-      isLikeSubmitted: boolean;
-    }
-  | undefined
->(undefined);
-
-export const CommentProvider: React.FC = ({ children }) => {
+const useComment = () => {
   const { user } = useUser();
 
   // Other Hooks
@@ -54,22 +45,10 @@ export const CommentProvider: React.FC = ({ children }) => {
   };
 
   // JSX
-  return (
-    <CommentContext.Provider
-      value={{
-        handleToggleCommentLike,
-        isLikeSubmitted: loading,
-      }}
-    >
-      {children}
-    </CommentContext.Provider>
-  );
+  return {
+    handleToggleCommentLike,
+    isLikeSubmitted: loading,
+  };
 };
 
-export const useComment = () => {
-  const context = useContext(CommentContext);
-  if (context === undefined) {
-    throw new Error("useComment must be used within a CommentProvider");
-  }
-  return context;
-};
+export default useComment;

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import LoadingSpinner from "../../../common/loading/spinner";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
-import { useFollow } from "../../../utils/context/follow";
+import useFollow from "../../../common/hooks/useFollow";
 import { useUser } from "../../../utils/context/user";
 import { User } from "../../../utils/types/user";
 import ProfileTitleUnfollowModal from "../../profile/title/modal/unfollow";
@@ -16,7 +16,6 @@ interface Props {
 const ProfileFollowersBody: React.FC<Props> = ({ user }) => {
   // Global State Hooks
   const { user: authUser } = useUser();
-  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
   const [open, setOpen] = useState(false);
@@ -24,6 +23,7 @@ const ProfileFollowersBody: React.FC<Props> = ({ user }) => {
 
   // Other Hooks
   const classes = useStyles();
+  const { handleToggleFollow, submitted } = useFollow();
 
   // Event Handlers
   const handleOpen = (user: User) => {

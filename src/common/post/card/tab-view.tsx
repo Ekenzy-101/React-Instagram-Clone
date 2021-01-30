@@ -25,8 +25,8 @@ import PostCardCommonForm from "./common/form";
 import { User } from "../../../utils/types/user";
 import { modalState } from "../../../utils/types/modal";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
-import { usePost } from "../../../utils/context/post";
-import { useComment } from "../../../utils/context/comment";
+import usePost from "../../../common/hooks/usePost";
+import useComment from "../../../common/hooks/useComment";
 interface Props {
   post: Post;
 }
@@ -43,8 +43,6 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
   } = post;
   // Global Hooks
   const { user: authUser } = useUser();
-  const { handleTogglePostLike, handleTogglePostSave } = usePost();
-  const { handleToggleCommentLike } = useComment();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
@@ -53,6 +51,8 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
   const classes = useStyles();
   const history = useHistory();
   const { path, params } = useRouteMatch();
+  const { handleTogglePostLike, handleTogglePostSave } = usePost();
+  const { handleToggleCommentLike } = useComment();
   const mobileView = useMedia(`(max-width: 600px)`);
 
   // Other Logic

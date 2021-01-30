@@ -5,6 +5,7 @@ import { Avatar, Button, Grid, Hidden, Typography } from "@material-ui/core";
 
 import { useStyles } from "./styles";
 import ProfileTitleUnfollowModal from "./modal/unfollow";
+import ProfileTitlePictureModal from "./modal/picture";
 import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { User } from "../../../utils/types/user";
 import { useUser } from "../../../utils/context/user";
@@ -14,25 +15,29 @@ import LoadingSpinner from "../../../common/loading/spinner";
 import NotSupportedModal from "../../../common/not-supported-modal";
 import { modalState } from "../../../utils/types/modal";
 import UsersModal from "../../../common/users-modal";
-import { useFollow } from "../../../utils/context/follow";
+import useFollow from "../../../common/hooks/useFollow";
+import useProfile from "../../../common/hooks/useProfile";
 interface Props {
   user: User;
-  isUploading: boolean;
-  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ProfileTitleDesktopView: React.FC<Props> = (props) => {
-  const { user, onUpload, isUploading } = props;
+const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
   // Global State Hooks
   const { user: authUser } = useUser();
-  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
 
   // Other Hooks
   const classes = useStyles();
+  const { handleToggleFollow, submitted } = useFollow();
   const { path, params } = useRouteMatch();
+  const {
+    handleDeleteProfilePicture,
+    handleUploadProfilePicture,
+    isDeleting,
+    isUploading,
+  } = useProfile();
 
   // Other Logic
   const isFollowingUser = (id: string) => {
@@ -79,6 +84,12 @@ const ProfileTitleDesktopView: React.FC<Props> = (props) => {
         onClose={() => setShow("none")}
         user={user}
       />
+      <ProfileTitlePictureModal
+        open={show === "profile-picture"}
+        onClose={() => setShow("none")}
+        onDelete={handleDeleteProfilePicture}
+        onUpload={handleUploadProfilePicture}
+      />
       <NotSupportedModal
         open={show === "not-supported"}
         onClose={() => setShow("none")}
@@ -90,32 +101,29 @@ const ProfileTitleDesktopView: React.FC<Props> = (props) => {
         spacing={3}
       >
         <Grid xs={3} item>
-          {isAuthUser ? (
+          {isUploading || isDeleting ? (
+            <Avatar src={LOADING_GIF_URL} className={classes.avatar} />
+          ) : isAuthUser && !user.image_url ? (
             <div className="file-input-wrapper">
               <input
                 type="file"
                 id="file-input"
                 accept="image/png,image/jpeg"
                 style={{ width: 150, height: 150 }}
-                onChange={onUpload}
+                onChange={handleUploadProfilePicture}
               />
-              <Avatar
-                src={
-                  isUploading
-                    ? LOADING_GIF_URL
-                    : user.image_url
-                    ? PROFILE_PIC_URL
-                    : PROFILE_PIC_URL
-                }
-                className={classes.avatar}
-                alt="image"
-              />
+              <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
             </div>
+          ) : isAuthUser && user.image_url ? (
+            <Avatar
+              src={user.image_url}
+              onClick={() => setShow("profile-picture")}
+              className={classes.avatar}
+            />
           ) : (
             <Avatar
-              src={PROFILE_PIC_URL}
+              src={user.image_url ? user.image_url : PROFILE_PIC_URL}
               className={classes.avatar}
-              alt="image"
             />
           )}
         </Grid>

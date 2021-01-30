@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { useStyles } from "./styles";
 import { User } from "../../../../utils/types/user";
 import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
-import { useFollow } from "../../../../utils/context/follow";
+import useFollow from "../../../../common/hooks/useFollow";
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -17,11 +17,9 @@ const ProfileTitleUnfollowModal: React.FC<Props> = ({
   onClose,
   user,
 }) => {
-  // Global Hooks
-  const { handleToggleFollow } = useFollow();
-
   // Other Hooks
   const classes = useStyles();
+  const { handleToggleFollow } = useFollow();
 
   // Event Handlers
   const handleClick = async () => {

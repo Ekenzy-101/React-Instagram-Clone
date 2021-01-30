@@ -17,7 +17,7 @@ import { PROFILE_PIC_URL } from "../../utils/constants/url";
 import { User } from "../../utils/types/user";
 import { modalState } from "../../utils/types/modal";
 import { useUser } from "../../utils/context/user";
-import { useFollow } from "../../utils/context/follow";
+import useFollow from "../../common/hooks/useFollow";
 
 interface Props {
   open: boolean;
@@ -30,7 +30,6 @@ const UsersModal: React.FC<Props> = (props) => {
 
   // Global State Hooks
   const { user: authUser } = useUser();
-  const { handleToggleFollow, submitted } = useFollow();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
@@ -38,6 +37,7 @@ const UsersModal: React.FC<Props> = (props) => {
 
   // Other Hooks
   const classes = useStyles();
+  const { handleToggleFollow, submitted } = useFollow();
 
   // Event Handlers
   const handleOpen = (user: User) => {

@@ -7,7 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@apollo/client";
 
@@ -20,12 +20,13 @@ import { User } from "../../../utils/types/user";
 import { UPDATE_PROFILE_INFO } from "../../../utils/mutations/user";
 import LoadingSpinner from "../../../common/loading/spinner";
 import { GET_AUTH_USER_INFO } from "../../../utils/queries/user";
-
+import useProfile from "../../../common/hooks/useProfile";
+import ProfileTitlePictureModal from "../../profile/title/modal/picture";
+import { modalState } from "../../../utils/types/modal";
 interface Props {
   profile: User;
-  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isUploading: boolean;
 }
+
 const obj = {
   name: "",
   gender: "",
@@ -35,8 +36,7 @@ const obj = {
   bio: "",
 };
 
-const EditProfileBody: React.FC<Props> = (props) => {
-  const { profile, onUpload, isUploading } = props;
+const EditProfileBody: React.FC<Props> = ({ profile }) => {
   const {
     name,
     username,
@@ -48,8 +48,15 @@ const EditProfileBody: React.FC<Props> = (props) => {
     image_url,
   } = profile;
 
+  const [show, setShow] = useState<modalState>("none");
   // Other Hooks
   const classes = useStyles();
+  const {
+    handleUploadProfilePicture,
+    handleDeleteProfilePicture,
+    isDeleting,
+    isUploading,
+  } = useProfile();
   const {
     renderInput,
     renderSelect,
@@ -87,16 +94,31 @@ const EditProfileBody: React.FC<Props> = (props) => {
 
   // JSX
   const avatarElement = (
-    <Avatar
-      src={
-        isUploading
-          ? LOADING_GIF_URL
-          : image_url
-          ? PROFILE_PIC_URL
-          : PROFILE_PIC_URL
-      }
-      className={classes.avatar}
-    />
+    <div
+      style={{ justifyContent: "flex-start" }}
+      className="file-input-wrapper"
+    >
+      {image_url ? null : (
+        <input
+          type="file"
+          id="file-input"
+          accept="image/png,image/jpeg"
+          style={{ width: 40 }}
+          onChange={handleUploadProfilePicture}
+        />
+      )}
+      <Avatar
+        src={
+          isUploading || isDeleting
+            ? LOADING_GIF_URL
+            : image_url
+            ? image_url
+            : PROFILE_PIC_URL
+        }
+        onClick={() => setShow("profile-picture")}
+        className={classes.avatar}
+      />
+    </div>
   );
 
   const buttonElement = (
@@ -112,14 +134,21 @@ const EditProfileBody: React.FC<Props> = (props) => {
         style={{ justifyContent: "flex-start" }}
         className="file-input-wrapper"
       >
-        <input
-          type="file"
-          id="file-input"
-          accept="image/png,image/jpeg"
-          style={{ width: 160 }}
-          onChange={onUpload}
-        />
-        <Button className={classes.selectBtn} variant="text" color="primary">
+        {image_url ? null : (
+          <input
+            type="file"
+            id="file-input"
+            accept="image/png,image/jpeg"
+            style={{ width: 160 }}
+            onChange={handleUploadProfilePicture}
+          />
+        )}
+        <Button
+          className={classes.selectBtn}
+          onClick={() => setShow("profile-picture")}
+          variant="text"
+          color="primary"
+        >
           Change Profile Photo
         </Button>
       </div>
@@ -151,6 +180,12 @@ const EditProfileBody: React.FC<Props> = (props) => {
   );
   return (
     <>
+      <ProfileTitlePictureModal
+        open={show === "profile-picture"}
+        onClose={() => setShow("none")}
+        onDelete={handleDeleteProfilePicture}
+        onUpload={handleUploadProfilePicture}
+      />
       <Paper className={classes.root}>
         <Grid container>
           {tabView ? null : (

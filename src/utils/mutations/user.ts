@@ -1,5 +1,11 @@
 import { gql } from "@apollo/client";
 
+export const DELETE_PROFILE_PIC = gql`
+  mutation {
+    deleteProfilePicture
+  }
+`;
+
 export const RESEND_VERIFICATION_CODE = gql`
   mutation resendCode($email: String!) {
     resendCode(email: $email)

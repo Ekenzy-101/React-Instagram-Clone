@@ -27,7 +27,7 @@ import UsersModal from "../../users-modal";
 import { modalState } from "../../../utils/types/modal";
 import { Link, useRouteMatch } from "react-router-dom";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
-import { usePost } from "../../../utils/context/post";
+import usePost from "../../../common/hooks/usePost";
 interface Props {
   post: Post;
 }
@@ -37,7 +37,6 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
 
   // Global Hooks
   const { user: authUser } = useUser();
-  const { handleTogglePostLike, handleTogglePostSave } = usePost();
 
   // State Hooks
   const [show, setShow] = useState<modalState>("none");
@@ -46,6 +45,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
   );
 
   // Other Hooks
+  const { handleTogglePostLike, handleTogglePostSave } = usePost();
   const classes = useStyles();
   const { path, params } = useRouteMatch();
 
