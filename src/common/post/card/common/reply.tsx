@@ -10,6 +10,7 @@ import { useStyles } from "../styles";
 import LoveSvg from "../../../svgs/LoveSvg";
 import { modalState } from "../../../../utils/types/modal";
 import UsersModal from "../../../users-modal";
+import LoginModal from "../../../login-modal";
 
 interface Props {
   reply: ReplyComment;
@@ -45,6 +46,7 @@ const PostCardCommonReply: React.FC<Props> = ({
         open={show === "users"}
         onClose={() => setShow("none")}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <div className={classes.commentByGroup}>
         <Avatar
           src={reply.user.image_url ? reply.user.image_url : PROFILE_PIC_URL}
@@ -77,7 +79,7 @@ const PostCardCommonReply: React.FC<Props> = ({
           </Typography>
           <Typography id={reply.id} variant="caption" color="textSecondary">
             {parseCommentDate(reply.created_at)}
-            {reply.likes.length ? (
+            {reply.likes.length && authUser ? (
               <strong
                 className={classes.link}
                 onClick={() => setShow("users")}
@@ -92,13 +94,15 @@ const PostCardCommonReply: React.FC<Props> = ({
         </div>
 
         <div>
-          <LoveSvg
-            active={isReplyLikedByUser(reply)}
-            fill={isReplyLikedByUser(reply) ? "#ed4956" : undefined}
-            width={12}
-            height={12}
-            onClick={() => onToggleReplyLike(reply.id)}
-          />
+          {authUser ? (
+            <LoveSvg
+              active={isReplyLikedByUser(reply)}
+              fill={isReplyLikedByUser(reply) ? "#ed4956" : undefined}
+              width={12}
+              height={12}
+              onClick={() => onToggleReplyLike(reply.id)}
+            />
+          ) : null}
         </div>
       </div>
     </>

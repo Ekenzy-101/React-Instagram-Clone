@@ -26,6 +26,7 @@ import { useStyles } from "../styles";
 import LoveSvg from "../../../svgs/LoveSvg";
 import PostCommentModal from "../../modal/comment";
 import UsersModal from "../../../users-modal";
+import LoginModal from "../../../login-modal";
 
 interface Props {
   comment: PostComment;
@@ -160,6 +161,7 @@ const PostCardCommonComment: React.FC<Props> = ({
         title="Likes"
         users={comment.likes}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       {/* Comment Section */}
       <div className={classes.commentByGroup}>
         <Avatar
@@ -194,7 +196,7 @@ const PostCardCommonComment: React.FC<Props> = ({
           </Typography>
           <Typography id={comment.id} variant="caption" color="textSecondary">
             {parseCommentDate(comment.created_at)}
-            {comment.likes.length ? (
+            {comment.likes.length && authUser ? (
               <strong
                 className={classes.link}
                 onClick={() => setShow("users")}
@@ -206,7 +208,9 @@ const PostCardCommonComment: React.FC<Props> = ({
               </strong>
             ) : null}
             <strong
-              onClick={handleSetCommentToReply}
+              onClick={
+                authUser ? handleSetCommentToReply : () => setShow("login")
+              }
               className={classes.link}
               style={{ marginLeft: "12px" }}
             >
@@ -215,13 +219,15 @@ const PostCardCommonComment: React.FC<Props> = ({
           </Typography>
         </div>
         <div>
-          <LoveSvg
-            active={isCommentLikedByUser}
-            fill={isCommentLikedByUser ? "#ed4956" : undefined}
-            width={12}
-            height={12}
-            onClick={() => handleToggleCommentLike({ post, id: comment.id })}
-          />
+          {authUser ? (
+            <LoveSvg
+              active={isCommentLikedByUser}
+              fill={isCommentLikedByUser ? "#ed4956" : undefined}
+              width={12}
+              height={12}
+              onClick={() => handleToggleCommentLike({ post, id: comment.id })}
+            />
+          ) : null}
         </div>
       </div>
       {/* Replies Section */}

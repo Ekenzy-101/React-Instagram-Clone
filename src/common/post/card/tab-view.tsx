@@ -27,6 +27,7 @@ import { modalState } from "../../../utils/types/modal";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import usePost from "../../../common/hooks/usePost";
 import useComment from "../../../common/hooks/useComment";
+import LoginModal from "../../login-modal";
 interface Props {
   post: Post;
 }
@@ -94,6 +95,7 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
         open={show === "not-supported"}
         onClose={() => setShow("none")}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <Card variant="outlined" className={classes.root}>
         <PostCardCommonHeader onClick={() => setShow("post")} post={post} />
         <PostCardCommonStepper image_urls={image_urls} />
@@ -101,24 +103,41 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
         <CardActions className={classes.cardActions}>
           <div className={classes.groupIcons}>
             <LoveSvg
-              onClick={() => handleTogglePostLike(post)}
+              onClick={
+                authUser
+                  ? () => handleTogglePostLike(post)
+                  : () => setShow("login")
+              }
               active={isPostLikedByUser}
               fill={isPostLikedByUser ? "#ed4956" : undefined}
             />
             <CommentSvg
-              onClick={() =>
-                history.push(`/p/${post.id}/comments/`, {
-                  from: path,
-                  ...params,
-                })
+              onClick={
+                authUser
+                  ? () =>
+                      history.push(`/p/${post.id}/comments/`, {
+                        from: path,
+                        ...params,
+                      })
+                  : () => setShow("login")
               }
             />
-            <DirectSvg onClick={() => setShow("not-supported")} />
+            <DirectSvg
+              onClick={
+                authUser
+                  ? () => setShow("not-supported")
+                  : () => setShow("login")
+              }
+            />
           </div>
           <PostCardCommonStepper mobile image_urls={image_urls} />
           <SavedSvg
             active={isSavedByUser}
-            onClick={() => handleTogglePostSave(post)}
+            onClick={
+              authUser
+                ? () => handleTogglePostSave(post)
+                : () => setShow("login")
+            }
           />
         </CardActions>
 
@@ -139,7 +158,7 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
                 </strong>
                 and{" "}
                 <strong>
-                  {mobileView ? (
+                  {mobileView && authUser ? (
                     <Link
                       className={classes.link}
                       to={{
@@ -152,7 +171,11 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
                   ) : (
                     <span
                       className={classes.link}
-                      onClick={() => setShow("users")}
+                      onClick={
+                        authUser
+                          ? () => setShow("users")
+                          : () => setShow("login")
+                      }
                     >
                       {likes.length - 1} others
                     </span>
@@ -163,7 +186,7 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
           ) : likes.length ? (
             <Typography className={classes.text} variant="body1">
               <strong>
-                {mobileView ? (
+                {mobileView && authUser ? (
                   <Link
                     className={classes.link}
                     to={{
@@ -178,7 +201,9 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
                 ) : (
                   <span
                     className={classes.link}
-                    onClick={() => setShow("users")}
+                    onClick={
+                      authUser ? () => setShow("users") : () => setShow("login")
+                    }
                   >
                     {likes.length > 1
                       ? `${likes.length} likes`
@@ -206,7 +231,7 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
             </Typography>
             <div></div>
           </div>
-          {comments.length > 1 ? (
+          {comments.length > 1 && authUser ? (
             <Typography style={{ fontSize: "0.9rem" }} color="textSecondary">
               <Link
                 className={classes.link}
@@ -219,7 +244,7 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
               </Link>
             </Typography>
           ) : null}
-          {comments.slice(0, 2).map((comment, index) => (
+          {comments.slice(0, 3).map((comment, index) => (
             <div
               style={{ display: "flex", marginBottom: "0.3rem" }}
               key={index}
@@ -239,15 +264,17 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
                 {comment.content}
               </Typography>
               <div>
-                <LoveSvg
-                  active={isCommentLikedByUser(comment)}
-                  fill={isCommentLikedByUser(comment) ? "#ed4956" : undefined}
-                  width={12}
-                  height={12}
-                  onClick={() =>
-                    handleToggleCommentLike({ post, id: comment.id })
-                  }
-                />
+                {authUser ? (
+                  <LoveSvg
+                    active={isCommentLikedByUser(comment)}
+                    fill={isCommentLikedByUser(comment) ? "#ed4956" : undefined}
+                    width={12}
+                    height={12}
+                    onClick={() =>
+                      handleToggleCommentLike({ post, id: comment.id })
+                    }
+                  />
+                ) : null}
               </div>
             </div>
           ))}

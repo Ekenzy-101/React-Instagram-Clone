@@ -13,6 +13,7 @@ import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
 import SettingsSvg from "../../../common/svgs/SettingsSvg";
 import LoadingSpinner from "../../../common/loading/spinner";
 import NotSupportedModal from "../../../common/not-supported-modal";
+import LoginModal from "../../../common/login-modal";
 import { modalState } from "../../../utils/types/modal";
 import UsersModal from "../../../common/users-modal";
 import useFollow from "../../../common/hooks/useFollow";
@@ -94,6 +95,7 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
         open={show === "not-supported"}
         onClose={() => setShow("none")}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <Grid
         container
         className={classes.root}
@@ -169,7 +171,11 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
               ) : (
                 <Button
                   className={classes.followBtn}
-                  onClick={() => handleToggleFollow(user)}
+                  onClick={
+                    authUser
+                      ? () => handleToggleFollow(user)
+                      : () => setShow("login")
+                  }
                 >
                   {submitted ? (
                     <LoadingSpinner width={24} height={24} />
@@ -197,7 +203,9 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
             </Grid>
             <Grid item>
               <Typography
-                onClick={() => setShow("followers")}
+                onClick={
+                  authUser ? () => setShow("followers") : () => setShow("login")
+                }
                 className={classes.link}
               >
                 <strong>{user.followersCount}</strong> followers
@@ -205,7 +213,9 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
             </Grid>
             <Grid item>
               <Typography
-                onClick={() => setShow("following")}
+                onClick={
+                  authUser ? () => setShow("following") : () => setShow("login")
+                }
                 className={classes.link}
               >
                 <strong>{user.followingCount}</strong> following

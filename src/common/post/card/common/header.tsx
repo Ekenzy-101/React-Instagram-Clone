@@ -17,6 +17,7 @@ import { modalState } from "../../../../utils/types/modal";
 import { Post } from "../../../../utils/types/post";
 import LoadingSpinner from "../../../loading/spinner";
 import { useStyles } from "../styles";
+import LoginModal from "../../../login-modal";
 interface Props {
   onClick: () => void;
   post: Post;
@@ -56,6 +57,7 @@ const PostCardCommonHeader: React.FC<Props> = ({
         open={show === "unfollow"}
         onClose={() => setShow("none")}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <CardHeader
         avatar={
           <Grid item className={classes.gridItem}>
@@ -94,7 +96,11 @@ const PostCardCommonHeader: React.FC<Props> = ({
               <Button
                 style={{ marginLeft: "0.5rem" }}
                 className={classes.submitBtn}
-                onClick={() => handleToggleFollow(user)}
+                onClick={
+                  authUser
+                    ? () => handleToggleFollow(user)
+                    : () => setShow("login")
+                }
               >
                 {submitted ? (
                   <LoadingSpinner />

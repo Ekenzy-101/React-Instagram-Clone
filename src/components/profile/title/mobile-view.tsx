@@ -22,6 +22,7 @@ import NotSupportedModal from "../../../common/not-supported-modal";
 import { modalState } from "../../../utils/types/modal";
 import useFollow from "../../../common/hooks/useFollow";
 import useProfile from "../../../common/hooks/useProfile";
+import LoginModal from "../../../common/login-modal";
 interface Props {
   user: User;
 }
@@ -87,6 +88,7 @@ const ProfileTitleMobileView: React.FC<Props> = ({ user }) => {
         onDelete={handleDeleteProfilePicture}
         onUpload={handleUploadProfilePicture}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <Grid container className={classes.root} alignItems="center" spacing={3}>
         <Grid xs={3} item>
           {isUploading || isDeleting ? (
@@ -148,7 +150,11 @@ const ProfileTitleMobileView: React.FC<Props> = ({ user }) => {
           ) : (
             <Button
               className={classes.followBtn}
-              onClick={() => handleToggleFollow(user)}
+              onClick={
+                authUser
+                  ? () => handleToggleFollow(user)
+                  : () => setShow("login")
+              }
             >
               {submitted ? (
                 <LoadingSpinner width={24} height={24} />
@@ -217,32 +223,50 @@ const ProfileTitleMobileView: React.FC<Props> = ({ user }) => {
           <Typography color="textSecondary">posts</Typography>
         </Grid>
         <Grid item>
-          <Link
-            className={classes.link}
-            to={{
-              pathname: `/${user.username}/followers/`,
-              state: { from: path, ...params },
-            }}
-          >
-            <Typography style={{ width: "100%", textAlign: "center" }}>
-              <strong>{user.followersCount}</strong>
-            </Typography>
-            <Typography color="textSecondary">followers</Typography>
-          </Link>
+          {authUser ? (
+            <Link
+              className={classes.link}
+              to={{
+                pathname: `/${user.username}/followers/`,
+                state: { from: path, ...params },
+              }}
+            >
+              <Typography style={{ width: "100%", textAlign: "center" }}>
+                <strong>{user.followersCount}</strong>
+              </Typography>
+              <Typography color="textSecondary">followers</Typography>
+            </Link>
+          ) : (
+            <div className={classes.link} onClick={() => setShow("login")}>
+              <Typography style={{ width: "100%", textAlign: "center" }}>
+                <strong>{user.followersCount}</strong>
+              </Typography>
+              <Typography color="textSecondary">followers</Typography>
+            </div>
+          )}
         </Grid>
         <Grid item>
-          <Link
-            className={classes.link}
-            to={{
-              pathname: `/${user.username}/following/`,
-              state: { from: path, ...params },
-            }}
-          >
-            <Typography style={{ width: "100%", textAlign: "center" }}>
-              <strong>{user.followingCount}</strong>
-            </Typography>
-            <Typography color="textSecondary">following</Typography>
-          </Link>
+          {authUser ? (
+            <Link
+              className={classes.link}
+              to={{
+                pathname: `/${user.username}/following/`,
+                state: { from: path, ...params },
+              }}
+            >
+              <Typography style={{ width: "100%", textAlign: "center" }}>
+                <strong>{user.followingCount}</strong>
+              </Typography>
+              <Typography color="textSecondary">following</Typography>
+            </Link>
+          ) : (
+            <div className={classes.link} onClick={() => setShow("login")}>
+              <Typography style={{ width: "100%", textAlign: "center" }}>
+                <strong>{user.followingCount}</strong>
+              </Typography>
+              <Typography color="textSecondary">following</Typography>
+            </div>
+          )}
         </Grid>
       </Grid>
     </Hidden>

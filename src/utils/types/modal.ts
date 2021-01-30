@@ -6,6 +6,7 @@ export type modalState =
   | "following"
   | "users"
   | "logout"
+  | "login"
   | "not-supported"
   | "unfollow"
   | "none";

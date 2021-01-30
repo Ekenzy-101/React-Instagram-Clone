@@ -53,11 +53,13 @@ const Routes = () => {
           <MobileRoute
             path={TO_POSTCOMMENTS_PAGE}
             exact
+            authenticated
             component={PostCommentsPage}
           />
           <MobileRoute
             path={TO_POSTLIKES_PAGE}
             exact
+            authenticated
             component={PostLikesPage}
           />
           <MobileRoute
@@ -75,11 +77,13 @@ const Routes = () => {
           <MobileRoute
             path={TO_PROFILEFOLLOWING_PAGE}
             exact
+            authenticated
             component={ProfileFollowingPage}
           />
           <MobileRoute
             path={TO_PROFILEFOLLOWERS_PAGE}
             exact
+            authenticated
             component={ProfileFollowersPage}
           />
           <ProtectedRoute

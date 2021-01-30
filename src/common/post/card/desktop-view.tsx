@@ -28,6 +28,7 @@ import { modalState } from "../../../utils/types/modal";
 import { Link, useRouteMatch } from "react-router-dom";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
 import usePost from "../../../common/hooks/usePost";
+import LoginModal from "../../login-modal";
 interface Props {
   post: Post;
 }
@@ -88,6 +89,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
         open={show === "not-supported"}
         onClose={() => setShow("none")}
       />
+      <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <Card variant="outlined" className={classes.root}>
         <Grid container>
           <Grid item xs={7} style={{ position: "relative" }}>
@@ -110,16 +112,32 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
             <CardActions className={classes.cardActions}>
               <div className={classes.groupIcons}>
                 <LoveSvg
-                  onClick={() => handleTogglePostLike(post)}
+                  onClick={
+                    authUser
+                      ? () => handleTogglePostLike(post)
+                      : () => setShow("login")
+                  }
                   active={isLikedByUser}
                   fill={isLikedByUser ? "#ed4956" : undefined}
                 />
-                <CommentSvg onClick={handleFocus} />
-                <DirectSvg onClick={() => setShow("not-supported")} />
+                <CommentSvg
+                  onClick={authUser ? handleFocus : () => setShow("login")}
+                />
+                <DirectSvg
+                  onClick={
+                    authUser
+                      ? () => setShow("not-supported")
+                      : () => setShow("login")
+                  }
+                />
               </div>
               <SavedSvg
                 active={isSavedByUser}
-                onClick={() => handleTogglePostSave(post)}
+                onClick={
+                  authUser
+                    ? () => handleTogglePostSave(post)
+                    : () => setShow("login")
+                }
               />
             </CardActions>
 
@@ -144,7 +162,11 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
                     and{" "}
                     <strong
                       className={classes.link}
-                      onClick={() => setShow("users")}
+                      onClick={
+                        authUser
+                          ? () => setShow("users")
+                          : () => setShow("login")
+                      }
                     >
                       {" "}
                       {likes.length - 1} others
@@ -156,7 +178,11 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
                   <strong>
                     <span
                       className={classes.link}
-                      onClick={() => setShow("users")}
+                      onClick={
+                        authUser
+                          ? () => setShow("users")
+                          : () => setShow("login")
+                      }
                     >
                       {likes.length > 1
                         ? `${likes.length} likes`

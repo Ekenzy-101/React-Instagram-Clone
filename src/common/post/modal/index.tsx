@@ -36,6 +36,10 @@ const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
     }
   };
 
+  const isFollowedByAuthUser = user?.following?.some(
+    (f) => f.id === post.user.id
+  );
+
   // JSX
   return (
     <Dialog
@@ -44,7 +48,7 @@ const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
       open={open}
       onClose={onClose}
     >
-      {user?.username !== post.user.username ? (
+      {isFollowedByAuthUser ? (
         <DialogContent
           className={clsx(classes.dialogBtn, classes.dangerBtn)}
           dividers

@@ -13,10 +13,12 @@ const UserContext = createContext<
 
 export const UserProvider: React.FC = ({ children }) => {
   // Other Hooks
-  const { data, loading } = useQuery(GET_AUTH_USER);
+  const { data, loading, error } = useQuery(GET_AUTH_USER);
 
   // JSX
   if (loading) return <LoadingPage />;
+
+  console.log(error);
 
   return (
     <UserContext.Provider

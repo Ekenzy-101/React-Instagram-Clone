@@ -120,7 +120,12 @@ const DesktopViewHeader = () => {
           <>
             <Grid className={classes.gridItem} item>
               <Link
-                to={TO_LOGIN_PAGE}
+                to={{
+                  pathname: `${TO_LOGIN_PAGE}?next=${encodeURIComponent(
+                    pathname
+                  )}`,
+                  state: pathname,
+                }}
                 className={clsx(classes.loginBtn, classes.navLink)}
               >
                 Log In

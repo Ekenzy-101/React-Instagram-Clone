@@ -1,7 +1,7 @@
 import { Hidden, Avatar, Grid } from "@material-ui/core";
 import React from "react";
 import clsx from "clsx";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useLocation, useRouteMatch } from "react-router-dom";
 
 import { IG_MONOCHROME_LOGO_URL } from "../../utils/constants/url";
 import {
@@ -13,7 +13,9 @@ import { useStyles } from "./styles";
 
 const MobileViewHeader: React.FC = () => {
   const classes = useStyles();
+  const { pathname } = useLocation();
   const { path, params } = useRouteMatch();
+
   return (
     <Hidden smUp>
       <Link
@@ -29,7 +31,10 @@ const MobileViewHeader: React.FC = () => {
       <Grid container className={classes.gridIconContainer}>
         <Grid className={classes.gridItem} item>
           <Link
-            to={TO_LOGIN_PAGE}
+            to={{
+              pathname: `${TO_LOGIN_PAGE}?next=${encodeURIComponent(pathname)}`,
+              state: pathname,
+            }}
             className={clsx(classes.signUpBtn, classes.navLink)}
           >
             Log In
