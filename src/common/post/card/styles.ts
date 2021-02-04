@@ -80,8 +80,8 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   commentContent: {
-    maxHeight: "380px",
-    minHeight: "380px",
+    maxHeight: "385px",
+    minHeight: "385px",
     overflow: "auto",
     [theme.breakpoints.down(825)]: {
       maxHeight: "360px",

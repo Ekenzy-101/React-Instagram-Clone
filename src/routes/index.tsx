@@ -112,7 +112,11 @@ const Routes = () => {
             exact
             component={VerifyEmailPage}
           />
-          <RedirectedRoute path={TO_LOGIN_PAGE} exact component={LoginPage} />
+          <RedirectedRoute
+            path={TO_LOGIN_PAGE}
+            exact={false}
+            component={LoginPage}
+          />
           <RedirectedRoute
             path={TO_PASSWORDRESET_PAGE}
             exact

@@ -50,7 +50,7 @@ export const GET_POST_LIKES = gql`
 
 export const GET_POSTS = gql`
   query {
-    posts(random: false) {
+    posts(random: false, post_id: "") {
       ...PostFragment
       comments(count: 2) {
         ...CommentFragment
@@ -63,7 +63,18 @@ export const GET_POSTS = gql`
 
 export const GET_RANDOM_POSTS = gql`
   query {
-    posts(random: true) {
+    posts(random: true, post_id: "") {
+      id
+      image_urls
+      commentsCount
+      likesCount
+    }
+  }
+`;
+
+export const GET_USER_RELATED_POSTS = gql`
+  query getUserRelatedPosts($id: String) {
+    posts(random: false, post_id: $id) {
       id
       image_urls
       commentsCount
