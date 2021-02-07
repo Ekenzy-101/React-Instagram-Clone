@@ -1,5 +1,6 @@
 export const TO_HOME_PAGE = "/";
 export const TO_EXPLORE_PAGE = "/explore/";
+export const TO_EXPLORESEARCH_PAGE = "/explore/search/";
 export const TO_PROFILE_PAGE = "/:username/";
 export const TO_PROFILEFOLLOWING_PAGE = "/:username/following/";
 export const TO_PROFILEFOLLOWERS_PAGE = "/:username/followers/";

@@ -1,11 +1,15 @@
 import { AppBar, Toolbar, Hidden } from "@material-ui/core";
 import React from "react";
 
-import CustomSearch from "../../../common/search";
+import CustomSearchMobileView from "../../../common/search/moblie-view";
 import { useStyles } from "./styles";
 import DesktopViewHeader from "../../../common/header";
+import { User } from "../../../utils/types/user";
+interface Props {
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+}
 
-const ExploreHeader = () => {
+const ExploreHeader: React.FC<Props> = ({ setUsers }) => {
   // Other Hooks
   const classes = useStyles();
 
@@ -14,7 +18,7 @@ const ExploreHeader = () => {
     <AppBar position="sticky" className={classes.root}>
       <Toolbar className={classes.toolbar}>
         <Hidden smUp>
-          <CustomSearch fullWidth={true} borderRadius="0.4rem" />
+          <CustomSearchMobileView setUsers={setUsers} />
         </Hidden>
 
         <DesktopViewHeader />

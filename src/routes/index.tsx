@@ -6,6 +6,7 @@ import {
   TO_CREATESTYLE_PAGE,
   TO_EDITPROFILE_PAGE,
   TO_EXPLORE_PAGE,
+  TO_EXPLORESEARCH_PAGE,
   TO_LOGIN_PAGE,
   TO_PASSWORDCHANGE_PAGE,
   TO_PASSWORDRESET_PAGE,
@@ -103,6 +104,11 @@ const Routes = () => {
           />
           <ProtectedRoute
             path={TO_EXPLORE_PAGE}
+            exact
+            component={ExplorePage}
+          />
+          <ProtectedRoute
+            path={TO_EXPLORESEARCH_PAGE}
             exact
             component={ExplorePage}
           />

@@ -17,6 +17,13 @@ export const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     zIndex: 4959,
   },
+  cancelLink: {
+    color: "#262626",
+    marginLeft: "1rem",
+    textDecoration: "none",
+    fontWeight: 550,
+    cursor: "pointer",
+  },
   input: {
     fontSize: "0.9rem",
   },
@@ -29,6 +36,14 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     paddingLeft: props.status === "focused" ? "0.5rem" : "3rem",
     paddingRight: "0.4rem",
+    [theme.breakpoints.down("xs")]: {
+      height: "35px",
+      fontSize: "1.1rem",
+      background: theme.palette.background.paper,
+    },
+    "&:focus": {
+      borderColor: "#262626",
+    },
   }),
   link: {
     cursor: "pointer",
@@ -62,6 +77,9 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     color: theme.palette.action.disabled,
     fontWeight: "bold",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1.1rem",
+    },
   },
   username: {
     color: "#262626",

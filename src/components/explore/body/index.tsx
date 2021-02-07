@@ -1,25 +1,62 @@
-import { Typography } from "@material-ui/core";
+import { Avatar, Typography } from "@material-ui/core";
 import React from "react";
-import { Link } from "react-router-dom";
+import { useMedia } from "react-use";
+import { Link, useRouteMatch } from "react-router-dom";
+
 import { useStyles } from "./styles";
 import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import {
   MULTI_PHOTO_LOGO_URL,
   POST_PIC_URL,
+  PROFILE_PIC_URL,
 } from "../../../utils/constants/url";
 import { Post } from "../../../utils/types/post";
+import { User } from "../../../utils/types/user";
 interface Props {
   posts: Post[];
+  users: User[];
 }
-const ExploreBody: React.FC<Props> = ({ posts }) => {
+
+const ExploreBody: React.FC<Props> = ({ posts, users }) => {
+  // Other Hooks
   const classes = useStyles();
+  const { path } = useRouteMatch();
+  const mobileView = useMedia(`(max-width: 600px)`);
+
+  // Other Logic
   const getClassName = (index: number) => {
     if ([2, 17, 32].includes(index)) {
       return "explore-grid-item double-grid-square";
     }
     return "explore-grid-item single-grid-square";
   };
+
+  // JSX
+  if (path.includes("/explore/search") && mobileView) {
+    return (
+      <>
+        {users.map(({ username, image_url, name, id }) => (
+          <Link to={`/${username}/`} key={id} className={classes.link}>
+            <div className={classes.menuItem}>
+              <Avatar
+                className={classes.avatar}
+                src={image_url ? image_url : PROFILE_PIC_URL}
+              />
+              <div>
+                <Typography className={classes.username}>
+                  <strong>{username}</strong>
+                </Typography>
+                <Typography className={classes.name} color="textSecondary">
+                  {name}
+                </Typography>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </>
+    );
+  }
 
   return (
     <div>
