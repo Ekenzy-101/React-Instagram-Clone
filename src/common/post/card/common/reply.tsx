@@ -11,6 +11,7 @@ import LoveSvg from "../../../svgs/LoveSvg";
 import { modalState } from "../../../../utils/types/modal";
 import UsersModal from "../../../users-modal";
 import LoginModal from "../../../login-modal";
+import { wrapLinkTag } from "../../../../utils/helpers";
 
 interface Props {
   reply: ReplyComment;
@@ -72,7 +73,7 @@ const PostCardCommonReply: React.FC<Props> = ({
             </strong>
             {reply.content.split("\n").map((c, i) => (
               <span id={reply.id} key={i}>
-                {c}
+                {wrapLinkTag(c)}
                 <br />
               </span>
             ))}

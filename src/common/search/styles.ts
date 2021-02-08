@@ -5,6 +5,12 @@ export const useStyles = makeStyles((theme) => ({
     width: "350px",
     display: "flex",
     justifyContent: "center",
+    [theme.breakpoints.down(730)]: {
+      width: "270px",
+    },
+    [theme.breakpoints.down(650)]: {
+      width: "220px",
+    },
   },
   avatar: {
     width: 38,
@@ -31,6 +37,9 @@ export const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.default,
     height: "1.75rem",
     width: "215px",
+    [theme.breakpoints.down(730)]: {
+      width: "190px",
+    },
     borderRadius: "4px",
     border: "0.3px solid rgba(var(--b6a,219,219,219),1)",
     fontSize: "1rem",

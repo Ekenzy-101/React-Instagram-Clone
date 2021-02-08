@@ -18,6 +18,7 @@ import { DELETE_COMMENT } from "../../../../utils/mutations/comment";
 import { modalState } from "../../../../utils/types/modal";
 import PostCommentModal from "../../modal/comment";
 import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
+import { wrapLinkTag } from "../../../../utils/helpers";
 interface Props {
   post: Post;
   setCommentToReply?: React.Dispatch<
@@ -106,7 +107,12 @@ const PostCardCommonComments: React.FC<Props> = (props) => {
                 {user.username}
               </Link>
             </strong>
-            {caption}
+            {caption.split("\n").map((c, i) => (
+              <span key={i}>
+                {wrapLinkTag(c)}
+                <br />
+              </span>
+            ))}
           </Typography>
           <Typography variant="caption" color="textSecondary">
             {parseCommentDate(created_at)}

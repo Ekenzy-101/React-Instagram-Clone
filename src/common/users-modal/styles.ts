@@ -13,7 +13,8 @@ export const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   content: {
-    width: "45vw",
+    minWidth: "200px",
+    width: "auto",
     maxWidth: "400px",
     padding: "5px 0 0 0",
     maxHeight: "356px",

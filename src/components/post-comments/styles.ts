@@ -13,6 +13,7 @@ export const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.default,
     boxShadow: "none",
     borderBottom: "1px solid rgba(var(--b6a,219,219,219),1)",
+    top: "3.4rem",
   },
   avatar: {
     width: "30px",

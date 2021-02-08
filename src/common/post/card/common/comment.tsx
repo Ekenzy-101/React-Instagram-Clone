@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@apollo/client";
 import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
-import { Avatar, Collapse, Typography } from "@material-ui/core";
+import { Avatar, Button, Collapse, Typography } from "@material-ui/core";
 import { useLongPress } from "react-use";
 
 import { Post, PostComment, ReplyComment } from "../../../../utils/types/post";
@@ -20,6 +20,7 @@ import { debug } from "../../../../utils/services/debugService";
 import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
 import { updateReplyLikes } from "../../../../utils/helpers/like";
 import { modalState } from "../../../../utils/types/modal";
+import { wrapLinkTag } from "../../../../utils/helpers";
 import useComment from "../../../../common/hooks/useComment";
 import PostCardCommonReply from "./reply";
 import { useStyles } from "../styles";
@@ -189,7 +190,7 @@ const PostCardCommonComment: React.FC<Props> = ({
             </strong>
             {comment.content.split("\n").map((c, i) => (
               <span id={comment.id} key={i}>
-                {c}
+                {wrapLinkTag(c)}
                 <br />
               </span>
             ))}
@@ -197,25 +198,29 @@ const PostCardCommonComment: React.FC<Props> = ({
           <Typography id={comment.id} variant="caption" color="textSecondary">
             {parseCommentDate(comment.created_at)}
             {comment.likes.length && authUser ? (
-              <strong
-                className={classes.link}
+              <Button
+                disableFocusRipple
+                disableTouchRipple
+                className={classes.commentBtn}
                 onClick={() => setShow("users")}
-                style={{ marginLeft: "12px" }}
               >
                 {comment.likes.length > 1
                   ? `${comment.likes.length} likes`
                   : `${comment.likes.length} like`}
-              </strong>
+              </Button>
             ) : null}
-            <strong
+            <Button
               onClick={
-                authUser ? handleSetCommentToReply : () => setShow("login")
+                authUser
+                  ? () => handleSetCommentToReply()
+                  : () => setShow("login")
               }
-              className={classes.link}
-              style={{ marginLeft: "12px" }}
+              className={classes.commentBtn}
+              disableFocusRipple
+              disableTouchRipple
             >
               Reply
-            </strong>
+            </Button>
           </Typography>
         </div>
         <div>
@@ -235,7 +240,7 @@ const PostCardCommonComment: React.FC<Props> = ({
         <div className={classes.commentByGroup}>
           <p style={{ width: 30 }}></p>
           <p style={{ width: 30 }}></p>
-          <div>
+          <div style={{ flexGrow: 1 }}>
             <div
               onClick={() => setOpen(!open)}
               className={classes.link}

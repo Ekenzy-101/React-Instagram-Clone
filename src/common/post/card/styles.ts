@@ -36,6 +36,14 @@ export const useStyles = makeStyles((theme) => ({
       padding: "1px 14px",
     },
   },
+  collapse: {
+    "& div": {
+      display: " inline",
+      "& div": {
+        display: "inline !important",
+      },
+    },
+  },
   commentArea: {
     border: "none",
     outline: "none",
@@ -44,6 +52,14 @@ export const useStyles = makeStyles((theme) => ({
     resize: "none",
     background: "inherit",
     fontFamily: "inherit",
+  },
+  commentBtn: {
+    color: "inherit",
+    fontWeight: 550,
+    textTransform: "none",
+    padding: "0",
+    marginLeft: "12px",
+    background: "#fff !important",
   },
   commentByAvatar: {
     width: "30px",
@@ -54,10 +70,6 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     flexGrow: 1,
     margin: "auto 15px",
-    [theme.breakpoints.down("xs")]: {
-      margin: "auto 9px",
-      fontSize: "0.9rem",
-    },
   },
   commentByGroup: {
     display: "flex",
@@ -134,11 +146,28 @@ export const useStyles = makeStyles((theme) => ({
       paddingBottom: "105%",
     },
   },
+  mobileCommentByBody: {
+    marginRight: "15px",
+    float: "left",
+    flexGrow: 1,
+    [theme.breakpoints.down("xs")]: {
+      marginRight: "9px",
+      fontSize: "0.9rem",
+    },
+  },
   rounded: {
     borderRadius: "0.7rem",
     background: "#fff",
     margin: "10px 0 !important",
     border: "1px solid rgba(var(--b6a,219,219,219),1)",
+  },
+  seeMoreBtn: {
+    color: theme.palette.text.secondary,
+    background: "#fff !important",
+    textTransform: "none",
+    minWidth: 0,
+    fontWeight: 550,
+    padding: "0 3px",
   },
   stepper: {
     display: "flex",
@@ -178,6 +207,7 @@ export const useStyles = makeStyles((theme) => ({
   username: {
     fontSize: "1rem",
     marginBottom: "2px",
+    marginRight: "5px",
     [theme.breakpoints.down("xs")]: {
       fontSize: "0.9rem",
     },

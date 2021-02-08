@@ -70,8 +70,8 @@ const PostCardCommonHeader: React.FC<Props> = ({
           </Grid>
         }
         action={
-          <IconButton onClick={onClick}>
-            <MoreHoriz />
+          <IconButton disableFocusRipple disableTouchRipple onClick={onClick}>
+            <MoreHoriz onClick={onClick} />
           </IconButton>
         }
         title={
@@ -95,6 +95,8 @@ const PostCardCommonHeader: React.FC<Props> = ({
             ) : params?.id ? (
               <Button
                 style={{ marginLeft: "0.5rem" }}
+                disableFocusRipple
+                disableTouchRipple
                 className={classes.submitBtn}
                 onClick={
                   authUser
