@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useHistory, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
+import React from "react";
 
 import { TOGGLE_COMMENT_LIKE } from "../../utils/mutations/comment";
 import { TO_LOGIN_PAGE } from "../../utils/constants/routes";
@@ -8,6 +9,7 @@ import { useUser } from "../../utils/context/user";
 import { debug } from "../../utils/services/debugService";
 import { updateCommentLikes } from "../../utils/helpers/like";
 import { Post } from "../../utils/types/post";
+import CustomToast from "../toast";
 
 const useComment = () => {
   const { user } = useUser();
@@ -39,7 +41,7 @@ const useComment = () => {
           pathname
         );
       } else {
-        toast(error?.message);
+        toast(<CustomToast message="Couldn't like comment" />);
       }
     }
   };

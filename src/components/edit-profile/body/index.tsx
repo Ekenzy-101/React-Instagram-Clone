@@ -5,24 +5,25 @@ import {
   Grid,
   Paper,
   Typography,
-  useMediaQuery,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@apollo/client";
+import { useMedia } from "react-use";
 
 import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
-import AccountNav from "../../../common/account-nav";
 import { useStyles } from "./styles";
-import EditProfileBodyWrapper from "./wrapper";
-import useForm from "../../../common/hooks/useForm";
 import { User } from "../../../utils/types/user";
 import { UPDATE_PROFILE_INFO } from "../../../utils/mutations/user";
-import LoadingSpinner from "../../../common/loading/spinner";
 import { GET_AUTH_USER_INFO } from "../../../utils/queries/user";
-import useProfile from "../../../common/hooks/useProfile";
-import ProfileTitlePictureModal from "../../profile/title/modal/picture";
 import { modalState } from "../../../utils/types/modal";
+import ProfileTitlePictureModal from "../../profile/title/modal/picture";
+import EditProfileBodyWrapper from "./wrapper";
+import useForm from "../../../common/hooks/useForm";
+import useProfile from "../../../common/hooks/useProfile";
+import LoadingSpinner from "../../../common/loading/spinner";
+import AccountNav from "../../../common/account-nav";
+import CustomToast from "../../../common/toast";
 interface Props {
   profile: User;
 }
@@ -65,7 +66,7 @@ const EditProfileBody: React.FC<Props> = ({ profile }) => {
     formData,
   } = useForm({ ...obj }, {});
   const [updateProfileInfo, { loading }] = useMutation(UPDATE_PROFILE_INFO);
-  const tabView = useMediaQuery(`(max-width: 735px)`);
+  const tabView = useMedia(`(max-width: 735px)`);
 
   // Effect Hooks
   useEffect(() => {
@@ -85,9 +86,15 @@ const EditProfileBody: React.FC<Props> = ({ profile }) => {
           });
         },
       });
-      toast("Profile saved");
+      toast(<CustomToast message="Profile saved" />);
     } catch (error) {
-      toast(error?.message);
+      toast(
+        <CustomToast
+          message="Couldn't save profile"
+          btnText="Retry"
+          onClick={() => handleSubmit(e)}
+        />
+      );
       setFormData({ name, username, bio, gender, website, email, phone_no });
     }
   };

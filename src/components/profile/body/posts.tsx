@@ -15,6 +15,7 @@ import { useUser } from "../../../utils/context/user";
 // import ProfileBodyCard from "./card";
 import { useStyles } from "./style";
 import { TO_CREATESTYLE_PAGE } from "../../../utils/constants/routes";
+import CustomToast from "../../../common/toast";
 interface Props {
   posts: Post[];
 }
@@ -36,13 +37,14 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
 
     for (const file of files) {
       if (supportedTypes.every((type) => file.type !== type)) {
-        toast("Image is not a supported format");
+        toast(<CustomToast message={"Image is not a supported format"} />);
+
         return;
       }
     }
 
     if (files?.length > 5) {
-      toast("Please select a maximum of 5 images");
+      toast(<CustomToast message="Please select a maximum of 5 images" />);
       return;
     }
     if (files?.length <= 5 && files?.length > 0) {

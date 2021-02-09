@@ -7,6 +7,7 @@ import { Post } from "../../../utils/types/post";
 import { useUser } from "../../../utils/context/user";
 import { useCopyToClipboard } from "react-use";
 import toast from "react-hot-toast";
+import CustomToast from "../../toast";
 
 interface Props {
   open: boolean;
@@ -30,9 +31,9 @@ const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
     copyToClipboard(`${window.location.origin}/p/${post.id}/`);
     onClose();
     if (state.error) {
-      toast("Unable to copy link.");
+      toast(<CustomToast message="Unable to copy link." />);
     } else {
-      toast("Link copied to clipboard.");
+      toast(<CustomToast message="Link copied to clipboard." />);
     }
   };
 

@@ -15,6 +15,7 @@ import { verifyEmail } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
 import { useStyles } from "./styles";
 import { GET_AUTH_USER } from "../../utils/queries/user";
+import CustomToast from "../../common/toast";
 
 const VerifyEmailPage: React.FC = () => {
   // Other Hooks
@@ -78,12 +79,15 @@ const VerifyEmailPage: React.FC = () => {
         variables: { email: state },
       });
       debug.log(data);
-
-      toast(`We have sent a confirmation code to your email ${state}`);
+      toast(
+        <CustomToast
+          message={`We have sent a confirmation code to your email ${state}`}
+        />
+      );
     } catch (error) {
       debug.error(error?.message);
 
-      toast(error?.message);
+      toast(<CustomToast message={error?.messaage} />);
     }
   };
 

@@ -9,7 +9,7 @@ import {
 import { useMutation } from "@apollo/client";
 import toast from "react-hot-toast";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 
 import {
   updatePostCommentReplies,
@@ -24,6 +24,7 @@ import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
 import { useUser } from "../../../../utils/context/user";
 import { debug } from "../../../../utils/services/debugService";
 import { useStyles } from "../styles";
+import CustomToast from "../../../toast";
 interface Props {
   post: Post;
   commentToReply?: PostComment;
@@ -49,6 +50,8 @@ const PostCardCommonForm: React.FC<Props> = ({
   const classes = useStyles();
   const theme = useTheme();
   const { id } = useParams() as { id: string };
+  const history = useHistory();
+  const { pathname } = useLocation();
 
   // Effect Hooks
   useEffect(() => {
@@ -92,7 +95,20 @@ const PostCardCommonForm: React.FC<Props> = ({
       setContent("");
     } catch (error) {
       debug.error(error.message);
-      toast(error.message);
+      if (error.message.includes("Unauthorized")) {
+        history.push(
+          `${TO_LOGIN_PAGE}?next=${encodeURIComponent(pathname)}`,
+          pathname
+        );
+      } else {
+        toast(
+          <CustomToast
+            message="Couldn't post comment"
+            btnText="Retry"
+            onClick={() => handleSubmit(event)}
+          />
+        );
+      }
     }
   };
 

@@ -42,7 +42,7 @@ export const validateUsername = (username: inputValue) => {
     return "Usernames must be between 6 to 30 characters";
   }
 
-  if (!validator.matches(value, /^([a-z0-9._])+$/)) {
+  if (!validator.matches(value, /^(?!.*\.\.)(?!.*\.$)[^\W][a-z0-9.]$/)) {
     return "Usernames can only use letters, numbers, underscores and periods.";
   }
 };

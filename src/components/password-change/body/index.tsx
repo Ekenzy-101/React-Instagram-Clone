@@ -19,6 +19,9 @@ import useForm from "../../../common/hooks/useForm";
 import { UPDATE_PASSWORD } from "../../../utils/mutations/user";
 import LoadingSpinner from "../../../common/loading/spinner";
 import { useUser } from "../../../utils/context/user";
+import CustomToast from "../../../common/toast";
+import { useHistory, useLocation } from "react-router-dom";
+import { TO_LOGIN_PAGE } from "../../../utils/constants/routes";
 
 const obj = {
   password: "",
@@ -32,6 +35,8 @@ const PasswordChangeBody: React.FC = () => {
 
   // Other Hooks
   const classes = useStyles();
+  const history = useHistory();
+  const { pathname } = useLocation();
   const { renderInput, formData, setFormData } = useForm({ ...obj }, {});
   const [updatePassword, { loading }] = useMutation(UPDATE_PASSWORD);
   const tabView = useMediaQuery(`(max-width: 735px)`);
@@ -43,10 +48,24 @@ const PasswordChangeBody: React.FC = () => {
       await updatePassword({
         variables: { ...formData },
       });
-      toast("Password changed");
+      toast(<CustomToast message="Password changed" />);
+
       setFormData({ ...obj });
     } catch (error) {
-      toast(error?.message);
+      if (error.message.includes("Unauthorized")) {
+        history.push(
+          `${TO_LOGIN_PAGE}?next=${encodeURIComponent(pathname)}`,
+          pathname
+        );
+      } else {
+        toast(
+          <CustomToast
+            message="Couldn't change password"
+            btnText="Retry"
+            onClick={() => handleSubmit(e)}
+          />
+        );
+      }
     }
   };
 

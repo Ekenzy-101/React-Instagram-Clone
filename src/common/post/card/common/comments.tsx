@@ -19,6 +19,7 @@ import { modalState } from "../../../../utils/types/modal";
 import PostCommentModal from "../../modal/comment";
 import { TO_LOGIN_PAGE } from "../../../../utils/constants/routes";
 import { wrapLinkTag } from "../../../../utils/helpers";
+import CustomToast from "../../../toast";
 interface Props {
   post: Post;
   setCommentToReply?: React.Dispatch<
@@ -75,7 +76,13 @@ const PostCardCommonComments: React.FC<Props> = (props) => {
           pathname
         );
       } else {
-        toast(error?.message);
+        toast(
+          <CustomToast
+            message="Couldn't delete comment"
+            btnText="Retry"
+            onClick={handleDeleteComment}
+          />
+        );
       }
     }
   };

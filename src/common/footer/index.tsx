@@ -2,6 +2,7 @@ import { Avatar, AppBar, Grid, Hidden, Toolbar } from "@material-ui/core";
 import { Add, SearchOutlined } from "@material-ui/icons";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import React from "react";
+import toast from "react-hot-toast";
 
 import { useStyles } from "./styles";
 import HomeSvg from "../svgs/HomeSvg";
@@ -15,7 +16,7 @@ import {
   TO_PROFILE_PAGE,
 } from "../../utils/constants/routes";
 import { useUser } from "../../utils/context/user";
-import toast from "react-hot-toast";
+import CustomToast from "../toast";
 
 const Footer: React.FC = () => {
   // Global State Hooks
@@ -34,13 +35,13 @@ const Footer: React.FC = () => {
 
     for (const file of files) {
       if (supportedTypes.every((type) => file.type !== type)) {
-        toast("Image is not a supported format");
+        toast(<CustomToast message="Image is not a supported format" />);
         return;
       }
     }
 
     if (files?.length > 5) {
-      toast("Please select a maximum of 5 images");
+      toast(<CustomToast message="Please select a maximum of 5 images" />);
       return;
     }
     if (files?.length <= 5 && files?.length > 0) {

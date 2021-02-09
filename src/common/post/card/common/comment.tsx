@@ -28,6 +28,7 @@ import LoveSvg from "../../../svgs/LoveSvg";
 import PostCommentModal from "../../modal/comment";
 import UsersModal from "../../../users-modal";
 import LoginModal from "../../../login-modal";
+import CustomToast from "../../../toast";
 
 interface Props {
   comment: PostComment;
@@ -113,7 +114,7 @@ const PostCardCommonComment: React.FC<Props> = ({
           pathname
         );
       } else {
-        toast(error?.message);
+        toast(<CustomToast message="Couldn't like comment" />);
       }
     }
   };
@@ -137,7 +138,13 @@ const PostCardCommonComment: React.FC<Props> = ({
           pathname
         );
       } else {
-        toast(error?.message);
+        toast(
+          <CustomToast
+            message="Couldn't delete comment"
+            btnText="Retry"
+            onClick={handleDeleteReply}
+          />
+        );
       }
     }
   };

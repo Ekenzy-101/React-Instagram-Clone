@@ -23,6 +23,7 @@ import { logout } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
 import { modalState } from "../../utils/types/modal";
 import LogoutModal from "../logout-modal";
+import CustomToast from "../toast";
 import { useStyles } from "./styles";
 
 interface Props {
@@ -50,9 +51,11 @@ const AccountNavMobileView: React.FC<Props> = ({ onClose }) => {
       debug.error(error?.response?.status, error?.response?.data);
 
       if (error?.response?.status >= 400 && error?.response?.status < 500) {
-        toast(error?.response?.data);
+        toast(<CustomToast message={error?.response?.data} />);
       } else {
-        toast("An unexpected error occured. Please try again");
+        toast(
+          <CustomToast message="An unexpected error occured. Please try again" />
+        );
       }
     }
   };

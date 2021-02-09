@@ -13,6 +13,7 @@ import { debug } from "../../utils/services/debugService";
 import { useUser } from "../../utils/context/user";
 import { User } from "../../utils/types/user";
 import { useParams } from "react-router-dom";
+import CustomToast from "../toast";
 
 const useProfile = () => {
   // Global State Hooks
@@ -33,7 +34,7 @@ const useProfile = () => {
     const supportedTypes = ["image/png", "image/jpeg"];
 
     if (supportedTypes.every((type) => file?.type !== type)) {
-      toast("Image is not a supported format");
+      toast(<CustomToast message="Image is not a supported format" />);
       return;
     }
 
@@ -49,12 +50,17 @@ const useProfile = () => {
         const image = (await resizeFile(options)) as Blob;
         debug.log(image);
 
-        let presignedUrl = "";
-        let newImageUrl = "";
         await updateProfilePic({
-          update(cache, { data }) {
-            presignedUrl = data.updateProfilePicture as string;
-            newImageUrl = presignedUrl.split("?", 1)[0];
+          update: async (cache, { data }) => {
+            const presignedUrl = data.updateProfilePicture as string;
+            const newImageUrl = presignedUrl.split("?", 1)[0];
+
+            await http.put(presignedUrl, image, {
+              headers: {
+                "Content-Type": "image/jpeg",
+              },
+              withCredentials: false,
+            });
 
             if (params.username) {
               const userData = cache.readQuery({
@@ -83,17 +89,10 @@ const useProfile = () => {
             }
           },
         });
-
-        await http.put(presignedUrl, image, {
-          headers: {
-            "Content-Type": "image/jpeg",
-          },
-          withCredentials: false,
-        });
-        toast("Profile photo added");
+        toast(<CustomToast message="Profile photo added" />);
       } catch (error) {
         debug.error(error?.message);
-        toast(error?.message);
+        toast(<CustomToast message="Upload failed" />);
       }
     }
   };
@@ -106,7 +105,6 @@ const useProfile = () => {
             query: GET_USER,
             variables: { username: user?.username },
           }) as { user: User };
-          console.log("userdata", data);
 
           cache.writeQuery({
             query: GET_USER,
@@ -115,10 +113,10 @@ const useProfile = () => {
           });
         },
       });
-      toast("Profile photo removed");
+      toast(<CustomToast message="Profile photo removed" />);
     } catch (error) {
       debug.error(error?.message);
-      toast(error?.message);
+      toast(<CustomToast message="Couldn't remove photo" />);
     }
   };
 

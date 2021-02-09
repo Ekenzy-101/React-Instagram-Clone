@@ -24,6 +24,7 @@ import NotSupportedModal from "../not-supported-modal";
 import LogoutModal from "../logout-modal";
 import { useStyles } from "./styles";
 import { modalState } from "../../utils/types/modal";
+import CustomToast from "../toast";
 interface Props {
   anchorElement: null | HTMLElement;
   setAnchorElement: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
@@ -51,9 +52,11 @@ const HeaderMenu: React.FC<Props> = ({ anchorElement, setAnchorElement }) => {
       debug.error(error?.response?.status, error?.response?.data);
 
       if (error?.response?.status >= 400 && error?.response?.status < 500) {
-        toast(error?.response?.data);
+        toast(<CustomToast message={error?.response?.data} />);
       } else {
-        toast("An unexpected error occured. Please try again");
+        toast(
+          <CustomToast message="An unexpected error occured. Please try again" />
+        );
       }
     }
   };

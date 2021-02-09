@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useHistory, useLocation } from "react-router-dom";
+import React from "react";
 import toast from "react-hot-toast";
 
 import { TOGGLE_FOLLOW } from "../../utils/mutations/user";
@@ -8,6 +9,7 @@ import { useUser } from "../../utils/context/user";
 import { debug } from "../../utils/services/debugService";
 import { updateAuthUserFollowers } from "../../utils/helpers/user";
 import { User } from "../../utils/types/user";
+import CustomToast from "../toast";
 
 const useFollow = () => {
   // Global Hooks
@@ -35,7 +37,7 @@ const useFollow = () => {
           pathname
         );
       } else {
-        toast(error?.message);
+        toast(<CustomToast message="Couldn't follow user" />);
       }
     }
   };

@@ -1,3 +1,4 @@
+import { Paper, Typography } from "@material-ui/core";
 import React, { Component, ErrorInfo } from "react";
 import { debug } from "../utils/services/debugService";
 
@@ -18,7 +19,26 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
-      return <div>Something Went Wrong</div>;
+      return (
+        <Paper
+          square
+          variant="outlined"
+          style={{
+            height: "100vh",
+            width: "100vw",
+            padding: "2rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <Typography color="textPrimary" variant="h6">
+            Something went wrong. Please try refreshing the page if error
+            persists
+          </Typography>
+        </Paper>
+      );
     }
     return this.props.children;
   }
