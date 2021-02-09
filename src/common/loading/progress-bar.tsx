@@ -1,8 +1,11 @@
 import React from "react";
 import { useStyles } from "./styles";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
+interface Props {
+  title?: string;
+}
 
-const LoadingProgressBar: React.FC = () => {
+const LoadingProgressBar: React.FC<Props> = ({ title }) => {
   const classes = useStyles();
   return (
     <div className={classes.wrapper}>
@@ -10,12 +13,16 @@ const LoadingProgressBar: React.FC = () => {
         <span id="loading-animation" className="loading-progress-bar"></span>
         <Toolbar className={classes.toolbar}>
           <Typography color="textPrimary" variant="h6">
-            Sharing...
+            {title}
           </Typography>
         </Toolbar>
       </AppBar>
     </div>
   );
+};
+
+LoadingProgressBar.defaultProps = {
+  title: "Sharing...",
 };
 
 export default LoadingProgressBar;

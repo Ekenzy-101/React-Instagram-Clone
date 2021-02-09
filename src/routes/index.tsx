@@ -18,6 +18,7 @@ import {
   TO_PROFILE_PAGE,
   TO_SIGNUP_PAGE,
   TO_VERIFYEMAIL_PAGE,
+  TO_CREATESTORY_PAGE,
 } from "../utils/constants/routes";
 import ProtectedRoute from "./protected-route";
 import RedirectedRoute from "./redirected-route";
@@ -38,6 +39,7 @@ const PostPage = lazy(() => import("../containers/post"));
 const PostCommentsPage = lazy(() => import("../containers/post-comments"));
 const PostLikesPage = lazy(() => import("../containers/post-likes"));
 const AddPostPage = lazy(() => import("../containers/add-post"));
+const AddStoryPage = lazy(() => import("../containers/add-story"));
 const SignupPage = lazy(() => import("../containers/signup"));
 const VerifyEmailPage = lazy(() => import("../containers/verify-email"));
 const LoginPage = lazy(() => import("../containers/login"));
@@ -62,6 +64,12 @@ const Routes = () => {
             exact
             authenticated
             component={PostLikesPage}
+          />
+          <MobileRoute
+            path={TO_CREATESTORY_PAGE}
+            exact
+            authenticated
+            component={AddStoryPage}
           />
           <MobileRoute
             path={TO_CREATESTYLE_PAGE}

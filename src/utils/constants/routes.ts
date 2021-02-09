@@ -17,4 +17,5 @@ export const TO_LOGIN_PAGE = "/accounts/login/";
 export const TO_PASSWORDRESET_PAGE = "/accounts/password/reset/";
 export const TO_PASSWORDCHANGE_PAGE = "/accounts/password/change/";
 export const TO_CREATESTYLE_PAGE = "/create/style/";
+export const TO_CREATESTORY_PAGE = "/create/story/";
 export const TO_CREATEDETAILS_PAGE = "/create/details/";
