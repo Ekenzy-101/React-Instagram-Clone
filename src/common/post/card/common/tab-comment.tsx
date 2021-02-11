@@ -25,23 +25,13 @@ const PostCardCommonTabComment: React.FC<Props> = ({ comment, post }) => {
   // Other Logic
   const isCommentLikedByUser = likes.some((like) => like.id === authUser?.id);
 
-  const splitWords = limitCommentText(
-    content +
-      `
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel earum ea dignissimos, veniam sunt doloribus. Rerum quaerat expedita, iure ipsum quam tempore iste harum? Saepe ea deleniti eius repellendus praesentium.`,
-    80
-  );
+  const splitWords = limitCommentText(content, 80);
 
   return (
     <div style={{ display: "flex", marginBottom: "0.3rem" }}>
       <Typography className={classes.mobileCommentByBody} variant="body1">
         <strong className={classes.username}>
-          <Link
-            className={classes.link}
-            to={{
-              pathname: `/${user.username}/`,
-            }}
-          >
+          <Link className={classes.link} to={`/${user.username}/`}>
             {user.username}
           </Link>
         </strong>

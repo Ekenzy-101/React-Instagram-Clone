@@ -35,12 +35,13 @@ export const wrapLinkTag = (text: string) => {
 
   const splitWords = text.split(" ");
 
-  return splitWords.map((word) => {
+  return splitWords.map((word, index) => {
     if (regex.test(word)) {
       const username = word.replace("@", "");
 
       return (
         <Link
+          key={index}
           style={{
             cursor: "pointer",
             textDecoration: "none",

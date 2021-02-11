@@ -12,11 +12,10 @@ export const useStyles = makeStyles((theme) => ({
       marginBottom: "30px",
     },
   },
-  gridItem: {
-    borderRadius: "50%",
-    marginRight: "20px",
-    padding: "2px",
-    background: "linear-gradient(to left, #C13584 0%, #F77737 90%)",
+  addIcon: {
+    width: 20,
+    height: 20,
+    color: theme.palette.primary.main,
   },
   avatarWrapper: {
     borderRadius: "50%",
@@ -26,5 +25,20 @@ export const useStyles = makeStyles((theme) => ({
   avatar: {
     width: "56px",
     height: "56px",
+  },
+  gridItem: {
+    borderRadius: "50%",
+    padding: "2px",
+    background: "linear-gradient(to left, #C13584 0%, #F77737 90%)",
+  },
+  username: {
+    marginTop: "5px",
+    lineHeight: 1,
+  },
+  wrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginRight: "20px",
   },
 }));

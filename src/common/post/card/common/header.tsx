@@ -71,7 +71,7 @@ const PostCardCommonHeader: React.FC<Props> = ({
         }
         action={
           <IconButton disableFocusRipple disableTouchRipple onClick={onClick}>
-            <MoreHoriz onClick={onClick} />
+            <MoreHoriz />
           </IconButton>
         }
         title={
