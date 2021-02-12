@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { Avatar, Button, Typography } from "@material-ui/core";
+import { Avatar, Button, CardMedia, Typography } from "@material-ui/core";
 import toast from "react-hot-toast";
 
 import { Post } from "../../../utils/types/post";
@@ -8,7 +8,6 @@ import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import {
   CAMERA_LOGO_URL,
-  POST_PIC_URL,
   MULTI_PHOTO_LOGO_URL,
 } from "../../../utils/constants/url";
 import { useUser } from "../../../utils/context/user";
@@ -91,7 +90,7 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
                 className={classes.multiPhoto}
               ></span>
             ) : null}
-            <img src={POST_PIC_URL} alt="Post" />
+            <CardMedia image={post?.image_urls[0]} className="post-image" />
           </Link>
         ))}
       </div>

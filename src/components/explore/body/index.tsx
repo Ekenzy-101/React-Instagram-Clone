@@ -1,4 +1,4 @@
-import { Avatar, Typography } from "@material-ui/core";
+import { Avatar, CardMedia, Typography } from "@material-ui/core";
 import React from "react";
 import { useMedia } from "react-use";
 import { Link, useRouteMatch } from "react-router-dom";
@@ -8,7 +8,6 @@ import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import {
   MULTI_PHOTO_LOGO_URL,
-  POST_PIC_URL,
   PROFILE_PIC_URL,
 } from "../../../utils/constants/url";
 import { Post } from "../../../utils/types/post";
@@ -93,7 +92,7 @@ const ExploreBody: React.FC<Props> = ({ posts, users }) => {
                 className={classes.multiPhoto}
               ></span>
             ) : null}
-            <img src={POST_PIC_URL} alt="Post" />
+            <CardMedia image={post?.image_urls[0]} className="post-image" />
           </Link>
         ))}
       </div>

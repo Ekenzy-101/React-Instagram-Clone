@@ -14,6 +14,7 @@ import { useUser } from "../../../utils/context/user";
 import { limitCommentText, wrapLinkTag } from "../../../utils/helpers";
 import { modalState } from "../../../utils/types/modal";
 import PostModal from "../modal";
+import PostDeleteModal from "../modal/delete";
 import UsersModal from "../../users-modal";
 import NotSupportedModal from "../../not-supported-modal";
 import LoginModal from "../../login-modal";
@@ -23,6 +24,7 @@ import PostCardCommonForm from "./common/form";
 import PostCardCommonActions from "./common/actions";
 import PostCardCommonLikeContent from "./common/like-content";
 import PostCardCommonTabComment from "./common/tab-comment";
+import usePost from "../../hooks/usePost";
 interface Props {
   post: Post;
 }
@@ -33,12 +35,14 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
   const { user: authUser } = useUser();
 
   // State Hooks
+  const [activeStep, setActiveStep] = useState(0);
   const [show, setShow] = useState<modalState>("none");
   const [open, setOpen] = useState(false);
 
   // Other Hooks
   const classes = useStyles();
   const { path, params } = useRouteMatch();
+  const { handleDeletePost, isDeletingPost } = usePost();
 
   const splitWords = limitCommentText(caption, 75);
 
@@ -55,6 +59,12 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
         open={show === "post"}
         post={post}
         onClose={() => setShow("none")}
+        onSwitchModal={() => setShow("post-delete")}
+      />
+      <PostDeleteModal
+        open={show === "post-delete"}
+        onDelete={isDeletingPost ? undefined : () => handleDeletePost(post)}
+        onClose={() => setShow("none")}
       />
       <NotSupportedModal
         open={show === "not-supported"}
@@ -63,10 +73,19 @@ const PostCardTabView: React.FC<Props> = ({ post }) => {
       <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <Card variant="outlined" className={classes.root}>
         <PostCardCommonHeader onClick={() => setShow("post")} post={post} />
-        <PostCardCommonStepper image_urls={image_urls} />
+        <PostCardCommonStepper
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
+          image_urls={image_urls}
+        />
 
         <PostCardCommonActions post={post} setShow={setShow}>
-          <PostCardCommonStepper mobile image_urls={image_urls} />
+          <PostCardCommonStepper
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            mobile
+            image_urls={image_urls}
+          />
         </PostCardCommonActions>
 
         <CardContent className={classes.cardContent}>

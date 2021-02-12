@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Paper } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import AddPostHeader from "../../components/add-post/header";
 import AddPostBody from "../../components/add-post/body";
@@ -13,6 +14,7 @@ import { TO_HOME_PAGE } from "../../utils/constants/routes";
 import { useInputImagesContext } from "../../utils/context/inputImages";
 import LoadingProgressBar from "../../common/loading/progress-bar";
 import { useStyles } from "./styles";
+import CustomToast from "../../common/toast";
 
 const obj = { location: "", caption: "" };
 
@@ -45,10 +47,10 @@ const AddPostPage: React.FC = () => {
         for (const file of state) {
           const options: fileOptions = {
             file,
-            maxHeight: 300,
-            maxWidth: 300,
-            minHeight: 50,
-            minWidth: 50,
+            maxHeight: 600,
+            maxWidth: 600,
+            minHeight: 600,
+            minWidth: 600,
           };
           const image = (await resizeFile(options)) as Blob;
 
@@ -95,11 +97,20 @@ const AddPostPage: React.FC = () => {
       const signedUrls = data.createPost as string[];
 
       signedUrls.forEach(async (url, index) => {
-        await http.put(url, inputImages[index], { withCredentials: false });
+        await http.put(url, inputImages[index], {
+          headers: {
+            "Content-Type": "image/jpeg",
+          },
+          withCredentials: false,
+        });
       });
 
-      history.push(TO_HOME_PAGE);
+      setTimeout(() => {
+        history.push(TO_HOME_PAGE);
+        toast(<CustomToast message="Your photo was posted" />);
+      }, 2000);
     } catch (error) {
+      toast(<CustomToast message="Couldn't post photo" />);
       setSubmitted(false);
       debug.error(error);
     }

@@ -1,12 +1,17 @@
 import { useQuery } from "@apollo/client";
-import { Avatar, Divider, Hidden, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  CardMedia,
+  Divider,
+  Hidden,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import {
-  POST_PIC_URL,
   LOADING_GIF_URL,
   MULTI_PHOTO_LOGO_URL,
 } from "../../../utils/constants/url";
@@ -75,7 +80,7 @@ const PostBody: React.FC<Props> = ({ post }) => {
                     className={classes.multiPhoto}
                   ></span>
                 ) : null}
-                <img src={POST_PIC_URL} alt={p.caption} />
+                <CardMedia image={p?.image_urls[0]} className="post-image" />
               </Link>
             ))}
           </div>

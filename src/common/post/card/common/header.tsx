@@ -63,7 +63,7 @@ const PostCardCommonHeader: React.FC<Props> = ({
           <Grid item className={classes.gridItem}>
             <div className={classes.avatarWrapper}>
               <Avatar
-                src={user.image_url ? PROFILE_PIC_URL : PROFILE_PIC_URL}
+                src={user.image_url ? user?.image_url : PROFILE_PIC_URL}
                 className={classes.avatar}
               />
             </div>
@@ -92,7 +92,7 @@ const PostCardCommonHeader: React.FC<Props> = ({
               >
                 Following
               </strong>
-            ) : params?.id ? (
+            ) : params?.id && user.id !== authUser?.id ? (
               <Button
                 style={{ marginLeft: "0.5rem" }}
                 disableFocusRipple

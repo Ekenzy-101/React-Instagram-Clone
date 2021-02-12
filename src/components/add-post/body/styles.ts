@@ -17,7 +17,7 @@ export const useStyles = makeStyles((theme) => ({
   image: {
     width: "90vw",
     marginLeft: "0.5rem",
-    minHeight: "50vh",
+    minHeight: "60vh",
   },
   input: {
     height: "20px !important",

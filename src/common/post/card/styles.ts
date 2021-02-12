@@ -142,9 +142,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   media: {
     paddingBottom: "125%",
-    [theme.breakpoints.down("xs")]: {
-      paddingBottom: "105%",
-    },
   },
   mobileCommentByBody: {
     marginRight: "15px",

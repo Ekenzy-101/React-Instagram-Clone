@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import SwipeableViews from "react-swipeable-views";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
-import { POST_PIC_URL } from "../../../../utils/constants/url";
 import { useStyles } from "../styles";
 import {
   CardMedia,
@@ -13,12 +12,16 @@ import {
 interface Props {
   image_urls: string[];
   mobile?: boolean;
+  activeStep: number;
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const PostCardCommonStepper: React.FC<Props> = ({ image_urls, mobile }) => {
-  // State Hooks
-  const [activeStep, setActiveStep] = useState(0);
-
+const PostCardCommonStepper: React.FC<Props> = ({
+  image_urls,
+  mobile,
+  activeStep,
+  setActiveStep,
+}) => {
   // Other Hooks
   const classes = useStyles();
   const theme = useTheme();
@@ -46,11 +49,7 @@ const PostCardCommonStepper: React.FC<Props> = ({ image_urls, mobile }) => {
         enableMouseEvents
       >
         {image_urls.map((img, index) => (
-          <CardMedia
-            className={classes.media}
-            key={index}
-            image={POST_PIC_URL}
-          />
+          <CardMedia className={classes.media} key={index} image={img} />
         ))}
       </SwipeableViews>
 

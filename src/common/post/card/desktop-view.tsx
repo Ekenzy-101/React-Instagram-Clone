@@ -20,6 +20,8 @@ import PostCardCommonHeader from "./common/header";
 import PostCardCommonForm from "./common/form";
 import PostCardCommonActions from "./common/actions";
 import PostCardCommonLikeContent from "./common/like-content";
+import PostDeleteModal from "../modal/delete";
+import usePost from "../../hooks/usePost";
 interface Props {
   post: Post;
 }
@@ -28,6 +30,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
   const { image_urls, created_at, likes } = post;
 
   // State Hooks
+  const [activeStep, setActiveStep] = useState(0);
   const [show, setShow] = useState<modalState>("none");
   const [commentToReply, setCommentToReply] = useState<undefined | PostComment>(
     undefined
@@ -35,6 +38,7 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
 
   // Other Hooks
   const classes = useStyles();
+  const { handleDeletePost, isDeletingPost } = usePost();
 
   // JSX
   return (
@@ -49,6 +53,12 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
         open={show === "post"}
         onClose={() => setShow("none")}
         post={post}
+        onSwitchModal={() => setShow("post-delete")}
+      />
+      <PostDeleteModal
+        open={show === "post-delete"}
+        onDelete={isDeletingPost ? undefined : () => handleDeletePost(post)}
+        onClose={() => setShow("none")}
       />
       <NotSupportedModal
         open={show === "not-supported"}
@@ -59,7 +69,11 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
       <Card variant="outlined" className={classes.root}>
         <Grid container>
           <Grid item xs={7} style={{ position: "relative" }}>
-            <PostCardCommonStepper image_urls={image_urls} />
+            <PostCardCommonStepper
+              activeStep={activeStep}
+              setActiveStep={setActiveStep}
+              image_urls={image_urls}
+            />
           </Grid>
 
           <Grid item xs={5}>

@@ -40,10 +40,10 @@ const useProfile = () => {
 
     const options: fileOptions = {
       file,
-      maxHeight: 100,
-      maxWidth: 100,
-      minHeight: 50,
-      minWidth: 50,
+      maxHeight: 200,
+      maxWidth: 200,
+      minHeight: 150,
+      minWidth: 150,
     };
     if (file) {
       try {

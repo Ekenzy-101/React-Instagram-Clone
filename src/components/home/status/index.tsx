@@ -63,7 +63,12 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
                 }}
                 badgeContent={<AddCircle className={classes.addIcon} />}
               >
-                <Avatar className={classes.avatar} src={PROFILE_PIC_URL} />
+                <Avatar
+                  className={classes.avatar}
+                  src={
+                    authUser?.image_url ? authUser?.image_url : PROFILE_PIC_URL
+                  }
+                />
               </Badge>
             </Grid>
             <input

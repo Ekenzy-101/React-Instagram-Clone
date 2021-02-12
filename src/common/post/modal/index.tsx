@@ -12,10 +12,11 @@ import CustomToast from "../../toast";
 interface Props {
   open: boolean;
   post: Post;
+  onSwitchModal: () => void;
   onClose: () => void;
 }
 
-const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
+const PostModal: React.FC<Props> = ({ open, post, onClose, onSwitchModal }) => {
   // Global Context
   const { user } = useUser();
 
@@ -61,6 +62,7 @@ const PostModal: React.FC<Props> = ({ open, post, onClose }) => {
         <DialogContent
           className={clsx(classes.dialogBtn, classes.dangerBtn)}
           dividers
+          onClick={onSwitchModal}
         >
           Delete
         </DialogContent>

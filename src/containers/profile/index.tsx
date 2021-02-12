@@ -28,6 +28,7 @@ const ProfilePage: React.FC<Props> = (props) => {
   const { username } = useParams() as { username: string };
   const { data, loading } = useQuery(GET_USER, {
     variables: { username: props?.username ? props?.username : username },
+    fetchPolicy: "cache-and-network",
   });
   useTitle(`@${username} - Instagram photos and videos`);
 
@@ -37,24 +38,27 @@ const ProfilePage: React.FC<Props> = (props) => {
   debug.log("UserProfile", user);
 
   // JSX
+  if (data)
+    return (
+      <>
+        <Switch>
+          <Route path={TO_PROFILESAVED_PAGE} exact>
+            {isAuthUser ? <ProfileSavedPage user={user} /> : <NotFoundPage />}
+          </Route>
+          <Route path={TO_PROFILETAGGED_PAGE} exact>
+            <ProfileTaggedPage user={user} />
+          </Route>
+          <Route path={TO_PROFILE_PAGE} exact>
+            <ProfilePostsPage user={user} />
+          </Route>
+          <Route component={NotFoundPage} />
+        </Switch>
+      </>
+    );
   if (loading) return <LoadingPage spinner />;
   if (!user) return <NotFoundPage />;
-  return (
-    <>
-      <Switch>
-        <Route path={TO_PROFILESAVED_PAGE} exact>
-          {isAuthUser ? <ProfileSavedPage user={user} /> : <NotFoundPage />}
-        </Route>
-        <Route path={TO_PROFILETAGGED_PAGE} exact>
-          <ProfileTaggedPage user={user} />
-        </Route>
-        <Route path={TO_PROFILE_PAGE} exact>
-          <ProfilePostsPage user={user} />
-        </Route>
-        <Route component={NotFoundPage} />
-      </Switch>
-    </>
-  );
+
+  return null;
 };
 
 export default ProfilePage;

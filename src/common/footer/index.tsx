@@ -115,7 +115,10 @@ const Footer: React.FC = () => {
                 }}
               >
                 <div className={classes.avatarWrapper}>
-                  <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+                  <Avatar
+                    src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                    className={classes.avatar}
+                  />
                 </div>
               </Grid>
             </Link>
