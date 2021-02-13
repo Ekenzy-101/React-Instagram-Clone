@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.MuiAutocomplete-root {
+  border: none !important;
+}
+
 .explore-grid-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(100px, 1fr));

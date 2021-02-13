@@ -7,6 +7,7 @@ export const TO_PROFILEFOLLOWERS_PAGE = "/:username/followers/";
 export const TO_PROFILESAVED_PAGE = "/:username/saved/";
 export const TO_PROFILETAGGED_PAGE = "/:username/tagged/";
 export const TO_POST_PAGE = "/p/:id/";
+export const TO_STORY_PAGE = "/stories/:username/:id/";
 export const TO_POSTCOMMENTS_PAGE = "/p/:id/comments/";
 export const TO_POSTLIKES_PAGE = "/p/:id/liked_by/";
 export const TO_SIGNUP_PAGE = "/accounts/emailsignup/";

@@ -41,7 +41,7 @@ export const useStyles = makeStyles((theme) => ({
       width: "190px",
     },
     borderRadius: "4px",
-    border: "0.3px solid rgba(var(--b6a,219,219,219),1)",
+    border: "0.3px solid rgba(var(--b6a,219,219,219),1) !important",
     fontSize: "1rem",
     paddingLeft: props.status === "focused" ? "0.5rem" : "3rem",
     paddingRight: "0.4rem",
@@ -51,7 +51,9 @@ export const useStyles = makeStyles((theme) => ({
       background: theme.palette.background.paper,
     },
     "&:focus": {
-      borderColor: "#262626",
+      [theme.breakpoints.down("xs")]: {
+        borderColor: "#262626",
+      },
     },
   }),
   link: {

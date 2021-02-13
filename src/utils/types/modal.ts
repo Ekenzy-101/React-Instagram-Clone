@@ -2,6 +2,8 @@ export type modalState =
   | "post"
   | "post-delete"
   | "post-comment"
+  | "story"
+  | "story-delete"
   | "profile-picture"
   | "followers"
   | "following"

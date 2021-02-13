@@ -5,3 +5,9 @@ export const CREATE_STORY = gql`
     createStory
   }
 `;
+
+export const DELETE_STORY = gql`
+  mutation deleteStory($id: String!) {
+    deleteStory(id: $id)
+  }
+`;

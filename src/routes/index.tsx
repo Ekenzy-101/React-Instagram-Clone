@@ -19,6 +19,7 @@ import {
   TO_SIGNUP_PAGE,
   TO_VERIFYEMAIL_PAGE,
   TO_CREATESTORY_PAGE,
+  TO_STORY_PAGE,
 } from "../utils/constants/routes";
 import ProtectedRoute from "./protected-route";
 import RedirectedRoute from "./redirected-route";
@@ -47,6 +48,7 @@ const PasswordResetPage = lazy(() => import("../containers/password-reset"));
 const PasswordChangePage = lazy(() => import("../containers/password-change"));
 const ActivityPage = lazy(() => import("../containers/activity"));
 const EditProfilePage = lazy(() => import("../containers/edit-profile"));
+const StoryPage = lazy(() => import("../containers/story"));
 
 const Routes = () => {
   return (
@@ -137,6 +139,7 @@ const Routes = () => {
             component={PasswordResetPage}
           />
           <Route path={TO_POST_PAGE} exact component={PostPage} />
+          <ProtectedRoute path={TO_STORY_PAGE} exact component={StoryPage} />
           <Route path={TO_PROFILE_PAGE} component={ProfilePage} />
           <HomeRoute />
           <Route component={NotFoundPage} />

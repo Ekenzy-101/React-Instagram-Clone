@@ -8,6 +8,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: "16px 0 16px  20px",
     flexWrap: "nowrap",
     overflow: "auto",
+    minHeight: "110px",
     [theme.breakpoints.up("sm")]: {
       marginBottom: "30px",
     },
@@ -16,6 +17,8 @@ export const useStyles = makeStyles((theme) => ({
     width: 20,
     height: 20,
     color: theme.palette.primary.main,
+    background: "#fff",
+    borderRadius: "50%",
   },
   avatarWrapper: {
     borderRadius: "50%",

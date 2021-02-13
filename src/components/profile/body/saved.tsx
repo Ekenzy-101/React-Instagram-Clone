@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { CardMedia, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import { useStyles } from "./style";
@@ -7,10 +7,7 @@ import CommentSvg from "../../../common/svgs/CommentSvg";
 import SavedSvg from "../../../common/svgs/SavedSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import { Post } from "../../../utils/types/post";
-import {
-  MULTI_PHOTO_LOGO_URL,
-  POST_PIC_URL,
-} from "../../../utils/constants/url";
+import { MULTI_PHOTO_LOGO_URL } from "../../../utils/constants/url";
 interface Props {
   savedPosts: Post[];
 }
@@ -64,7 +61,7 @@ const ProfileBodySaved: React.FC<Props> = (props) => {
                   className={classes.multiPhoto}
                 ></span>
               ) : null}
-              <img src={POST_PIC_URL} alt="Post" />
+              <CardMedia image={post.image_urls[0]} className="post-image" />
             </Link>
           ))}
         </div>

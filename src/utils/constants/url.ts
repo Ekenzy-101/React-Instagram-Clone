@@ -1,4 +1,5 @@
 import igGreyLogo from "../images/instagram-grey.png";
+import igTransparentLogo from "../images/instagram-light-logo.png";
 import igMonoChromeLogo from "../images/instagram-logo.png";
 import igMonoChromeLogo1 from "../images/instagram-logo-1.png";
 import multiPhotoLogo from "../images/multi.png";
@@ -12,6 +13,7 @@ import cameraLogo from "../images/camera.png";
 
 export const IG_MONOCHROME_LOGO_URL = igMonoChromeLogo;
 export const IG_MONOCHROME_LOGO1_URL = igMonoChromeLogo1;
+export const IG_TRANSPARENT_LOGO_URL = igTransparentLogo;
 export const IG_GREY_LOGO_URL = igGreyLogo;
 export const PASSWORD_LOCK_LOGO_URL = lockLogo;
 export const PROFILE_PIC_URL = profilePic;

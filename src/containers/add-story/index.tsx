@@ -38,7 +38,7 @@ const AddStoryPage: React.FC = () => {
     const options: fileOptions = {
       file: state,
       maxHeight: 1000,
-      maxWidth: 600,
+      maxWidth: 800,
       minHeight: 600,
       minWidth: 480,
     };

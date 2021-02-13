@@ -2,6 +2,7 @@ import { Avatar, Badge, Grid, Typography } from "@material-ui/core";
 import { AddCircle } from "@material-ui/icons";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useMedia } from "react-use";
 
 import { TO_CREATESTORY_PAGE } from "../../../utils/constants/routes";
 import { PROFILE_PIC_URL } from "../../../utils/constants/url";
@@ -19,6 +20,7 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
   // Other Hooks
   const classes = useStyles();
   const history = useHistory();
+  const mobileView = useMedia(`(max-width: 600px)`);
 
   // Event Handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,9 +37,18 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
   // JSX
   return (
     <Grid container alignItems="center" className={classes.root}>
-      <div className={classes.wrapper}>
-        {userStory ? (
-          <Grid item className={classes.gridItem}>
+      {userStory ? (
+        <div className={classes.wrapper}>
+          <Grid
+            item
+            onClick={() =>
+              history.replace(
+                `/stories/${authUser?.username}/${userStory.id}/`,
+                "/"
+              )
+            }
+            className={classes.gridItem}
+          >
             <div className={classes.avatarWrapper}>
               <Avatar
                 src={
@@ -48,7 +59,16 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
               />
             </div>
           </Grid>
-        ) : (
+          <Typography
+            className={classes.username}
+            variant="body1"
+            color="textPrimary"
+          >
+            Your Story
+          </Typography>
+        </div>
+      ) : mobileView ? (
+        <div className={classes.wrapper}>
           <div className="file-input-wrapper">
             <Grid
               style={{ background: "transparent" }}
@@ -79,19 +99,23 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
               onChange={handleChange}
             />
           </div>
-        )}
-        <Typography
-          className={classes.username}
-          variant="body1"
-          color="textPrimary"
-        >
-          Your Story
-        </Typography>
-      </div>
+          <Typography
+            className={classes.username}
+            variant="body1"
+            color="textPrimary"
+          >
+            Your Story
+          </Typography>
+        </div>
+      ) : null}
 
       {otherStories?.map(({ id, user: { username, image_url } }) => (
         <div key={id} className={classes.wrapper}>
-          <Grid item className={classes.gridItem}>
+          <Grid
+            item
+            onClick={() => history.replace(`/stories/${username}/${id}/`, "/")}
+            className={classes.gridItem}
+          >
             <div className={classes.avatarWrapper}>
               <Avatar
                 src={image_url ? image_url : PROFILE_PIC_URL}
