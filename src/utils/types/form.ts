@@ -8,6 +8,7 @@ export type formState =
 export type inputName =
   | "email"
   | "password"
+  | "password_confirmation"
   | "new_password"
   | "new_password_confirmation"
   | "name"
@@ -24,6 +25,7 @@ export type validateFunction = (value: inputValue) => string | undefined;
 export interface initialValues {
   email?: inputValue;
   password?: inputValue;
+  password_confirmation?: inputValue;
   new_password?: inputValue;
   new_password_confirmation?: inputValue;
   name?: inputValue;

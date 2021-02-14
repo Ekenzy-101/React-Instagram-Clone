@@ -1,9 +1,19 @@
 import { gql } from "@apollo/client";
 import { USER_FRAGMENT } from "../fragments/user";
 
+export const GET_USER_BY_TOKEN = gql`
+  query getUserByToken($token: String) {
+    user(token: $token, username: null) {
+      ...UserFragment
+      email
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
 export const GET_USER = gql`
   query getUser($username: String!) {
-    user(username: $username) {
+    user(username: $username, token: null) {
       id
       name
       username
@@ -41,7 +51,7 @@ export const GET_USER = gql`
 
 export const GET_USER_FOLLOWERS = gql`
   query getUser($username: String!) {
-    user(username: $username) {
+    user(username: $username, token: null) {
       id
       followers {
         ...UserFragment
@@ -53,7 +63,7 @@ export const GET_USER_FOLLOWERS = gql`
 
 export const GET_USER_FOLLOWING = gql`
   query getUser($username: String!) {
-    user(username: $username) {
+    user(username: $username, token: null) {
       id
       following {
         ...UserFragment

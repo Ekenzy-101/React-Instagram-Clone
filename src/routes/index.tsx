@@ -20,6 +20,7 @@ import {
   TO_VERIFYEMAIL_PAGE,
   TO_CREATESTORY_PAGE,
   TO_STORY_PAGE,
+  TO_PASSWORDCONFIRM_PAGE,
 } from "../utils/constants/routes";
 import ProtectedRoute from "./protected-route";
 import RedirectedRoute from "./redirected-route";
@@ -46,6 +47,9 @@ const VerifyEmailPage = lazy(() => import("../containers/verify-email"));
 const LoginPage = lazy(() => import("../containers/login"));
 const PasswordResetPage = lazy(() => import("../containers/password-reset"));
 const PasswordChangePage = lazy(() => import("../containers/password-change"));
+const PasswordConfirmPage = lazy(
+  () => import("../containers/password-confirm")
+);
 const ActivityPage = lazy(() => import("../containers/activity"));
 const EditProfilePage = lazy(() => import("../containers/edit-profile"));
 const StoryPage = lazy(() => import("../containers/story"));
@@ -137,6 +141,11 @@ const Routes = () => {
             path={TO_PASSWORDRESET_PAGE}
             exact
             component={PasswordResetPage}
+          />
+          <RedirectedRoute
+            path={TO_PASSWORDCONFIRM_PAGE}
+            exact={false}
+            component={PasswordConfirmPage}
           />
           <Route path={TO_POST_PAGE} exact component={PostPage} />
           <ProtectedRoute path={TO_STORY_PAGE} exact component={StoryPage} />

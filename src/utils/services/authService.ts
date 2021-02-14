@@ -32,3 +32,16 @@ export const register = async (formData: {
 export const verifyEmail = async (data: { email: string; code: number }) => {
   return http.post("/verify/email", data);
 };
+
+export const forgotPassword = async (email: inputValue) => {
+  return http.post("/forgot-password", { email });
+};
+
+export const resetPassword = async (formData: {
+  password: inputValue;
+  password_confirmation: inputValue;
+  email?: string;
+  token?: string;
+}) => {
+  return http.post("/reset-password", formData);
+};
