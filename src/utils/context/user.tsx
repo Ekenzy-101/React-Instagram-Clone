@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { Paper, Typography } from "@material-ui/core";
 import React, { createContext, useContext } from "react";
 import LoadingPage from "../../common/loading/page";
 import { GET_AUTH_USER } from "../queries/user";
@@ -18,7 +19,26 @@ export const UserProvider: React.FC = ({ children }) => {
   // JSX
   if (loading) return <LoadingPage />;
 
-  console.log(error);
+  if (error)
+    return (
+      <Paper
+        square
+        variant="outlined"
+        style={{
+          height: "100vh",
+          width: "100vw",
+          padding: "2rem",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography color="textPrimary" variant="h6">
+          Something went wrong. Please try refreshing the page if error persists
+        </Typography>
+      </Paper>
+    );
 
   return (
     <UserContext.Provider

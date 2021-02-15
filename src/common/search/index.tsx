@@ -89,7 +89,6 @@ const CustomSearch: React.FC = () => {
 
   // Event Handlers
   const handleChange = (e: React.ChangeEvent<{}>, value: string) => {
-    console.log(value);
     dispatch({ type: "handlechange", payload: value });
     clearTimeout(ref.current!);
   };
