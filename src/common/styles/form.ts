@@ -9,9 +9,9 @@ export const useStyles = makeStyles(
       background: "transparent",
       borderRadius: "4px",
       [theme.breakpoints.down(735)]: {
-        width: "90%",
-        margin: "auto",
-        display: "block",
+        width: "90% !important",
+        margin: "auto !important",
+        display: "block !important",
       },
     },
     focused: {

@@ -88,13 +88,7 @@ const EditProfileBody: React.FC<Props> = ({ profile }) => {
       });
       toast(<CustomToast message="Profile saved" />);
     } catch (error) {
-      toast(
-        <CustomToast
-          message="Couldn't save profile"
-          btnText="Retry"
-          onClick={() => handleSubmit(e)}
-        />
-      );
+      toast(<CustomToast message={error?.message} />);
       setFormData({ name, username, bio, gender, website, email, phone_no });
     }
   };
