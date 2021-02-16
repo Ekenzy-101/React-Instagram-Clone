@@ -24,8 +24,8 @@ const useFacebookLogin = () => {
     debug.log(response);
 
     const dataArray = ["email", "name", "picture"];
-    const isPresent = Object.keys(response).every((key) =>
-      dataArray.includes(key)
+    const isPresent = dataArray.every((key) =>
+      Object.keys(response).includes(key)
     );
 
     if (isPresent) {
