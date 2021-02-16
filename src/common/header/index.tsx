@@ -104,7 +104,7 @@ const DesktopViewHeader = () => {
             </Grid>
             <Grid item>
               <Avatar
-                src={PROFILE_PIC_URL}
+                src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
                 className={classes.profilePic}
                 onClick={(e) => handleClick(e)}
                 aria-controls="header-menu"

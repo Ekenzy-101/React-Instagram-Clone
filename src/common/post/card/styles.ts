@@ -123,7 +123,9 @@ export const useStyles = makeStyles((theme) => ({
     width: "6.5rem",
   },
   header: {
-    padding: "10px 13px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "10px 13px !important",
+    },
     fontWeight: "bold",
   },
   likedByGroup: {

@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { Hidden, Paper, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTitle } from "react-use";
 
@@ -18,14 +18,12 @@ import {
   validatePassword,
 } from "../../utils/helpers/validation";
 import { GET_AUTH_USER } from "../../utils/queries/user";
-import { login, loginWithFacebook } from "../../utils/services/authService";
+import { login } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
 import { useStyles } from "./styles";
+import useFacebookLogin from "../../common/hooks/useFacebookLogin";
 
 const LoginPage: React.FC = () => {
-  // State Hooks
-  const [pageLoading, setPageLoading] = useState(false);
-
   // Other Hooks
   const classes = useStyles();
   const client = useApolloClient();
@@ -42,38 +40,15 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
+  const { handleFacebookResponse, loading, errorMessage } = useFacebookLogin();
   useTitle("Login - Instagram");
 
+  useEffect(() => {
+    setErrorMessage(errorMessage);
+    // eslint-disable-next-line
+  }, [errorMessage]);
+
   // Event Handlers
-  const handleFacebookResponse = async (response: any) => {
-    setPageLoading(true);
-    debug.log(response);
-
-    const email = response.email as string;
-    const name = response.name as string;
-    const image_url = response.picture.data.url as string;
-
-    try {
-      const { data } = await loginWithFacebook({ email, name, image_url });
-
-      debug.log(data);
-
-      const authUser = { __typename: "User", ...data };
-      client.writeQuery({ query: GET_AUTH_USER, data: { profile: authUser } });
-
-      state ? history.push(state as string) : history.push(TO_HOME_PAGE);
-    } catch (error) {
-      debug.log(error?.response?.status, error?.response?.data);
-
-      setPageLoading(false);
-      if (error?.response?.status >= 400 && error?.response?.status < 500) {
-        setErrorMessage(error?.response?.data);
-      } else {
-        setErrorMessage("An unexpected error occured. Please try again");
-      }
-    }
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormState("submitted");
@@ -101,7 +76,7 @@ const LoginPage: React.FC = () => {
   };
 
   // JSX
-  if (pageLoading) return <LoadingPage />;
+  if (loading) return <LoadingPage />;
 
   return (
     <Paper variant="outlined" square className={classes.root}>

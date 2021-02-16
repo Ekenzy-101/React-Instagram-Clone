@@ -28,7 +28,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   wrapper: {
-    background: "rgba(0,0,0,0.5)",
+    background: "rgba(0,0,0,0.5) !important",
     position: "absolute",
     height: "100vh",
     width: "100%",
