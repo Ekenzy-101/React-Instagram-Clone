@@ -23,7 +23,7 @@ const useFacebookLogin = () => {
     setLoading(true);
     debug.log(response);
 
-    const dataArray = ["email", "name", "image_url"];
+    const dataArray = ["email", "name", "picture"];
     const isPresent = Object.keys(response).every((key) =>
       dataArray.includes(key)
     );
