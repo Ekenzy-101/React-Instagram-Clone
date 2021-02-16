@@ -27,6 +27,7 @@ const useFacebookLogin = () => {
     const isPresent = Object.keys(response).every((key) =>
       dataArray.includes(key)
     );
+
     if (isPresent) {
       try {
         const name = response.name!;
