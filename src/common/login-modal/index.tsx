@@ -1,15 +1,16 @@
 import { useApolloClient } from "@apollo/client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import {
   validateEmail,
   validatePassword,
 } from "../../utils/helpers/validation";
 import { GET_AUTH_USER } from "../../utils/queries/user";
-import { login, loginWithFacebook } from "../../utils/services/authService";
+import { login } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
 import useForm from "../hooks/useForm";
 import DesktopViewLoginModal from "./desktop-view";
+import useFacebookLogin from "../hooks/useFacebookLogin";
 
 interface Props {
   open: boolean;
@@ -28,37 +29,23 @@ const LoginModal: React.FC<Props> = ({ open, onClose }) => {
   const client = useApolloClient();
   const history = useHistory();
   const { pathname } = useLocation();
+  const { handleFacebookResponse, errorMessage, loading } = useFacebookLogin(
+    pathname
+  );
 
-  const handleFacebookResponse = async (response: any) => {
-    setFormState("submitted");
-    debug.log(response);
-
-    const email = response.email as string;
-    const name = response.name as string;
-    const image_url = response.picture.data.url as string;
-
-    try {
-      const { data } = await loginWithFacebook({ email, name, image_url });
-
-      debug.log(data);
-
-      const authUser = { __typename: "User", ...data };
-      client.writeQuery({ query: GET_AUTH_USER, data: { profile: authUser } });
-
-      onClose();
-      history.push(pathname);
-    } catch (error) {
-      setFormState("initial");
-
-      debug.log(error?.response?.status, error?.response?.data);
-
-      if (error?.response?.status >= 400 && error?.response?.status < 500) {
-        setErrorMessage(error?.response?.data);
-      } else {
-        setErrorMessage("An unexpected error occured. Please try again");
-      }
+  useEffect(() => {
+    if (loading) {
+      setFormState("submitted");
+    } else {
+      setFormState("error");
     }
-  };
+    // eslint-disable-next-line
+  }, [loading]);
+
+  useEffect(() => {
+    setErrorMessage(errorMessage);
+    // eslint-disable-next-line
+  }, [errorMessage]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

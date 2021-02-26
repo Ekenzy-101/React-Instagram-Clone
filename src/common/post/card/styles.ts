@@ -67,9 +67,9 @@ export const useStyles = makeStyles((theme) => ({
   },
   commentByBody: {
     display: "flex",
+    flexWrap: "wrap",
     flexDirection: "column",
-    flexGrow: 1,
-    margin: "auto 15px",
+    marginLeft: "15px",
   },
   commentByGroup: {
     display: "flex",
@@ -151,6 +151,12 @@ export const useStyles = makeStyles((theme) => ({
       marginRight: "9px",
       fontSize: "0.9rem",
     },
+  },
+  replyByBody: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    marginLeft: "15px",
   },
   rounded: {
     borderRadius: "0.7rem",

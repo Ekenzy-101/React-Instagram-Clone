@@ -54,9 +54,14 @@ const PostCardCommonReply: React.FC<Props> = ({
           className={classes.commentByAvatar}
         />
 
-        <div {...onLongPress} id={reply.id} className={classes.commentByBody}>
+        <div {...onLongPress} id={reply.id} className={classes.replyByBody}>
           <Typography
-            style={{ marginBottom: "0.5rem", fontSize: "0.9rem" }}
+            style={{
+              marginBottom: "0.5rem",
+              fontSize: "0.9rem",
+              maxWidth: "200px",
+              wordWrap: "break-word",
+            }}
             variant="body1"
             id={reply.id}
           >
@@ -94,7 +99,7 @@ const PostCardCommonReply: React.FC<Props> = ({
           </Typography>
         </div>
 
-        <div>
+        <div style={{ marginLeft: "auto" }}>
           {authUser ? (
             <LoveSvg
               active={isReplyLikedByUser(reply)}

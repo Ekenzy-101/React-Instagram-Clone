@@ -31,7 +31,7 @@ const obj = {
 
 const PasswordChangeBody: React.FC = () => {
   // Global State Hooks
-  const { user } = useUser()!;
+  const { user } = useUser();
 
   // Other Hooks
   const classes = useStyles();
@@ -105,14 +105,20 @@ const PasswordChangeBody: React.FC = () => {
           <br />
           <PasswordChangeBodyWrapper
             leftComponent={
-              <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+              <Avatar
+                src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                className={classes.avatar}
+              />
             }
             rightComponent={
               <Typography variant="h5">{user?.username}</Typography>
             }
             centerComponent={
               <div className={classes.wrapper}>
-                <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+                <Avatar
+                  src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                  className={classes.avatar}
+                />
                 <Typography variant="h5">{user?.username}</Typography>
               </div>
             }

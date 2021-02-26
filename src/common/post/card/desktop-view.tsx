@@ -80,7 +80,10 @@ const PostCardDesktopView: React.FC<Props> = ({ post }) => {
             <PostCardCommonHeader onClick={() => setShow("post")} post={post} />
             <Divider />
 
-            <CardContent className={classes.commentContent}>
+            <CardContent
+              style={{ overflowY: "auto" }}
+              className={classes.commentContent}
+            >
               <PostCardCommonComments
                 setCommentToReply={setCommentToReply}
                 post={post}

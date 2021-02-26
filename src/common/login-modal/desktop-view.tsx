@@ -44,8 +44,6 @@ const DesktopViewLoginModal: React.FC<Props> = (props) => {
           {children}
 
           <br />
-          {renderErrorMessage()}
-
           <div className={classes.dividerGroup}>
             <div className={classes.divider}></div>
             <Typography

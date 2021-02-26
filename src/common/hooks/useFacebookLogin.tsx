@@ -8,7 +8,7 @@ import { debug } from "../../utils/services/debugService";
 import { GET_AUTH_USER } from "../../utils/queries/user";
 import { TO_HOME_PAGE } from "../../utils/constants/routes";
 
-const useFacebookLogin = () => {
+const useFacebookLogin = (path?: string) => {
   // State Hooks
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,7 +43,11 @@ const useFacebookLogin = () => {
           data: { profile: authUser },
         });
 
-        state ? history.push(state as string) : history.push(TO_HOME_PAGE);
+        path
+          ? history.push(path)
+          : state
+          ? history.push(state as string)
+          : history.push(TO_HOME_PAGE);
       } catch (error) {
         debug.log(error?.response?.status, error?.response?.data);
 

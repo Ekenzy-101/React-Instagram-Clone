@@ -180,7 +180,12 @@ const PostCardCommonComment: React.FC<Props> = ({
         />
         <div {...onLongPress} id={comment.id} className={classes.commentByBody}>
           <Typography
-            style={{ marginBottom: "0.5rem", fontSize: "0.9rem" }}
+            style={{
+              marginBottom: "0.5rem",
+              fontSize: "0.9rem",
+              maxWidth: "230px",
+              wordWrap: "break-word",
+            }}
             variant="body1"
             id={comment.id}
           >
@@ -230,7 +235,7 @@ const PostCardCommonComment: React.FC<Props> = ({
             </Button>
           </Typography>
         </div>
-        <div>
+        <div style={{ marginLeft: "auto" }}>
           {authUser ? (
             <LoveSvg
               active={isCommentLikedByUser}
@@ -245,8 +250,8 @@ const PostCardCommonComment: React.FC<Props> = ({
       {/* Replies Section */}
       {replies?.length ? (
         <div className={classes.commentByGroup}>
-          <p style={{ width: 30 }}></p>
-          <p style={{ width: 30 }}></p>
+          <p style={{ minWidth: 20 }}></p>
+          <p style={{ minWidth: 20 }}></p>
           <div style={{ flexGrow: 1 }}>
             <div
               onClick={() => setOpen(!open)}
