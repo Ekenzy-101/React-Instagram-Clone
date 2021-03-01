@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import React, { useEffect } from "react";
+import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import {
   validateEmail,
@@ -10,8 +10,6 @@ import { login } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
 import useForm from "../hooks/useForm";
 import DesktopViewLoginModal from "./desktop-view";
-import useFacebookLogin from "../hooks/useFacebookLogin";
-
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -29,23 +27,6 @@ const LoginModal: React.FC<Props> = ({ open, onClose }) => {
   const client = useApolloClient();
   const history = useHistory();
   const { pathname } = useLocation();
-  const { handleFacebookResponse, errorMessage, loading } = useFacebookLogin(
-    pathname
-  );
-
-  useEffect(() => {
-    if (loading) {
-      setFormState("submitted");
-    } else {
-      setFormState("error");
-    }
-    // eslint-disable-next-line
-  }, [loading]);
-
-  useEffect(() => {
-    setErrorMessage(errorMessage);
-    // eslint-disable-next-line
-  }, [errorMessage]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -80,7 +61,6 @@ const LoginModal: React.FC<Props> = ({ open, onClose }) => {
         renderErrorMessage={renderErrorMessage}
         open={open}
         onClose={onClose}
-        onFacebookResponse={handleFacebookResponse}
       >
         <form onSubmit={handleSubmit}>
           {renderInput({
