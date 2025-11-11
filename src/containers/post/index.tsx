@@ -26,7 +26,7 @@ const PostPage: React.FC<Props> = (props) => {
   });
   const classes = useStyles();
   const tabView = useMedia(`(max-width: 735px)`);
-  useTitle(`Instagram`);
+  useTitle(`Kenzygram`);
 
   const post = data?.post as Post;
   debug.table(post);

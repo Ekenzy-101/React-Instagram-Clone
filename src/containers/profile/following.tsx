@@ -25,7 +25,7 @@ const ProfileFollowingPage: React.FC<Props> = (props) => {
   const { data, loading } = useQuery(GET_USER_FOLLOWING, {
     variables: { username: props?.username ? props?.username : username },
   });
-  useTitle("Instagram");
+  useTitle("Kenzygram");
 
   // Other Logic
   const user = data?.user as User;

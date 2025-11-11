@@ -5,7 +5,7 @@ import { Link, useLocation, useRouteMatch } from "react-router-dom";
 
 import {
   IG_MONOCHROME_LOGO_URL,
-  PROFILE_PIC_URL,
+  DEFAULT_PROFILE_PIC_URL,
 } from "../../utils/constants/url";
 import { useStyles } from "./styles";
 import CustomSearch from "../search";
@@ -104,7 +104,9 @@ const DesktopViewHeader = () => {
             </Grid>
             <Grid item>
               <Avatar
-                src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                src={
+                  user?.image_url ? user?.image_url : DEFAULT_PROFILE_PIC_URL
+                }
                 className={classes.profilePic}
                 onClick={(e) => handleClick(e)}
                 aria-controls="header-menu"

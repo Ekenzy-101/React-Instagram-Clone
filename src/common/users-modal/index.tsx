@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 import LoadingSpinner from "../loading/spinner";
 import ProfileTitleUnfollowModal from "../../components/profile/title/modal/unfollow";
-import { PROFILE_PIC_URL } from "../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../utils/constants/url";
 import { User } from "../../utils/types/user";
 import { modalState } from "../../utils/types/modal";
 import { useUser } from "../../utils/context/user";
@@ -85,7 +85,10 @@ const UsersModal: React.FC<Props> = (props) => {
             ?.filter((u) => u.id !== authUser?.id)
             ?.map((u) => (
               <div className={classes.wrapper} key={u.id}>
-                <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+                <Avatar
+                  src={DEFAULT_PROFILE_PIC_URL}
+                  className={classes.avatar}
+                />
                 <div style={{ flexGrow: 1, margin: "auto 12px" }}>
                   <Typography className={classes.text}>
                     <strong>

@@ -1,6 +1,7 @@
 import { Avatar, Paper } from "@material-ui/core";
+import { Instagram } from "@material-ui/icons";
 import React from "react";
-import { IG_GREY_LOGO_URL, LOADING_GIF_URL } from "../../utils/constants/url";
+import { LOADING_GIF_URL } from "../../utils/constants/url";
 import { useStyles } from "./styles";
 interface Props {
   spinner?: boolean;
@@ -16,7 +17,7 @@ const LoadingPage: React.FC<Props> = ({ spinner }) => {
       {spinner ? (
         <Avatar src={LOADING_GIF_URL} className={classes.spinner} />
       ) : (
-        <Avatar src={IG_GREY_LOGO_URL} className={classes.greyLogo} />
+        <Instagram className={classes.greyLogo} />
       )}
     </Paper>
   );

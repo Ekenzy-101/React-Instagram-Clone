@@ -26,14 +26,14 @@ export const useStyles = makeStyles((theme) => ({
     margin: "1.2rem auto 1.2rem auto",
   },
   facebookLogo: {
-    width: "16px",
-    height: "16px",
+    width: "20px",
+    height: "20px",
     marginRight: "0.5rem",
   },
   facebookLoginBtn: {
     marginBottom: "0.5rem",
     textTransform: "none",
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
     [theme.breakpoints.only("xs")]: {
       color: theme.palette.common.white,
     },
@@ -52,11 +52,6 @@ export const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: theme.palette.primary.main,
     fontWeight: 500,
-  },
-  darkLink: {
-    textDecoration: "none",
-    color: theme.palette.primary.dark,
-    fontSize: "0.8rem",
   },
   smallWrapper: {
     padding: "1rem !important",

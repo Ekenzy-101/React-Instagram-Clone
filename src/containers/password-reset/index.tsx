@@ -20,7 +20,7 @@ const PasswordResetPage: React.FC = () => {
   const { renderButton, renderInput, formData, setFormState } = useForm({
     email: "",
   });
-  useTitle("Reset Password - Instagram");
+  useTitle("Reset Password - Kenzygram");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

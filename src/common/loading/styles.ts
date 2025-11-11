@@ -21,8 +21,8 @@ export const useStyles = makeStyles((theme) => ({
     opacity: 0.6,
   },
   spinner: {
-    width: 30,
-    height: 30,
+    width: "60px",
+    height: "60px",
   },
   toolbar: {
     justifyContent: "center",

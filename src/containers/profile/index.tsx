@@ -30,7 +30,7 @@ const ProfilePage: React.FC<Props> = (props) => {
     variables: { username: props?.username ? props?.username : username },
     fetchPolicy: "cache-and-network",
   });
-  useTitle(`@${username} - Instagram photos and videos`);
+  useTitle(`@${username} - Kenzygram photos and videos`);
 
   const user = data?.user as User;
   const isAuthUser = authUser?.id === user?.id;

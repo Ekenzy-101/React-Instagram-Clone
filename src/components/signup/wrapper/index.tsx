@@ -1,14 +1,12 @@
 import { Avatar, Typography, Button, Hidden } from "@material-ui/core";
+import { Facebook } from "@material-ui/icons";
 import clsx from "clsx";
 import React from "react";
 import { Link } from "react-router-dom";
 
 import { useStyles } from "./styles";
 import { TO_LOGIN_PAGE } from "../../../utils/constants/routes";
-import {
-  IG_MONOCHROME_LOGO1_URL,
-  FACEBOOK_LITE_LOGO_URL,
-} from "../../../utils/constants/url";
+import { IG_MONOCHROME_LOGO_URL } from "../../../utils/constants/url";
 import FacebookButton from "../../../common/facebook/button";
 
 interface Props {
@@ -24,7 +22,7 @@ const SignupWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
     <div>
       <div className={classes.wrapper}>
         <Avatar
-          src={IG_MONOCHROME_LOGO1_URL}
+          src={IG_MONOCHROME_LOGO_URL}
           className={classes.brandLogo}
           variant="square"
         />
@@ -49,11 +47,7 @@ const SignupWrapper: React.FC<Props> = ({ onFacebookResponse, children }) => {
                 fullWidth
                 onClick={renderProps.onClick}
               >
-                <Avatar
-                  src={FACEBOOK_LITE_LOGO_URL}
-                  variant="square"
-                  className={classes.facebookLogo}
-                />
+                <Facebook className={classes.facebookLogo} />
                 Log in with Facebook
               </Button>
             )}

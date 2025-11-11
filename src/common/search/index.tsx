@@ -7,7 +7,10 @@ import { Link } from "react-router-dom";
 import { useStyles } from "./styles";
 import { getUsersBySearch } from "../../utils/services/userService";
 import { User } from "../../utils/types/user";
-import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../utils/constants/url";
+import {
+  LOADING_GIF_URL,
+  DEFAULT_PROFILE_PIC_URL,
+} from "../../utils/constants/url";
 
 type State = {
   users: User[];
@@ -160,7 +163,7 @@ const CustomSearch: React.FC = () => {
               <div className={classes.menuItem}>
                 <Avatar
                   className={classes.avatar}
-                  src={image_url ? image_url : PROFILE_PIC_URL}
+                  src={image_url ? image_url : DEFAULT_PROFILE_PIC_URL}
                 />
                 <div>
                   <Typography className={classes.username}>

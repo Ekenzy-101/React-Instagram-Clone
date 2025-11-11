@@ -93,7 +93,7 @@ const PostCardCommonForm: React.FC<Props> = ({
         });
       }
       setContent("");
-    } catch (error) {
+    } catch (error: Error) {
       debug.error(error.message);
       if (error.message.includes("Unauthorized")) {
         history.push(
@@ -148,7 +148,7 @@ const PostCardCommonForm: React.FC<Props> = ({
                   search: `?redirect_to=${encodeURIComponent(`/p/${post.id}`)}`,
                   state: `/p/${post.id}/`,
                 }}
-                style={{ color: theme.palette.primary.dark }}
+                style={{ color: theme.palette.primary.main }}
                 className={classes.link}
               >
                 Login

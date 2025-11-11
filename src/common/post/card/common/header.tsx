@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import ProfileTitleUnfollowModal from "../../../../components/profile/title/modal/unfollow";
 
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import useFollow from "../../../../common/hooks/useFollow";
 import { useUser } from "../../../../utils/context/user";
 import { modalState } from "../../../../utils/types/modal";
@@ -63,7 +63,7 @@ const PostCardCommonHeader: React.FC<Props> = ({
           <Grid item className={classes.gridItem}>
             <div className={classes.avatarWrapper}>
               <Avatar
-                src={user.image_url ? user?.image_url : PROFILE_PIC_URL}
+                src={user.image_url ? user?.image_url : DEFAULT_PROFILE_PIC_URL}
                 className={classes.avatar}
               />
             </div>

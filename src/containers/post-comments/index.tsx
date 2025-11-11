@@ -26,8 +26,8 @@ const PostCommentsPage: React.FC<Props> = (props) => {
 
   const post = data?.post as Post;
   const title = post
-    ? `${post.user.username} on Instagram: "${post.caption}"`
-    : "Instagram";
+    ? `${post.user.username} on Kenzygram: "${post.caption}"`
+    : "Kenzygram";
   useTitle(title);
 
   // JSX

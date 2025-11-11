@@ -16,11 +16,13 @@ import { useStyles } from "./styles";
 const HomePage: React.FC = () => {
   // Other Hooks
   const { data, loading, refetch: refetchPosts } = useQuery(GET_POSTS);
-  const { data: data1, loading: loading1, refetch: refetchStories } = useQuery(
-    GET_STORIES
-  );
+  const {
+    data: data1,
+    loading: loading1,
+    refetch: refetchStories,
+  } = useQuery(GET_STORIES);
   const classes = useStyles();
-  useTitle("Instagram");
+  useTitle("Kenzygram");
 
   useEffect(() => {
     refetchPosts();

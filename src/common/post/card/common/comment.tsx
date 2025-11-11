@@ -10,7 +10,7 @@ import {
   deleteReplyComment,
   parseCommentDate,
 } from "../../../../utils/helpers/comment";
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import { useUser } from "../../../../utils/context/user";
 import {
   TOGGLE_REPLY_LIKE,
@@ -174,7 +174,9 @@ const PostCardCommonComment: React.FC<Props> = ({
       <div className={classes.commentByGroup}>
         <Avatar
           src={
-            comment.user.image_url ? comment.user.image_url : PROFILE_PIC_URL
+            comment.user.image_url
+              ? comment.user.image_url
+              : DEFAULT_PROFILE_PIC_URL
           }
           className={classes.commentByAvatar}
         />

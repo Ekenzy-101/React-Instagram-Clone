@@ -9,7 +9,7 @@ import qs from "querystring";
 import useForm from "../../common/hooks/useForm";
 import CustomToast from "../../common/toast";
 import PasswordConfirmHeader from "../../components/password-confirm/header";
-import { PROFILE_PIC_URL } from "../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../utils/constants/url";
 import { validatePassword } from "../../utils/helpers/validation";
 import { resetPassword } from "../../utils/services/authService";
 import { debug } from "../../utils/services/debugService";
@@ -35,7 +35,7 @@ const PasswordConfirmPage: React.FC = () => {
     password: "",
     password_confirmation: "",
   });
-  useTitle("Instagram");
+  useTitle("Kenzygram");
 
   const user = data?.user as User | null;
 
@@ -80,7 +80,7 @@ const PasswordConfirmPage: React.FC = () => {
         <div className={classes.wrapper}>
           <div className={classes.formWrapper}>
             <Avatar
-              src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+              src={user?.image_url ? user?.image_url : DEFAULT_PROFILE_PIC_URL}
               className={classes.icon}
             />
             <Typography className={classes.text}>{user?.username}</Typography>

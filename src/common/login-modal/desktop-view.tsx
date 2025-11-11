@@ -8,7 +8,7 @@ import {
   TO_PASSWORDRESET_PAGE,
   TO_SIGNUP_PAGE,
 } from "../../utils/constants/routes";
-import { IG_MONOCHROME_LOGO1_URL } from "../../utils/constants/url";
+import { IG_MONOCHROME_LOGO_URL } from "../../utils/constants/url";
 
 interface Props {
   renderErrorMessage: () => "" | JSX.Element;
@@ -25,7 +25,7 @@ const DesktopViewLoginModal: React.FC<Props> = (props) => {
         <Close onClick={onClose} className={classes.closeButton} />
         <div className={classes.wrapper}>
           <Avatar
-            src={IG_MONOCHROME_LOGO1_URL}
+            src={IG_MONOCHROME_LOGO_URL}
             className={classes.brandLogo}
             variant="square"
           />

@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { useMedia } from "react-use";
 
 import { TO_CREATESTORY_PAGE } from "../../../utils/constants/routes";
-import { PROFILE_PIC_URL } from "../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { useUser } from "../../../utils/context/user";
 import { Story } from "../../../utils/types/story";
 import { useStyles } from "./styles";
@@ -52,7 +52,9 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
             <div className={classes.avatarWrapper}>
               <Avatar
                 src={
-                  authUser?.image_url ? authUser?.image_url : PROFILE_PIC_URL
+                  authUser?.image_url
+                    ? authUser?.image_url
+                    : DEFAULT_PROFILE_PIC_URL
                 }
                 alt={authUser?.username}
                 className={classes.avatar}
@@ -86,7 +88,9 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
                 <Avatar
                   className={classes.avatar}
                   src={
-                    authUser?.image_url ? authUser?.image_url : PROFILE_PIC_URL
+                    authUser?.image_url
+                      ? authUser?.image_url
+                      : DEFAULT_PROFILE_PIC_URL
                   }
                 />
               </Badge>
@@ -118,7 +122,7 @@ const HomeStatus: React.FC<Props> = ({ stories }) => {
           >
             <div className={classes.avatarWrapper}>
               <Avatar
-                src={image_url ? image_url : PROFILE_PIC_URL}
+                src={image_url ? image_url : DEFAULT_PROFILE_PIC_URL}
                 alt={username}
                 className={classes.avatar}
               />

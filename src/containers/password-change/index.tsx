@@ -10,7 +10,7 @@ const PasswordChangePage: React.FC = () => {
   // Other Hooks
   const classes = useStyles();
 
-  useTitle("Change Password - Instagram");
+  useTitle("Change Password - Kenzygram");
 
   return (
     <Paper className={classes.root} square variant="outlined">

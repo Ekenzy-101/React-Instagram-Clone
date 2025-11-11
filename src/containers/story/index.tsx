@@ -23,7 +23,7 @@ const StoryPage: React.FC = () => {
     fetchPolicy: "cache-and-network",
   });
   const { replace, location } = useHistory();
-  useTitle("Stories - Instagram");
+  useTitle("Stories - Kenzygram");
 
   const stories = data?.stories as Story[] | undefined;
   // Effect Hooks

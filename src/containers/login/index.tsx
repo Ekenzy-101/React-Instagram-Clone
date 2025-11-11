@@ -41,7 +41,7 @@ const LoginPage: React.FC = () => {
     password: "",
   });
   const { handleFacebookResponse, loading, errorMessage } = useFacebookLogin();
-  useTitle("Login - Instagram");
+  useTitle("Login - Kenzygram");
 
   useEffect(() => {
     setErrorMessage(errorMessage);

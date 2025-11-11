@@ -16,7 +16,7 @@ const EditProfilePage: React.FC = () => {
   // Other Hooks
   const classes = useStyles();
   const { data, loading } = useQuery(GET_AUTH_USER_INFO);
-  useTitle("Edit Profile - Instagram");
+  useTitle("Edit Profile - Kenzygram");
 
   const profile = data?.profile as User;
   debug.table(profile);

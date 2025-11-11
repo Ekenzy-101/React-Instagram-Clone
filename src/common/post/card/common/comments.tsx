@@ -6,7 +6,7 @@ import { useLongPress } from "react-use";
 import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 
 import { debug } from "../../../../utils/services/debugService";
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import { Post, PostComment } from "../../../../utils/types/post";
 import {
   parseCommentDate,
@@ -98,7 +98,7 @@ const PostCardCommonComments: React.FC<Props> = (props) => {
       />
       <div className={classes.commentByGroup}>
         <Avatar
-          src={user.image_url ? user.image_url : PROFILE_PIC_URL}
+          src={user.image_url ? user.image_url : DEFAULT_PROFILE_PIC_URL}
           className={classes.commentByAvatar}
         />
         <div className={classes.commentByBody}>

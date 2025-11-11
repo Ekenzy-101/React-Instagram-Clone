@@ -19,7 +19,7 @@ const ExplorePage: React.FC = () => {
   // Other Hooks
   const classes = useStyles();
   const { data, loading } = useQuery(GET_RANDOM_POSTS);
-  useTitle("Instagram");
+  useTitle("Kenzygram");
 
   // JSX
   if (loading) return <LoadingPage spinner />;

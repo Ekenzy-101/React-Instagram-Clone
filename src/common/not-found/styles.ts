@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   link: {
     textDecoration: "none",
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
   },
   subTitle: {
     textAlign: "center",

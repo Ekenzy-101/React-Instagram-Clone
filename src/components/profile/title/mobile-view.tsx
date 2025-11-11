@@ -12,7 +12,10 @@ import { Link, useRouteMatch } from "react-router-dom";
 
 import LoadingSpinner from "../../../common/loading/spinner";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
-import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
+import {
+  LOADING_GIF_URL,
+  DEFAULT_PROFILE_PIC_URL,
+} from "../../../utils/constants/url";
 import { useUser } from "../../../utils/context/user";
 import { User } from "../../../utils/types/user";
 import { useStyles } from "./styles";
@@ -102,7 +105,10 @@ const ProfileTitleMobileView: React.FC<Props> = ({ user }) => {
                 style={{ width: 75, height: 75 }}
                 onChange={handleUploadProfilePicture}
               />
-              <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+              <Avatar
+                src={DEFAULT_PROFILE_PIC_URL}
+                className={classes.avatar}
+              />
             </div>
           ) : isAuthUser && user.image_url ? (
             <Avatar
@@ -112,7 +118,7 @@ const ProfileTitleMobileView: React.FC<Props> = ({ user }) => {
             />
           ) : (
             <Avatar
-              src={user.image_url ? user.image_url : PROFILE_PIC_URL}
+              src={user.image_url ? user.image_url : DEFAULT_PROFILE_PIC_URL}
               className={classes.avatar}
             />
           )}

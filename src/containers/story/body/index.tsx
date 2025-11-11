@@ -10,7 +10,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useStyles } from "../styles";
 import {
   IG_TRANSPARENT_LOGO_URL,
-  PROFILE_PIC_URL,
+  DEFAULT_PROFILE_PIC_URL,
 } from "../../../utils/constants/url";
 import { useUser } from "../../../utils/context/user";
 import { parseCommentDate } from "../../../utils/helpers/comment";
@@ -124,7 +124,7 @@ const StoryBody: React.FC<Props> = ({
                           src={
                             authUser?.image_url
                               ? authUser?.image_url
-                              : PROFILE_PIC_URL
+                              : DEFAULT_PROFILE_PIC_URL
                           }
                         />
                         <Typography
@@ -140,7 +140,7 @@ const StoryBody: React.FC<Props> = ({
                           src={
                             currentStory?.user.image_url
                               ? currentStory?.user.image_url
-                              : PROFILE_PIC_URL
+                              : DEFAULT_PROFILE_PIC_URL
                           }
                         />
                         <Link to={`/${username}/`} className={classes.link}>

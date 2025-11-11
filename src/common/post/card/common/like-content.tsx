@@ -2,7 +2,7 @@ import { Avatar, Typography } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useMedia } from "react-use";
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import { useUser } from "../../../../utils/context/user";
 import { modalState } from "../../../../utils/types/modal";
 import { Post } from "../../../../utils/types/post";
@@ -46,7 +46,9 @@ const PostCardCommonLikeContent: React.FC<Props> = ({ post, setShow }) => {
         <div className={classes.likedByGroup}>
           <Avatar
             src={
-              relatedUser.image_url ? relatedUser.image_url : PROFILE_PIC_URL
+              relatedUser.image_url
+                ? relatedUser.image_url
+                : DEFAULT_PROFILE_PIC_URL
             }
             className={classes.likedByAvatar}
           />

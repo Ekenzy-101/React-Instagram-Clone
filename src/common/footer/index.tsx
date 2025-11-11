@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useStyles } from "./styles";
 import HomeSvg from "../svgs/HomeSvg";
 import LoveSvg from "../svgs/LoveSvg";
-import { PROFILE_PIC_URL } from "../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../utils/constants/url";
 import {
   TO_ACTIVITY_PAGE,
   TO_CREATESTYLE_PAGE,
@@ -116,7 +116,11 @@ const Footer: React.FC = () => {
               >
                 <div className={classes.avatarWrapper}>
                   <Avatar
-                    src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                    src={
+                      user?.image_url
+                        ? user?.image_url
+                        : DEFAULT_PROFILE_PIC_URL
+                    }
                     className={classes.avatar}
                   />
                 </div>

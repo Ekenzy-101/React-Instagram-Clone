@@ -11,7 +11,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@apollo/client";
 
-import { PROFILE_PIC_URL } from "../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../utils/constants/url";
 import AccountNav from "../../../common/account-nav";
 import { useStyles } from "./styles";
 import PasswordChangeBodyWrapper from "./wrapper";
@@ -106,7 +106,9 @@ const PasswordChangeBody: React.FC = () => {
           <PasswordChangeBodyWrapper
             leftComponent={
               <Avatar
-                src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                src={
+                  user?.image_url ? user?.image_url : DEFAULT_PROFILE_PIC_URL
+                }
                 className={classes.avatar}
               />
             }
@@ -116,7 +118,9 @@ const PasswordChangeBody: React.FC = () => {
             centerComponent={
               <div className={classes.wrapper}>
                 <Avatar
-                  src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+                  src={
+                    user?.image_url ? user?.image_url : DEFAULT_PROFILE_PIC_URL
+                  }
                   className={classes.avatar}
                 />
                 <Typography variant="h5">{user?.username}</Typography>

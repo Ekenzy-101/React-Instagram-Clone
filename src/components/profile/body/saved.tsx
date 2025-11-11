@@ -56,10 +56,11 @@ const ProfileBodySaved: React.FC<Props> = (props) => {
                 </div>
               </div>
               {post?.image_urls?.length > 1 ? (
-                <span
-                  style={{ backgroundImage: `url(${MULTI_PHOTO_LOGO_URL})` }}
+                <img
+                  alt="multi-photo"
+                  src={MULTI_PHOTO_LOGO_URL}
                   className={classes.multiPhoto}
-                ></span>
+                />
               ) : null}
               <CardMedia image={post.image_urls[0]} className="post-image" />
             </Link>

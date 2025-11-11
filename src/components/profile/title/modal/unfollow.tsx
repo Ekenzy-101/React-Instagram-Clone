@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { useStyles } from "./styles";
 import { User } from "../../../../utils/types/user";
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import useFollow from "../../../../common/hooks/useFollow";
 interface Props {
   open: boolean;
@@ -37,7 +37,7 @@ const ProfileTitleUnfollowModal: React.FC<Props> = ({
     >
       <DialogContent className={classes.dialogBtn} dividers>
         <Avatar
-          src={user?.image_url ? user?.image_url : PROFILE_PIC_URL}
+          src={user?.image_url ? user?.image_url : DEFAULT_PROFILE_PIC_URL}
           className={classes.avatar}
         />
         <Typography variant="body1" style={{ marginBottom: "1rem" }}>

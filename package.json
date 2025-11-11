@@ -1,12 +1,14 @@
 {
-  "name": "react-typescript",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@apollo/client": "^3.3.9",
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
+  "name": "kenzygram",
+  "version": "1.0.0",
+  "author": "Emmanuel Onyekaba",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@rsbuild/core": "^1.6.3",
+    "@rsbuild/plugin-node-polyfill": "^1.4.2",
+    "@rsbuild/plugin-react": "^1.4.2",
+    "@rsbuild/plugin-svgr": "^1.2.2",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.1.2",
     "@testing-library/user-event": "^12.2.2",
@@ -18,7 +20,13 @@
     "@types/react-facebook-login": "^4.1.2",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-swipeable-views": "^0.13.0",
-    "@types/validator": "^13.1.2",
+    "@types/validator": "^13.1.2"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.9",
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "graphql": "^15.5.0",
@@ -30,7 +38,6 @@
     "react-image-file-resizer": "^0.3.10",
     "react-insta-stories": "^2.1.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
     "react-swipeable-views": "^0.13.9",
     "react-use": "^15.3.8",
     "typescript": "^4.0.5",
@@ -38,10 +45,9 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "rsbuild dev",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview"
   },
   "eslintConfig": {
     "extends": [

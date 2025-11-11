@@ -28,8 +28,8 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: "1.2rem",
   },
   facebookLogo: {
-    width: "16px",
-    height: "16px",
+    width: "20px",
+    height: "20px",
     marginRight: "0.5rem",
   },
   facebookLoginBtn: {

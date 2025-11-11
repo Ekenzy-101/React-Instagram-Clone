@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import PostCardCommonComments from "../../common/post/card/common/comments";
 import PostCardCommonForm from "../../common/post/card/common/form";
-import { PROFILE_PIC_URL } from "../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../utils/constants/url";
 import { Post, PostComment } from "../../utils/types/post";
 import { useStyles } from "./styles";
 interface Props {
@@ -24,7 +24,7 @@ const PostCommentsBody: React.FC<Props> = ({ post }) => {
     <>
       <AppBar position="sticky" className={classes.commentWrapper}>
         <Toolbar className={classes.toolbar}>
-          <Avatar className={classes.avatar} src={PROFILE_PIC_URL} />
+          <Avatar className={classes.avatar} src={DEFAULT_PROFILE_PIC_URL} />
           <PostCardCommonForm
             post={post}
             rounded

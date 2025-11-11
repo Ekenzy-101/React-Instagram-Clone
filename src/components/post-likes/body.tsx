@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import LoadingSpinner from "../../common/loading/spinner";
 
-import { PROFILE_PIC_URL } from "../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../utils/constants/url";
 import useFollow from "../../common/hooks/useFollow";
 import { useUser } from "../../utils/context/user";
 import { Post } from "../../utils/types/post";
@@ -61,7 +61,7 @@ const PostLikesBody: React.FC<Props> = ({ post }) => {
         .map((l) => (
           <div className={classes.wrapper} key={l.id}>
             <Avatar
-              src={l.image_url ? l.image_url : PROFILE_PIC_URL}
+              src={l.image_url ? l.image_url : DEFAULT_PROFILE_PIC_URL}
               className={classes.avatar}
             />
             <div style={{ flexGrow: 1, margin: "auto 12px" }}>

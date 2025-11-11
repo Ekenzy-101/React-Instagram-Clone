@@ -26,7 +26,7 @@ const PostLikesPage: React.FC<Props> = (props) => {
     variables: { id: props.id ? props.id : id },
   });
 
-  useTitle("Instagram");
+  useTitle("Kenzygram");
 
   // Other Logic
   const post = data?.post as Post;

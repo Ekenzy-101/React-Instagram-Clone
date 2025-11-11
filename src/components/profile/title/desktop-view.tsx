@@ -6,7 +6,10 @@ import { Avatar, Button, Grid, Hidden, Typography } from "@material-ui/core";
 import { useStyles } from "./styles";
 import ProfileTitleUnfollowModal from "./modal/unfollow";
 import ProfileTitlePictureModal from "./modal/picture";
-import { LOADING_GIF_URL, PROFILE_PIC_URL } from "../../../utils/constants/url";
+import {
+  LOADING_GIF_URL,
+  DEFAULT_PROFILE_PIC_URL,
+} from "../../../utils/constants/url";
 import { User } from "../../../utils/types/user";
 import { useUser } from "../../../utils/context/user";
 import { TO_EDITPROFILE_PAGE } from "../../../utils/constants/routes";
@@ -114,7 +117,10 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
                 style={{ width: 150, height: 150 }}
                 onChange={handleUploadProfilePicture}
               />
-              <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+              <Avatar
+                src={DEFAULT_PROFILE_PIC_URL}
+                className={classes.avatar}
+              />
             </div>
           ) : isAuthUser && user.image_url ? (
             <Avatar
@@ -124,7 +130,7 @@ const ProfileTitleDesktopView: React.FC<Props> = ({ user }) => {
             />
           ) : (
             <Avatar
-              src={user.image_url ? user.image_url : PROFILE_PIC_URL}
+              src={user.image_url ? user.image_url : DEFAULT_PROFILE_PIC_URL}
               className={classes.avatar}
             />
           )}

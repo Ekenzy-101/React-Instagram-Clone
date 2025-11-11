@@ -8,7 +8,7 @@ import CommentSvg from "../../../common/svgs/CommentSvg";
 import LoveSvg from "../../../common/svgs/LoveSvg";
 import {
   MULTI_PHOTO_LOGO_URL,
-  PROFILE_PIC_URL,
+  DEFAULT_PROFILE_PIC_URL,
 } from "../../../utils/constants/url";
 import { Post } from "../../../utils/types/post";
 import { User } from "../../../utils/types/user";
@@ -40,7 +40,7 @@ const ExploreBody: React.FC<Props> = ({ posts, users }) => {
             <div className={classes.menuItem}>
               <Avatar
                 className={classes.avatar}
-                src={image_url ? image_url : PROFILE_PIC_URL}
+                src={image_url ? image_url : DEFAULT_PROFILE_PIC_URL}
               />
               <div>
                 <Typography className={classes.username}>
@@ -87,10 +87,11 @@ const ExploreBody: React.FC<Props> = ({ posts, users }) => {
               </div>
             </div>
             {post?.image_urls?.length > 1 ? (
-              <span
-                style={{ backgroundImage: `url(${MULTI_PHOTO_LOGO_URL})` }}
+              <img
+                alt="multi-photo"
+                src={MULTI_PHOTO_LOGO_URL}
                 className={classes.multiPhoto}
-              ></span>
+              />
             ) : null}
             <CardMedia image={post?.image_urls[0]} className="post-image" />
           </Link>

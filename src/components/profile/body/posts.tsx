@@ -85,10 +85,11 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
               </div>
             </div>
             {post?.image_urls?.length > 1 ? (
-              <span
-                style={{ backgroundImage: `url(${MULTI_PHOTO_LOGO_URL})` }}
+              <img
+                alt="multi-photo"
+                src={MULTI_PHOTO_LOGO_URL}
                 className={classes.multiPhoto}
-              ></span>
+              />
             ) : null}
             <CardMedia image={post?.image_urls[0]} className="post-image" />
           </Link>
@@ -115,7 +116,11 @@ const ProfileBodyPosts: React.FC<Props> = ({ posts }) => {
       <div className={classes.bodyRoot}>
         <div className={classes.bodyWrapper}>
           <div className={classes.svgWrapper}>
-            <Avatar src={CAMERA_LOGO_URL} className={classes.cameraLogo} />
+            <Avatar
+              variant="square"
+              src={CAMERA_LOGO_URL}
+              className={classes.cameraLogo}
+            />
           </div>
           <Typography variant="h6" className={classes.bodyTitle}>
             Share Photos

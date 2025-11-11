@@ -38,7 +38,7 @@ const SignupPage: React.FC = () => {
     username: "",
   });
   const { handleFacebookResponse, loading, errorMessage } = useFacebookLogin();
-  useTitle("Signup - Instagram");
+  useTitle("Signup - Kenzygram");
 
   useEffect(() => {
     setErrorMessage(errorMessage);

@@ -2,7 +2,7 @@ import { Avatar } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { PROFILE_PIC_URL } from "../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../utils/constants/url";
 import { useStyles } from "./styles";
 
 interface Props {
@@ -38,7 +38,7 @@ const AddPostBody: React.FC<Props> = ({ images, onChange }) => {
   return (
     <div>
       <div className={classes.wrapper}>
-        <Avatar src={PROFILE_PIC_URL} className={classes.avatar} />
+        <Avatar src={DEFAULT_PROFILE_PIC_URL} className={classes.avatar} />
         <textarea
           name="caption"
           onChange={onChange}

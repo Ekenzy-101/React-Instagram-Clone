@@ -19,11 +19,6 @@ export const useStyles = makeStyles((theme) => ({
     right: "5%",
     cursor: "pointer",
   },
-  darkLink: {
-    textDecoration: "none",
-    color: theme.palette.primary.dark,
-    fontSize: "0.8rem",
-  },
   divider: {
     border: "1px solid rgba(var(--b6a,219,219,219),1)",
     width: "110px",
@@ -36,14 +31,14 @@ export const useStyles = makeStyles((theme) => ({
     margin: "1.2rem auto 1.2rem auto",
   },
   facebookLogo: {
-    width: "16px",
-    height: "16px",
+    width: "20px",
+    height: "20px",
     marginRight: "0.5rem",
   },
   facebookLoginBtn: {
     marginBottom: "0.5rem",
     textTransform: "none",
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
   },
   linkWrapper: {
     textAlign: "center",

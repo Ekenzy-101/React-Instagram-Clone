@@ -7,12 +7,9 @@ import {
   TO_PASSWORDRESET_PAGE,
   TO_SIGNUP_PAGE,
 } from "../../../utils/constants/routes";
-import {
-  IG_MONOCHROME_LOGO1_URL,
-  FACEBOOK_LITE_LOGO_URL,
-  FACEBOOK_DARK_LOGO_URL,
-} from "../../../utils/constants/url";
+import { IG_MONOCHROME_LOGO_URL } from "../../../utils/constants/url";
 import FacebookButton from "../../../common/facebook/button";
+import { Facebook } from "@material-ui/icons";
 
 interface Props {
   onFacebookResponse: (response: any) => void;
@@ -30,7 +27,7 @@ const LoginWrapper: React.FC<Props> = ({
     <div className={classes.root}>
       <div className={classes.wrapper}>
         <Avatar
-          src={IG_MONOCHROME_LOGO1_URL}
+          src={IG_MONOCHROME_LOGO_URL}
           className={classes.brandLogo}
           variant="square"
         />
@@ -53,11 +50,7 @@ const LoginWrapper: React.FC<Props> = ({
                 fullWidth
                 onClick={renderProps.onClick}
               >
-                <Avatar
-                  src={FACEBOOK_LITE_LOGO_URL}
-                  variant="square"
-                  className={classes.facebookLogo}
-                />
+                <Facebook className={classes.facebookLogo} />
                 Continue with Facebook
               </Button>
             )}
@@ -111,18 +104,14 @@ const LoginWrapper: React.FC<Props> = ({
                 fullWidth
                 onClick={renderProps.onClick}
               >
-                <Avatar
-                  src={FACEBOOK_DARK_LOGO_URL}
-                  variant="square"
-                  className={classes.facebookLogo}
-                />
+                <Facebook color="primary" className={classes.facebookLogo} />
                 Log in with Facebook
               </Button>
             )}
           />
           {renderErrorMessage()}
           <Typography className={classes.linkWrapper}>
-            <Link to={TO_PASSWORDRESET_PAGE} className={classes.darkLink}>
+            <Link to={TO_PASSWORDRESET_PAGE} className={classes.link}>
               Forgot Password?
             </Link>
           </Typography>

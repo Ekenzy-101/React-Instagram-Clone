@@ -34,7 +34,7 @@ const VerifyEmailPage: React.FC = () => {
   } = useForm({ code: "" });
 
   // Effect Hooks
-  useTitle("Verify Email - Instagram");
+  useTitle("Verify Email - Kenzygram");
 
   useEffect(() => {
     if (!state) {

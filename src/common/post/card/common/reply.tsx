@@ -4,7 +4,7 @@ import { Avatar, Typography } from "@material-ui/core";
 
 import { ReplyComment } from "../../../../utils/types/post";
 import { useUser } from "../../../../utils/context/user";
-import { PROFILE_PIC_URL } from "../../../../utils/constants/url";
+import { DEFAULT_PROFILE_PIC_URL } from "../../../../utils/constants/url";
 import { parseCommentDate } from "../../../../utils/helpers/comment";
 import { useStyles } from "../styles";
 import LoveSvg from "../../../svgs/LoveSvg";
@@ -50,7 +50,11 @@ const PostCardCommonReply: React.FC<Props> = ({
       <LoginModal open={show === "login"} onClose={() => setShow("none")} />
       <div className={classes.commentByGroup}>
         <Avatar
-          src={reply.user.image_url ? reply.user.image_url : PROFILE_PIC_URL}
+          src={
+            reply.user.image_url
+              ? reply.user.image_url
+              : DEFAULT_PROFILE_PIC_URL
+          }
           className={classes.commentByAvatar}
         />
 

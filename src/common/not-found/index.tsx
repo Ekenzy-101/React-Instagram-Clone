@@ -16,7 +16,7 @@ const NotFoundPage: React.FC = () => {
   // Other Hooks
   const classes = useStyles();
   const { path, params } = useRouteMatch();
-  useTitle("Page Not Found - Instagram");
+  useTitle("Page Not Found - Kenzygram");
 
   // JSX
   return (
@@ -42,7 +42,7 @@ const NotFoundPage: React.FC = () => {
               className={classes.link}
               to={{ pathname: TO_HOME_PAGE, state: { from: path, ...params } }}
             >
-              Go back to Instagram.
+              Go back to Kenzygram.
             </Link>
           </Typography>
         </div>
